@@ -24,6 +24,7 @@ db.once('open', function callback () {
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var items = require('./routes/items');
+var sessions = require('./routes/sessions')(passport);
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
@@ -44,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
 app.use('/items', items);
+app.use('/sessions', sessions);
 app.use('/', routes);
 
 app.listen(process.env.OPENSHIFT_NODEJS_PORT || 8080,
