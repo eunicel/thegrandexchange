@@ -8,7 +8,7 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var User = require('./models/user').User;
+var User = require('./models/user');
 require('./config/passport')(passport, User, LocalStrategy);
 
 var mongo = require('mongodb');

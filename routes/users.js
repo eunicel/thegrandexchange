@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var Transaction = require('../models/transaction');
+var utils = require('../utils');
 
 // POST /users - create new user
 router.post('/', function(req, res) {
@@ -39,8 +40,8 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
   });
 });
 
-// PUT /users/:user_id/transactions/:transaction_id - add review to transaction with transaction_id
-router.get('/:user_id/transactions/:transaction_id', function(req, res) {
+// POST /users/:user_id/transactions/:transaction_id - add review to transaction with transaction_id
+router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
   var transaction_id = req.param('transaction_id');
   var review = req.body.review;
