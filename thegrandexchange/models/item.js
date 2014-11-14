@@ -70,6 +70,10 @@ offerSchema.statics.addOfferToItem = function(offer, item_id, callback){
   });
 }
 
+// create model
+var Item = mongoose.model('Item', itemSchema);
 
+// export
+module.exports = Item;
 
 
