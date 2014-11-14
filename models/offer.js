@@ -45,10 +45,14 @@ offerSchema.statics.getOfferById = function(offer_id, callback) {
 }
 
 // DELETE - delete offer
-offerSchema.statics.deleteOffer = function(offer_id, callback) {
+offerSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
   Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
     utils.handleError(err);
-    callback(offer);
+    Item.findOne({_id:item_id},function(err, item){
+      utils.handleError(err);
+      item.offers.remove(offer_id);
+      callback(offer);
+    });
   });
 }
 

@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
 });
 
 // POST /items - create items
-router.post('/', utils.loggedIn, function(req, res) {
+router.post('/', function(req, res) {
   var name = req.body.name;
   var description = req.body.description;
   Item.createItem(name, description, function(item) {
@@ -21,7 +21,7 @@ router.post('/', utils.loggedIn, function(req, res) {
 });
 
 // GET /items/:item_id - get item with item_id
-router.get('/:item_id', utils.loggedIn, function(req, res) {
+router.get('/:item_id', function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
     res.json({item: item});
@@ -29,7 +29,7 @@ router.get('/:item_id', utils.loggedIn, function(req, res) {
 });
 
 // GET /items/:item_id/offers/:offer_id - get offer with offer_id
-router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
+router.get('/:item_id/offers/:offer_id', function(req, res) {
   var offer_id = req.param('offer_id');
   Offer.getOfferById(offer_id, function(offer) {
     res.json({offer: offer});
@@ -37,7 +37,7 @@ router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
 });
 
 // POST /items/item_id/offers/offer_id - create new offer
-router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
+router.post('/:item_id/offers', function(req, res) {
   var item_id = req.param('item_id');
   var postedBy = req.body.postedBy;
   var postedAt = req.body.postedAt;
@@ -49,9 +49,10 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
 });
 
 // DELETE /items/item_id/offers/offer_id - delete offer
-router.delete('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res){
+router.delete('/:item_id/offers/:offer_id', function(req, res){
   var offer_id = req.param('offer_id');
-  Offer.deleteOffer(offer_id, function(offer) {
+  var item_id = req.param('item_id');
+  Offer.deleteOffer(item_id, offer_id, function(offer) {
     res.json({offer: offer});
   });
 });
