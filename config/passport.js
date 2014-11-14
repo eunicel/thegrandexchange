@@ -11,7 +11,7 @@ module.exports = function(passport, User, LocalStrategy) {
 
   passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.getUserByEmail(username, function (err, user) {
+    User.getUserByEmail(username, function(err, user) {
       if (err) {
         return done(err);
       }
