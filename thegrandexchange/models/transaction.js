@@ -29,7 +29,7 @@ transactionSchema.statics.createTransaction = function(buy, sell, callback) {
 // /users/user_id/transactions/transaction_id GET
 // Get transaction by id
 transactionSchema.statics.getTransactionById = function(userid, transactionid, callback) {
-  Transaction.findOne({_id:transactionid}.populate('buy').populate('sell').exec(function (err, poptransaction) {
+  Transaction.findOne({_id:transactionid}).populate('buy').populate('sell').exec(function (err, poptransaction) {
     if (err) {
       throw err;
     }
