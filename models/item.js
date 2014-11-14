@@ -13,7 +13,7 @@ var itemSchema = mongoose.Schema({
 
 // GET - returns all items
 itemSchema.statics.getItems = function(callback) {
-  Item.find({}, function(err, items){
+  Item.find({}, function(err, items) {
     utils.handleError(err);
     callback(items);
   });

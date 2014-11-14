@@ -1,5 +1,6 @@
 /* Transaction Model */
 var mongoose = require('mongoose');
+var utils = require('../utils');
 
 var transactionSchema = mongoose.Schema({
   buy : {
@@ -30,16 +31,12 @@ transactionSchema.statics.createTransaction = function(buy, sell, callback) {
 // Get transaction by id
 transactionSchema.statics.getTransactionById = function(userid, transactionid, callback) {
   Transaction.findOne({_id:transactionid}).populate('buy').populate('sell').exec(function(err, poptransaction) {
-    if (err) {
-      throw err;
+    utils.handleError(err);
+    if (poptransaction.buy.postedBy === userid || poptransaction.sell.postedBy === userid) {
+      callback(transaction);
     }
     else {
-      if (poptransaction.buy.postedBy === userid || poptransaction.sell.postedBy === userid) {
-        callback(transaction);
-      }
-      else {
-        callback("You are not authorized to view this transaction");
-      }
+      callback("You are not authorized to view this transaction");
     }
   });
 }
@@ -48,19 +45,12 @@ transactionSchema.statics.getTransactionById = function(userid, transactionid, c
 // Add a review to a transaction
 transactionSchema.statics.addTransactionReview = function(userid, transactionid, review, callback) {
   Transaction.findOne({_id:transactionid}).populate('buy').populate('sell').exec(function(err, poptransaction) {
-    if (err) {
-      throw err;
-    }
-    else {
-      if (poptransaction.buy.postedBy === userid || poptransaction.sell.postedBy === userid) {
-        Transaction.update( {_id:transactionid}, {$addToSet: {reviews : review}}, function(err, numberAffected, transaction){
-          if (err) {
-            throw err;
-          } else {
-            callback(transaction);
-          }
-        });
-      }
+    utils.handleError(err);
+    if (poptransaction.buy.postedBy === userid || poptransaction.sell.postedBy === userid) {
+      Transaction.update( {_id:transactionid}, {$addToSet: {reviews : review}}, function(err, numberAffected, transaction) {
+        utils.handleError(err);
+        callback(transaction);
+      });
     }
   });
 }

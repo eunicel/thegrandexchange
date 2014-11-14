@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var utils = require('../utils');
 
 var userSchema = mongoose.Schema({
   firstName: String,
@@ -27,11 +28,8 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
 // Get user by id
 userSchema.statics.getUserById = function(userid, callback) {
   User.findOne({_id:userid}, function(err, user) {
-    if (err) {
-      throw err;
-    } else {
-      callback(user);
-    }
+    utils.handleError(err);
+    callback(user);
   });
 }
 
@@ -39,17 +37,14 @@ userSchema.statics.getUserById = function(userid, callback) {
 // Get all transactions of a user
 userSchema.statics.getUserTransactions = function(userid, callback) {
   Transaction.find({}).populate('buy').populate('sell').exec(function(err, alltransactions) {
-    if (err) {
-      throw err;
-    } else {
-      var usertransactions = [];
-      for (t in alltransactions) {
-        if (t.buy.postedBy === userid || t.sell.postedBy === userid) {
-          usertransactions.push(t);
-        }
+    utils.handleError(err);
+    var usertransactions = [];
+    for (t in alltransactions) {
+      if (t.buy.postedBy === userid || t.sell.postedBy === userid) {
+        usertransactions.push(t);
       }
-      callback(usertransactions);
     }
+    callback(usertransactions);
   });
 }
 
