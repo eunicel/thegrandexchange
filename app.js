@@ -23,6 +23,7 @@ db.once('open', function callback () {
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var items = require('./routes/items');
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
@@ -42,6 +43,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
+app.use('/items', items);
 app.use('/', routes);
 
 app.listen(process.env.OPENSHIFT_NODEJS_PORT || 8080,

@@ -18,9 +18,9 @@ var transactionSchema = mongoose.Schema({
 // Create a new transaction initially without reviews
 transactionSchema.statics.createTransaction = function(buy, sell, callback) {
   transaction = new Transaction({
-    buy : buy,
-    sell : sell,
-    reviews = []
+    buy: buy,
+    sell: sell,
+    reviews: []
   });
   transaction.save(function(err, transaction) {
     callback(transaction);

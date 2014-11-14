@@ -37,7 +37,7 @@ itemSchema.statics.getItemById = function(item_id, callback) {
     .populate('offers')
     .exec(function(err, item) {
       utils.handleError(err);
-      callback(items);
+      callback(item);
     });
 }
 

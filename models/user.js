@@ -13,11 +13,11 @@ var userSchema = mongoose.Schema({
 // Create a new user
 userSchema.statics.createUser = function(firstName, lastName, email, password, callback) {
   user = new User({
-    firstName : firstName,
-    lastName : lastName,
-    email : email,
-    password : password,
-    reputation = 0
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    password: password,
+    reputation: 0
   });
   user.save(function(err, user){
     callback(user);
@@ -27,7 +27,14 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
 // /users/user_id GET
 // Get user by id
 userSchema.statics.getUserById = function(userid, callback) {
-  User.findOne({_id:userid}, function(err, user) {
+  User.findOne({_id: userid}, function(err, user) {
+    utils.handleError(err);
+    callback(user);
+  });
+}
+
+userSchema.statics.getUserByEmail = function(email, callback) {
+  User.findOne({email: email}, function(err, user) {
     utils.handleError(err);
     callback(user);
   });
