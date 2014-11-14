@@ -34,7 +34,7 @@ itemSchema.statics.createItem = function(name, description, callback){
 }
 
 // GET - get item by id
-offerSchema.statics.getItemById = function(item_id, callback){
+itemSchema.statics.getItemById = function(item_id, callback){
   Item.findOne({_id:item_id}, function (err, item){
     if (err) {
       throw err;
@@ -45,7 +45,7 @@ offerSchema.statics.getItemById = function(item_id, callback){
 }
 
 // GET - get offers of item
-offerSchema.statics.getItemOffers = function(item_id, callback){
+itemSchema.statics.getItemOffers = function(item_id, callback){
  Item.findOne({_id:item_id}, function (err, item){
   if (err) {
     throw err;
@@ -57,7 +57,7 @@ offerSchema.statics.getItemOffers = function(item_id, callback){
 }
 
 // PUT - adds offer to item
-offerSchema.statics.addOfferToItem = function(offer, item_id, callback){
+itemSchema.statics.addOfferToItem = function(offer, item_id, callback){
   Item.findOne({_id:item_id}, function(err, item){
     if(err){
       throw err;
