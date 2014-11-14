@@ -66,4 +66,4 @@ userSchema.statics.getUserTransactions = function(userid, callback) {
 
 
 var User = mongoose.model('User', userSchema);
-exports.User = User;
+module.exports.User = User;
