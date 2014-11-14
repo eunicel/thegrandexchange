@@ -52,19 +52,6 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
   });
 }
 
-// PUT - adds offer to item
-itemSchema.statics.addOfferToItem = function(offer, item_id, callback) {
-  Item.findOne({_id:item_id})
-    .populate('offers')
-    .exec(function(err, item) {
-      utils.handleError(err);
-      item.offers.push(offer);
-      items.save(function(err, item) {
-        callback(item);
-      });
-  });
-}
-
 // create model
 var Item = mongoose.model('Item', itemSchema);
 

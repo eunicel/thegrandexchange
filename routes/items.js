@@ -28,15 +28,6 @@ router.get('/:item_id', function(req, res) {
   });
 });
 
-// POST /items/:item_id - add offer to item
-router.post('/:item_id/offers', function(req, res) {
-  var item_id = req.param('item_id');
-  var offer = req.body.offer;
-  Item.addOfferToItem(offer, item_id, function(offer) {
-    res.json({offer: offer});
-  });
-});
-
 // GET /items/:item_id/offers/:offer_id - get offer with offer_id
 router.get('/:item_id/offers/:offer_id', function(req, res) {
   var offer_id = req.param('offer_id');
@@ -52,7 +43,7 @@ router.post('/:item_id/offers', function(req, res) {
   var postedAt = req.body.postedAt;
   var price = req.body.price;
   var type = req.body.type;
-  Offer.createOffer(postedBy, postedAt, price, type, function(offer) {
+  Offer.createOffer(item_id, postedBy, postedAt, price, type, function(offer) {
     res.json({offer: offer});
   });
 });
