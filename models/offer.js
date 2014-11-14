@@ -12,21 +12,21 @@ var offerSchema = mongoose.Schema({
 });
 
 // POST - create new offer
-offerSchema.statics.createOffer = function(postedBy, postedAt, price, type, callback){
+offerSchema.statics.createOffer = function(postedBy, postedAt, price, type, callback) {
   var offer = new Offer({
     postedBy: postedBy,
     postedAt: postedAt,
     price: price,
     type: type
   });
-  offer.save(function(err, offer){
+  offer.save(function(err, offer) {
     callback(offer);
   });
 }
 
 // GET - get offer by id
-offerSchema.statics.getOfferById = function(offer_id, callback){
-  Offer.findOne({_id:offer_id}, function (err, offer){
+offerSchema.statics.getOfferById = function(offer_id, callback) {
+  Offer.findOne({_id:offer_id}, function(err, offer) {
     if (err) {
       throw err;
     } else {
@@ -36,9 +36,9 @@ offerSchema.statics.getOfferById = function(offer_id, callback){
 }
 
 // DELETE - delete offer
-offerSchema.statics.deleteOffer = function(offer_id, callback){
-  Offer.findOneAndRemove({_id:offer_id}, function (err, offer){
-    if (err){
+offerSchema.statics.deleteOffer = function(offer_id, callback) {
+  Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
+    if (err) {
       throw err;
     } else {
       callback(offer);

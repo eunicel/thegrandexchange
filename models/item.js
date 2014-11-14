@@ -11,9 +11,9 @@ var itemSchema = mongoose.Schema({
 });
 
 // GET - returns all items
-itemSchema.statics.getItems = function(callback){
+itemSchema.statics.getItems = function(callback) {
   Item.find({}, function(err, items){
-    if(err){
+    if(err) {
       throw err;
     } else {
       callback(items);
@@ -22,7 +22,7 @@ itemSchema.statics.getItems = function(callback){
 }
 
 // POST - create new item
-itemSchema.statics.createItem = function(name, description, callback){
+itemSchema.statics.createItem = function(name, description, callback) {
   var item = new Item({
     name: name,
     description: description,
@@ -34,8 +34,8 @@ itemSchema.statics.createItem = function(name, description, callback){
 }
 
 // GET - get item by id
-itemSchema.statics.getItemById = function(item_id, callback){
-  Item.findOne({_id:item_id}, function (err, item){
+itemSchema.statics.getItemById = function(item_id, callback) {
+  Item.findOne({_id:item_id}, function(err, item) {
     if (err) {
       throw err;
     } else {
@@ -45,8 +45,8 @@ itemSchema.statics.getItemById = function(item_id, callback){
 }
 
 // GET - get offers of item
-itemSchema.statics.getItemOffers = function(item_id, callback){
- Item.findOne({_id:item_id}, function (err, item){
+itemSchema.statics.getItemOffers = function(item_id, callback) {
+ Item.findOne({_id:item_id}, function(err, item) {
   if (err) {
     throw err;
   } else {
@@ -57,14 +57,14 @@ itemSchema.statics.getItemOffers = function(item_id, callback){
 }
 
 // PUT - adds offer to item
-itemSchema.statics.addOfferToItem = function(offer, item_id, callback){
-  Item.findOne({_id:item_id}, function(err, item){
-    if(err){
+itemSchema.statics.addOfferToItem = function(offer, item_id, callback) {
+  Item.findOne({_id:item_id}, function(err, item) {
+    if (err) {
       throw err;
     } else {
       item.offers.push(offer);
     }
-    items.save(function(err, item){
+    items.save(function(err, item) {
       callback(item);
     });
   });
@@ -75,5 +75,3 @@ var Item = mongoose.model('Item', itemSchema);
 
 // export
 module.exports = Item;
-
-
