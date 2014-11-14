@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var utils = require('../utils');
 
 // offer schema
 var offerSchema = mongoose.Schema({
@@ -27,22 +28,16 @@ offerSchema.statics.createOffer = function(postedBy, postedAt, price, type, call
 // GET - get offer by id
 offerSchema.statics.getOfferById = function(offer_id, callback) {
   Offer.findOne({_id:offer_id}, function(err, offer) {
-    if (err) {
-      throw err;
-    } else {
-      callback(offer);
-    }
+    utils.handleError(err);
+    callback(offer);
   });
 }
 
 // DELETE - delete offer
 offerSchema.statics.deleteOffer = function(offer_id, callback) {
   Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
-    if (err) {
-      throw err;
-    } else {
-      callback(offer);
-    }
+    utils.handleError(err);
+    callback(offer);
   });
 }
 

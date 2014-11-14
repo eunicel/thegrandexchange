@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var utils = require('../utils');
 
 // item schema
 var itemSchema = mongoose.Schema({
@@ -12,12 +13,9 @@ var itemSchema = mongoose.Schema({
 
 // GET - returns all items
 itemSchema.statics.getItems = function(callback) {
-  Item.find({}, function(err, items){
-    if(err) {
-      throw err;
-    } else {
-      callback(items);
-    }
+  Item.find({}, function(err, items) {
+    utils.handleError(err);
+    callback(items);
   });
 }
 
@@ -36,34 +34,25 @@ itemSchema.statics.createItem = function(name, description, callback) {
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
   Item.findOne({_id:item_id}, function(err, item) {
-    if (err) {
-      throw err;
-    } else {
-      callback(item);
-    }
+    utils.handleError(err);
+    callback(item);
   });
 }
 
 // GET - get offers of item
 itemSchema.statics.getItemOffers = function(item_id, callback) {
- Item.findOne({_id:item_id}, function(err, item) {
-  if (err) {
-    throw err;
-  } else {
+  Item.findOne({_id:item_id}, function(err, item) {
+    utils.handleError(err);
     var offers = item.offers;
     callback(offers);
-  }
- });
+  });
 }
 
 // PUT - adds offer to item
 itemSchema.statics.addOfferToItem = function(offer, item_id, callback) {
   Item.findOne({_id:item_id}, function(err, item) {
-    if (err) {
-      throw err;
-    } else {
-      item.offers.push(offer);
-    }
+    utils.handleError(err);
+    item.offers.push(offer);
     items.save(function(err, item) {
       callback(item);
     });
