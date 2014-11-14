@@ -3,8 +3,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
+// offer schema
 var offerSchema = mongoose.Schema({
-  postedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  postedBy: {type: ObjectId, ref: 'User'},
   postedAt: Date,
   price: Number,
   type: String
@@ -22,9 +23,10 @@ offerSchema.statics.createOffer = function(postedBy, postedAt, price, type, call
     callback(offer);
   });
 }
+
 // GET - get offer by id
-offerSchema.statics.getOfferById = function(id, callback){
-  Offer.findOne({_id:id}, function (err, offer){
+offerSchema.statics.getOfferById = function(offer_id, callback){
+  Offer.findOne({_id:offer_id}, function (err, offer){
     if (err) {
       throw err;
     } else {
@@ -34,8 +36,8 @@ offerSchema.statics.getOfferById = function(id, callback){
 }
 
 // DELETE - delete offer
-offerSchema.statics.deleteOffer = function(id, callback){
-  Offer.findOneAndRemove({_id:id}, function (err, offer){
+offerSchema.statics.deleteOffer = function(offer_id, callback){
+  Offer.findOneAndRemove({_id:offer_id}, function (err, offer){
     if (err){
       throw err;
     } else {
