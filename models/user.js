@@ -14,6 +14,10 @@ var userSchema = mongoose.Schema({
   reviews: [{
     type : mongoose.Schema.Types.ObjectId,
     ref: 'Review'
+  }],
+  transactions: [{
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction'
   }]
 });
 
@@ -26,7 +30,8 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
     email: email,
     password: password,
     reputation: 0,
-    reviews: []
+    reviews: [],
+    transactions: []
   });
   user.save(function(err, user){
     utils.handleError(err);
@@ -51,18 +56,22 @@ userSchema.statics.getUserByEmail = function(email, callback) {
 // /users/user_id/transactions GET
 // Get all transactions of a user
 userSchema.statics.getUserTransactions = function(user_id, callback) {
-  Transaction.find({})
-    .populate('buyer')
-    .populate('seller')
-    .exec(function(err, all_transactions) {
-      utils.handleError(err);
-      var user_transactions = [];
-      for (t in all_transactions) {
-        if (t.buyer.postedBy._id === user_id || t.seller.postedBy._id === user_id) {
-          user_transactions.push(t);
-        }
-      }
-      callback(user_transactions);
+  // Transaction.find({})
+  //   .populate('buyer')
+  //   .populate('seller')
+  //   .exec(function(err, all_transactions) {
+  //     utils.handleError(err);
+  //     var user_transactions = [];
+  //     for (t in all_transactions) {
+  //       if (t.buyer.postedBy._id === user_id || t.seller.postedBy._id === user_id) {
+  //         user_transactions.push(t);
+  //       }
+  //     }
+  //     callback(user_transactions);
+  // });
+  User.findOne({_id: user_id}, function(err, user) {
+    utils.handleError(err);
+    callback(user.transactions);
   });
 }
 
