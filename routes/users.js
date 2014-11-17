@@ -13,12 +13,13 @@ router.post('/', function(req, res) {
   var lastName = req.body.lastName;
   var email = req.body.email;
   var password = req.body.password;
+
+  var fieldEmpty = false;
+  var fieldExists = false;
   User.createUser(firstName, lastName, email, password, function(user) {
-    if(firstName === '' || lastName === '' || email === '' || password === ''){
-      res.json({success: false});
+    if(firstName === '' || lastName === '' || email === '' || password === '' || user == null){
+      fieldEmpty = true;
     } else {
-
-
       res.json({user: user, success: true});
     }
   });
@@ -29,7 +30,11 @@ router.post('/', function(req, res) {
 router.get('/:user_id', function(req, res) {
   var user_id = req.param('user_id');
   User.getUserById(user_id, function(user) {
-    res.json({user: user});
+    if(user != null) {
+      res.json({user: user, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -38,7 +43,11 @@ router.get('/:user_id', function(req, res) {
 router.get('/:user_id/transactions', function(req, res) {
   var user_id = req.param('user_id');
   User.getUserTransactions(user_id, function(transactions) {
-    res.json({transactions: transactions});
+    if(transactions != null){
+      res.json({transactions: transactions, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -58,7 +67,11 @@ router.post('/:user_id/reviews', function(req, res) {
   var user_id = req.param('user_id');
   var review = req.body.review;
   User.addReview(user_id, review, function(user) {
-    res.json({user: user});
+    if(user != null){
+      res.json({user: user, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -67,7 +80,11 @@ router.post('/:user_id/reviews', function(req, res) {
 router.post('/:user_id/reviews', function(req, res){
   var user_id = req.param('user_id');
   User.getReviews(user_id, function(reviews){
-    res.json({reviews: reviews});
+    if(reviews != null){
+      res.json({reviews: reviews, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
