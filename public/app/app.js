@@ -65,7 +65,22 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies'], function($httpPro
       url: '/marketplace',
       templateUrl: '/views/marketplace.html',
       controller: 'MainCtrl'
-    });
+    })
+    .state('offers', {
+      url: '/offers',
+      templateUrl: '/views/offers.html',
+      controller: 'OffersCtrl'
+    })
+    .state('completed', {
+      url: '/completed',
+      templateUrl: '/views/completed.html',
+      controller: 'CompletedCtrl'
+    })
+    .state('profile', {
+      url: '/profile',
+      templateUrl: '/views/profile.html',
+      controller: 'ProfileCtrl'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 .factory('session', ['$cookieStore', function($cookieStore) {
