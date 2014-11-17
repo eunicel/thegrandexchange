@@ -73,3 +73,31 @@ angular.module('thegrandexchange')
     }
   }
 ])
+.controller('OffersCtrl', [
+  '$http',
+  '$scope',
+  '$filter',
+  'ngTableParams',
+  function($http, $scope, $filter, ngTableParams) {
+    $scope.users = [{item:'clicker',price:30}, {item:'textbook',price:100}];
+
+    // Set up the table that allows sorting by field.
+    // Credit: http://bazalt-cms.com/ng-table/example/3
+    $scope.tableParams = new ngTableParams({
+      page: 1,          // show first page
+      count: 10,        // count per page
+      sorting: {
+        name: 'asc'     // initial sorting
+      }
+    }, {
+        total: $scope.users.length, // length of data
+        getData: function($defer, params) {
+          // use built-in angular filter
+          var orderedData = params.sorting() ?
+                            $filter('orderBy')($scope.users, params.orderBy()) :
+                            $scope.users;
+          $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+  }
+])
