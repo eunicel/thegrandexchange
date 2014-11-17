@@ -81,3 +81,10 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies'], function($httpPro
     }
   };
 }])
+.factory('users', ['$http', function($http) {
+  return {
+    post: function(userData) {
+      return $http.post('/users', userData);
+    }
+  };
+}])
