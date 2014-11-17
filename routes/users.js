@@ -59,23 +59,20 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
   });
 });
 
-// POST /users/:user_id/reviews
-// add review for user with user_id
-router.post('/:user_id/reviews', function(req, res) {
+// POST /users/:user_id/transactions/:transaction_id
+// rate and review transaction with transaction_id with user user_id
+router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
+  var transaction_id = req.param('transaction_id');
   var review = req.body.review;
-  User.addReview(user_id, review, function(user) {
-    if(user != null){
-      res.json({user: user, success: true});
-    } else {
-      res.json({success: false});
-    }
+  Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
+    res.json({transaction: transaction});
   });
 });
 
 // GET /users/:user_id/reviews
 // get all reviews for a user
-router.post('/:user_id/reviews', function(req, res) {
+router.get('/:user_id/reviews', function(req, res) {
   var user_id = req.param('user_id');
   User.getReviews(user_id, function(reviews) {
     if(reviews != null) {
@@ -85,6 +82,20 @@ router.post('/:user_id/reviews', function(req, res) {
     }
   });
 });
+
+// GET /users/:user_id/offers
+// get all offers for a user
+router.get('/:user_id/offers', function(req, res) {
+  var user_id = req.param('user_id');
+  User.getOffers(user_id, function(offers) {
+    if(offers != null) {
+      res.json({offers: offers, success: true});
+    } else {
+      res.json({success: false});
+    }
+  });
+});
+
 
 // POST /users/:user_id/transactions/:transaction_id - rate transaction (not implemented for MVP)
 

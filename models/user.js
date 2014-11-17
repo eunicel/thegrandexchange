@@ -1,13 +1,25 @@
 var mongoose = require('mongoose');
 var utils = require('../utils');
 
+var reviewSchema = mongoose.Schema({
+  text: String,
+  score: Number
+});
+
 var userSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
   email: String,
   password: String,
   reputation: Number,
-  reviews: []
+  offers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Offer'
+  }],
+  reviews: [{
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
+  }]
 });
 
 // /users/ POST
@@ -65,6 +77,18 @@ userSchema.statics.addReview = function(user_id, review, callback) {
   User.find({id: user_id}, function(err, user) {
     utils.handleError(err);
     user.reviews.push(review);
+    user.reputation.$inc(review.score);
+    user.save();
+    callback(user);
+  });
+}
+
+// GET /users/user_id/offers
+// get all offers for user with specified user_id
+userSchema.statics.getOffers = function(user_id, callback) {
+  User.find({id: user_id}, function(err, user) {
+    utils.handleError(err);
+    callback(user.offers);
   });
 }
 
@@ -78,4 +102,10 @@ userSchema.statics.getReviews = function(user_id, callback) {
 }
 
 var User = mongoose.model('User', userSchema);
-module.exports = User;
+var Review = mongoose.model('Review', reviewSchema);
+
+module.exports = {
+  User: User,
+  Review: Review
+};
+

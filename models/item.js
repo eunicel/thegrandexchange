@@ -4,16 +4,25 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var utils = require('../utils');
 
+// Offer schema
+var offerSchema = mongoose.Schema({
+  postedBy: {type: String, ref: 'User'},
+  item: {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Item'
+  },
+  postedAt: Date,
+  price: Number,
+  type: String
+});
+
 // item schema
 var itemSchema = mongoose.Schema({
   name: String,
   description: String,
   offers: [{
-    _id: Number,
-    postedBy: {type: String, ref: 'User'},
-    postedAt: Date,
-    price: Number,
-    type: String
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Offer'
   }]
 });
 
@@ -55,14 +64,19 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 }
 
 // POST - create offer for item
-itemSchema.statics.createOffer = function(item_id, offer, callback) {
-  Item.findOne({_id:item_id}, function(err, item){
-    utils.handleError(err);
-    item.offers.push(offer);
-    item.save(function(err){
-      utils.handleError(err);
-      callback(offer);
-    });
+itemSchema.statics.createOffer = function(item_id, offerData, callback) {
+  // offerData may need to be augmented with item_id and user_id
+  var offer = new Offer(offerData);
+  
+  Item.update({_id: item_id}, {
+    $addToSet: {
+      offers: offer
+    }
+  });
+  User.update({_id: offerData.user_id}, {
+    $addToSet: {
+      offers: offer
+    }
   });
 }
 
@@ -98,7 +112,11 @@ itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
 }
 
 // create model
+var Offer = mongoose.model('Offer', offerSchema);
 var Item = mongoose.model('Item', itemSchema);
 
 // export
-module.exports = Item;
+module.exports = {
+  Offer: Offer,
+  Item: Item
+}
