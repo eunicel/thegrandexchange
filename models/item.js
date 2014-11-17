@@ -32,14 +32,14 @@ itemSchema.statics.createItem = function(name, description, callback) {
     description: description,
     offers: []
   });
-  item.save(function(err, item){
+  item.save(function(err, item) {
     callback(item);
   });
 }
 
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
-  Item.findOne({_id:item_id}, function(err, item) {
+  Item.findOne({_id: item_id}, function(err, item) {
       utils.handleError(err);
       callback(item);
     });
@@ -58,11 +58,11 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 itemSchema.statics.createOffer = function(item_id, offer, callback) {
   Item.findOne({_id:item_id}, function(err, item){
     utils.handleError(err);
-      item.offers.push(offer);
-      item.save(function(err){
-        utils.handleError(err);
-        callback(offer);
-      });
+    item.offers.push(offer);
+    item.save(function(err){
+      utils.handleError(err);
+      callback(offer);
+    });
   });
 }
 
@@ -70,8 +70,8 @@ itemSchema.statics.createOffer = function(item_id, offer, callback) {
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
   Item({_id:item_id}, function(err, item){
     utils.handleError(err);
-    for(offer in item.offers){
-      if(offer_id === offer._id){
+    for (offer in item.offers) {
+      if (offer_id === offer._id) {
         callback(offer);
       }
     }
@@ -83,8 +83,8 @@ itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
 itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
   Item.findOne({_id:item_id}, function(err, item) {
     utils.handleError(err);
-    for(offer in item.offers){
-      if(offer_id === offer._id){
+    for (offer in item.offers) {
+      if (offer_id === offer._id) {
         var index = item.offers.indexOf(offer_id);
         item.offers.splice(index, 1);
         item.save(function(err, offer){
