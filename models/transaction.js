@@ -26,6 +26,9 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
   transaction = new Transaction({
     buyOffer: buyOffer,
     sellOffer: sellOffer,
+    buyerRated: false,
+    sellerRated: false,
+    item: buyOffer.item,
     price: price
   });
   transaction.save(function(err, transaction) {
