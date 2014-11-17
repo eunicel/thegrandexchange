@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
 var utils = require('../utils');
 
-var reviewSchema = mongoose.Schema({
-  text: String,
-  score: Number
-});
-
 var userSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
@@ -102,10 +97,12 @@ userSchema.statics.getReviews = function(user_id, callback) {
 }
 
 var User = mongoose.model('User', userSchema);
-var Review = mongoose.model('Review', reviewSchema);
+// var Review = mongoose.model('Review', reviewSchema);
 
-module.exports = {
-  User: User,
-  Review: Review
-};
+// module.exports = {
+//   User: User,
+//   Review: Review
+// };
 
+module.exports = User
+// module.exports = Review;
