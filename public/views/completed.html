@@ -4,7 +4,7 @@
     <div ng-repeat="transaction in transactions" >
       <!-- buy transaction -->
       <div ng-show="isBuyer(transaction)">
-        <div> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.item.sellOffer.firstName}} {{transaction.item.sellOffer.lastName}}</div>
+        <h3> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.sellOffer.postedBy.firstName}} {{transaction.sellOffer.postedBy.lastName}}</h3>
         <form ng-submit="review()">
           <div class="form-group" >
             Was the transaction completed in person?
@@ -17,8 +17,8 @@
         </form>
       </div>
       <!-- sell transaction -->
-      <div ng-show="!isBuyer">
-        <div> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}</div>
+      <div ng-show="!isBuyer(transaction)">
+        <h3> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}</h3>
         <form ng-submit="review()">
           <div class="form-group" >
             Was the transaction completed in person?
