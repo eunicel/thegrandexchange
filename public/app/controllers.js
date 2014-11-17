@@ -22,7 +22,7 @@ angular.module('thegrandexchange')
   function($http, $scope, $location, session) {
     if (session.name()) {
       $http.post('/sessions', session.name()).success(function(response) {
-        if (response.success) {
+        if (response.success === true) {
           $location.path('marketplace');
         } else {
           session.clear();
@@ -31,18 +31,17 @@ angular.module('thegrandexchange')
     }
 
     $scope.authenticate = function() {
-      if ($scope.name === '') { return; }
       var userFields = {
         username: $scope.email,
         password: $scope.password
-      }
+      };
       $http.post('/sessions', userFields).success(function(response) {
         if (response.success === true) {
           session.setName(userFields);
           $location.path('marketplace');
         }
       });
-      $scope.name = '';
+      $scope.email = '';
       $scope.password = '';
     }
 }])

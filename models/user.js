@@ -36,12 +36,9 @@ userSchema.statics.getUserById = function(user_id, callback) {
   });
 }
 
-
+// Here, two arguments are passed to callback: err, user in that order.
 userSchema.statics.getUserByEmail = function(email, callback) {
-  User.findOne({email: email}, function(err, user){
-    utils.handleError(err);
-    callback(user);
-  });
+  User.findOne({email: email}, callback);
 }
 
 // /users/user_id/transactions GET
