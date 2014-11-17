@@ -14,11 +14,9 @@ router.post('/', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
 
-  var fieldEmpty = false;
-  var fieldExists = false;
   User.createUser(firstName, lastName, email, password, function(user) {
     if(firstName === '' || lastName === '' || email === '' || password === '' || user == null){
-      fieldEmpty = true;
+      res.json({success: false});
     } else {
       res.json({user: user, success: true});
     }
