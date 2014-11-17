@@ -21,8 +21,8 @@ var transactionSchema = mongoose.Schema({
 });
 
 // /users/user_id/transactions POST
-// Create a new transaction initially without reviews
-transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, price, callback) {
+// Create a new transaction, add transaction to user's transactions
+transactionSchema.statics.createTransaction = function(userid, buyOffer, sellOffer, price, callback) {
   transaction = new Transaction({
     buyOffer: buyOffer,
     sellOffer: sellOffer,
@@ -33,6 +33,12 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
   });
   transaction.save(function(err, transaction) {
     callback(transaction);
+  });
+
+  User.update({_id: userid}, {
+    $addToSet: {
+      transactions: transaction
+    }
   });
 }
 
