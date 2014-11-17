@@ -67,7 +67,7 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
   var offer = new Offer(offerData);
-  
+
   Item.update({_id: item_id}, {
     $addToSet: {
       offers: offer

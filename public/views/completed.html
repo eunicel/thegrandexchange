@@ -1,0 +1,34 @@
+<div class="page-header" ng-controller="CompletedCtrl">
+  <h1>Your Completed Transactions</h1>
+  <hr>
+    <div ng-repeat="transaction in transactions" >
+      <!-- buy transaction -->
+      <div ng-show="isBuyer(transaction)">
+        <div> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.item.sellOffer.firstName}} {{transaction.item.sellOffer.lastName}}</div>
+        <form ng-submit="review()">
+          <div class="form-group" >
+            Was the transaction completed in person?
+            <input type="checkbox">
+          </div>
+          <div class="form-group" >
+            <textarea class="review form-control" rows="3" placeholder="Enter your review here"></textarea>
+          </div>
+          <input name="submit_review" class="btn btn-default" type="submit"></input>
+        </form>
+      </div>
+      <!-- sell transaction -->
+      <div ng-show="!isBuyer">
+        <div> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}</div>
+        <form ng-submit="review()">
+          <div class="form-group" >
+            Was the transaction completed in person?
+            <input type="checkbox">
+          </div>
+          <div class="form-group" >
+            <textarea class="review form-control" rows="3" placeholder="Enter your review here"></textarea>
+          </div>
+          <input name="submit_review" class="btn btn-default" type="submit"></input>
+        </form>
+      </div>
+    </div>
+</div>

@@ -16,7 +16,7 @@ var transactionSchema = mongoose.Schema({
   item: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item'
-  }
+  },
   price: Number
 });
 

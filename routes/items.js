@@ -55,14 +55,19 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
   });
 });
 
-// POST /items/item_id/offers/offer_id
+// POST /items/:item_id/offers/offer_id
 // create new offer
 router.post('/:item_id/offers', function(req, res) {
   var item_id = req.param('item_id');
 
   Item.getItemById({_id: item_id}, function(item){
     var offers = item.offers;
-    var id = offers[offers.length-1]._id+1;
+    var id;
+    if(offers.length === 0){
+      id = 0;
+    } else {
+      offers[offers.length-1]._id+1;
+    }
     var offer = {
       _id: id,
       postedBy: req.body.postedBy,
