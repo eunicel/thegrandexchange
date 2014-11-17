@@ -2,3 +2,26 @@
     width:80%;
     height:50px;
 }
+.item{
+  height:200px;
+  border:1px solid;
+  border-radius:5px;
+  border-color:#E8E8E8;
+  margin:5px;
+  padding:10px;
+}
+.item:hover{
+  background-color: #E8E8E8;
+}
+.items_container{
+  padding:20px;
+}
+.item_details{
+  border-radius:4px;
+  border:1px solid;
+  border-color:#E8E8E8;
+  height:125px;
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:2px;
+}

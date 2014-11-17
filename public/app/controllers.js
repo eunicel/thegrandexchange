@@ -13,6 +13,21 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
+
+    // marketplace
+    var clicker = {
+      name:'clicker',
+      description:'click click click'
+    }
+    var book = {
+      name:'book',
+      description:'asdfasdfasdf'
+    }
+    var bike = {
+      name:'bike',
+      description:'bicyclesssss'
+    }
+    $scope.items = [clicker, book, bike];
 }])
 .controller('LoginCtrl', [
   '$http',
@@ -168,12 +183,8 @@ angular.module('thegrandexchange')
       console.log(transaction.buyOffer.postedBy.email);
       console.log(transaction.sellOffer.postedBy.email);
       if(transaction.buyOffer.postedBy.email === session.name().username){
-        console.log('buyer');
-        //$scope.buyer = transaction.buyOffer.postedBy;
         return true;
       } else if (transaction.sellOffer.postedBy.email === session.name().username){
-        console.log('seller');
-        //$scope.seller = transaction.sellOffer.postedBy;
         return false;
       } else {
         console.log("Logged in user did not match buyer or seller.");
