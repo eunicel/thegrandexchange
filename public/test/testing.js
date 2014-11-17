@@ -1,17 +1,42 @@
-/**
- * Authors: Rujia Zha, George Du
- */
+// Tests
 
 (function() {
-  var connectionString = 'http://teammotivate-dug.rhcloud.com/';
-  // var connectionString = 'http://localhost:8080/';
+  var connectionString = 'http://localhost:8080/';
+
+  // create user
+  asyncTest('create user', function() {
+    $.ajax({
+      type: 'POST',
+      url: connectionString + 'users',
+      dataType: 'json',
+      data: {
+        firstName: 'Eunice',
+        lastName: 'Lin',
+        email: 'eunicel@mit.edu',
+        password: 'asdf'
+      },
+      success : function(data) {
+        console.log(data);
+        ok(!data.success);
+        start();
+      },
+      failure : function(err) {
+        console.log('Test failed with error: ' + err);
+      }
+    });
+  });
 
   asyncTest('creating the same user again', function() {
     $.ajax({
       type: 'POST',
       url: connectionString + 'users',
       dataType: 'json',
-      data: { username: 'testuser', password: 'asdfjkll' },
+      data: {
+        firstName: 'Eunice',
+        lastName: 'Lin',
+        email: 'eunicel@mit.edu',
+        password: 'asdf'
+      },
       success : function(data) {
         console.log(data);
         ok(!data.success);

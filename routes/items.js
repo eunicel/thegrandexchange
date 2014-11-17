@@ -8,7 +8,11 @@ var utils = require('../utils');
 // get all items
 router.get('/', function(req, res) {
   Item.getItems(function(items) {
-    res.json({items: items});
+    if(items != null){
+      res.json({items: items, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -18,7 +22,11 @@ router.post('/', function(req, res) {
   var name = req.body.name;
   var description = req.body.description;
   Item.createItem(name, description, function(item) {
-    res.json({item: item});
+    if(item != null){
+      res.json({item: item, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -26,7 +34,11 @@ router.post('/', function(req, res) {
 router.get('/:item_id', function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    res.json({item: item});
+    if(item != null){
+      res.json({item: item, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -35,7 +47,11 @@ router.get('/:item_id', function(req, res) {
 router.get('/:item_id/offers/:offer_id', function(req, res) {
   var offer_id = req.param('offer_id');
   Offer.getOfferById(offer_id, function(offer) {
-    res.json({offer: offer});
+    if(offer != null){
+      res.json({offer: offer, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -55,7 +71,11 @@ router.post('/:item_id/offers', function(req, res) {
       type: req.body.type
     }
     Item.createOffer(item_id, offer, function(offer) {
-      res.json({offer: offer});
+      if(offer != null){
+        res.json({offer: offer, success: true});
+      } else {
+        res.json({success: false});
+      }
     });
   });
 
@@ -66,7 +86,11 @@ router.get('/:item_id/offers/_offer_id', function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
   Item.getOfferById(item_id, offer_id, function(offer){
-    res.json({offer: offer});
+    if(offer != null){
+      res.json({offer: offer, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 
@@ -77,7 +101,11 @@ router.delete('/:item_id/offers/:offer_id', function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
   Item.deleteOffer(item_id, offer_id, function(offer) {
-    res.json({offer: offer});
+    if(offer != null){
+      res.json({offer: offer, success: true});
+    } else {
+      res.json({success: false});
+    }
   });
 });
 

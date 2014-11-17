@@ -4,15 +4,23 @@ var User = require('../models/user');
 var Transaction = require('../models/transaction');
 var utils = require('../utils');
 
-// POST /users
-// create new user
+/* POST /users
+ * create new user
+ * firstName, lastName, email, and password cannot be empty
+ */
 router.post('/', function(req, res) {
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
   var email = req.body.email;
   var password = req.body.password;
   User.createUser(firstName, lastName, email, password, function(user) {
-    res.json({user: user});
+    if(firstName === '' || lastName === '' || email === '' || password === ''){
+      res.json({success: false});
+    } else {
+
+
+      res.json({user: user, success: true});
+    }
   });
 });
 

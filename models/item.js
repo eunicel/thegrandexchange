@@ -14,7 +14,7 @@ var itemSchema = mongoose.Schema({
     postedAt: Date,
     price: Number,
     type: String
-  }];
+  }]
 });
 
 // GET - returns all items
