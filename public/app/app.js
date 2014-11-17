@@ -2,7 +2,6 @@
  * Contains the definition of the main module, the configuration, and the
  * services used by the controllers.
  */
-
 angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -103,3 +102,12 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
     }
   };
 }])
+
+// Handle highlighting in the menubar.
+$(document).ready(function() {
+  $('.list-group-item').on('click', function(e) {
+    var previous = $(this).closest(".list-group").children(".active");
+    previous.removeClass('active'); // previous list-item
+    $(e.target).addClass('active'); // activated list-item
+  });
+});
