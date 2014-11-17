@@ -5,22 +5,22 @@ var utils = require('../utils');
 var transactionSchema = mongoose.Schema({
   buy : {
     type : mongoose.Schema.Types.ObjectId,
-    ref : 'Offer'
+    ref : 'User'
   },
   sell : {
     type : mongoose.Schema.Types.ObjectId,
-    ref : 'Offer'
+    ref : 'User'
   },
-  reviews: [String]
+  price: Number
 });
 
 // /users/user_id/transactions POST
 // Create a new transaction initially without reviews
-transactionSchema.statics.createTransaction = function(buy, sell, callback) {
+transactionSchema.statics.createTransaction = function(buyer, seller, price, callback) {
   transaction = new Transaction({
-    buy: buy,
-    sell: sell,
-    reviews: []
+    buyer: buy,
+    seller: sell,
+    price: price
   });
   transaction.save(function(err, transaction) {
     callback(transaction);
@@ -30,15 +30,18 @@ transactionSchema.statics.createTransaction = function(buy, sell, callback) {
 // /users/user_id/transactions/transaction_id GET
 // Get transaction by id
 transactionSchema.statics.getTransactionById = function(userid, transactionid, callback) {
-  Transaction.findOne({_id:transactionid}).populate('buy').populate('sell').exec(function(err, poptransaction) {
-    utils.handleError(err);
-    if (poptransaction.buy.postedBy === userid || poptransaction.sell.postedBy === userid) {
-      callback(transaction);
-    }
-    else {
-      callback("You are not authorized to view this transaction");
-    }
-  });
+  Transaction.findOne({_id:transactionid})
+    .populate('buyer')
+    .populate('seller')
+    .exec(function(err, transaction) {
+      utils.handleError(err);
+      if (transaction.buyer.postedBy._id === userid || transaction.sell.postedBy._id === userid) {
+        callback(transaction);
+      }
+      else {
+        callback("You are not authorized to view this transaction");
+      }
+    });
 }
 
 // /users/user_id/transactions/transaction_id PUT

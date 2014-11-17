@@ -6,7 +6,8 @@ var userSchema = mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  reputation: Number
+  reputation: Number,
+  reviews: []
 });
 
 // /users/ POST
@@ -17,38 +18,65 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
     lastName: lastName,
     email: email,
     password: password,
-    reputation: 0
+    reputation: 0,
+    reviews: []
   });
   user.save(function(err, user){
+    utils.handleError(err);
     callback(user);
   });
 }
 
 // /users/user_id GET
 // Get user by id
-userSchema.statics.getUserById = function(userid, callback) {
-  User.findOne({_id: userid}, function(err, user) {
+userSchema.statics.getUserById = function(user_id, callback) {
+  User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     callback(user);
   });
 }
 
+
 userSchema.statics.getUserByEmail = function(email, callback) {
-  User.findOne({email: email}, callback);
+  User.findOne({email: email}, function(err, user){
+    utils.handleError(err);
+    callback(user);
+  });
 }
 
 // /users/user_id/transactions GET
 // Get all transactions of a user
-userSchema.statics.getUserTransactions = function(userid, callback) {
-  Transaction.find({}).populate('buy').populate('sell').exec(function(err, alltransactions) {
-    utils.handleError(err);
-    var usertransactions = [];
-    for (t in alltransactions) {
-      if (t.buy.postedBy === userid || t.sell.postedBy === userid) {
-        usertransactions.push(t);
+userSchema.statics.getUserTransactions = function(user_id, callback) {
+  Transaction.find({})
+    .populate('buyer')
+    .populate('seller')
+    .exec(function(err, all_transactions) {
+      utils.handleError(err);
+      var user_transactions = [];
+      for (t in all_transactions) {
+        if (t.buyer.postedBy._id === user_id || t.seller.postedBy._id === user_id) {
+          user_transactions.push(t);
+        }
       }
-    }
-    callback(usertransactions);
+      callback(user_transactions);
+  });
+}
+
+// POST /users/user_id/reviews
+// add new review for user with specified user_id
+userSchema.statics.addReview = function(user_id, review, callback) {
+  User.find({id:user_id}, function(err, user){
+    utils.handleError(err);
+    user.reviews.push(review);
+  });
+}
+
+// GET /users/user_id/reviews
+// get all reviews for user with specified user_id
+userSchema.statics.getReviews = function(user_id, callback){
+  User.find({id:user_id}, function(err, user){
+    utils.handleError(err);
+    callback(user.reviews);
   });
 }
 
