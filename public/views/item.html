@@ -1,0 +1,28 @@
+<div class="page-header" ng-controller="ItemCtrl">
+  <hr>
+  <div class="item_left">
+    <h3>Sell:</h3>
+    <div ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order">
+      ${{sell.price}} {{sell.postedBy.firstName}} {{sell.postedBy.lastName}}
+    </div>
+    <h1 class="item_name">{{item.name}}</h1>
+    <h3>Buy:</h3>
+    <div ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order">
+      ${{buy.price}} {{buy.postedBy.firstName}} {{buy.postedBy.lastName}}
+    </div>
+  </div>
+  <div class="item_right">
+  </div>
+
+  <form class="item_description">
+    <h3> Description:</h3>
+    <h4>{{item.description}}</h4>
+    <h3>I'm willing to:</h3>
+    <button class="btn btn-default bid_button"><h4>Buy</h4></button><br>
+    <button class="btn btn-default bid_button"><h4>Sell</h4></button>
+    <div class="enter_price">
+      for $ <input class="price" type="text"></input>
+    </div>
+  </form>
+  </div>
+</div>

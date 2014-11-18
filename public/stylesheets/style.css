@@ -25,3 +25,36 @@
   margin-bottom:5px;
   padding:2px;
 }
+.item_description{
+  width:50%;
+  display:inline-block;
+}
+.bid_button{
+  padding-top:2px;
+  padding-bottom:2px;
+  padding-left:20px;
+  padding-right:20px;
+  margin-top:3px;
+  margin-bottom:3px;
+  margin-right:15px;
+}
+.enter_price{
+  display:inline-block;
+  vertical-align: middle;
+  position:absolute;
+  font-size:x-large;
+}
+.price{
+  width:90px;
+}
+.item_left{
+  display:inline-block;
+  width:40%;
+}
+.item_right{
+  display:inline-block;
+}
+.item_name{
+  margin-top:20px;
+  margin-bottom: 20px;
+}

@@ -3,7 +3,8 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($scope, $location, session) {
+  'items',
+  function($scope, $location, session, items) {
 
     $scope.isLoggedIn = function() {
       return session.name() !== undefined;
@@ -13,21 +14,18 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
-
-    // marketplace
-    var clicker = {
-      name:'clicker',
-      description:'click click click'
+    $scope.toItem = function(item){
+      $location.url('items/'+ item._id);
     }
-    var book = {
-      name:'book',
-      description:'asdfasdfasdf'
-    }
-    var bike = {
-      name:'bike',
-      description:'bicyclesssss'
-    }
-    $scope.items = [clicker, book, bike];
+    console.log(items);
+    items.getAll().success(function(response) {
+      if (response.success === true) {
+        $scope.items = response.items;
+      }
+      else {
+        $scope.items = [{name:'no items found', description:'rekt'}];
+      }
+    });
 }])
 .controller('LoginCtrl', [
   '$http',
@@ -182,8 +180,6 @@ angular.module('thegrandexchange')
       price: 6
     }]
     $scope.isBuyer = function(transaction){
-      console.log(transaction.buyOffer.postedBy.email);
-      console.log(transaction.sellOffer.postedBy.email);
       if(transaction.buyOffer.postedBy.email === session.name().username){
         return true;
       } else if (transaction.sellOffer.postedBy.email === session.name().username){
@@ -203,8 +199,13 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
-    $scope.name = session.name().username;
+  'users',
+  function($http, $scope, $location, session, users) {
+    users.get(session.name()._id).success(function(response) {
+      if (response.success === true) {
+        $scope.user = response.user;
+      }
+    });
   }
 ])
 .controller('OffersCtrl', [
@@ -235,3 +236,106 @@ angular.module('thegrandexchange')
     });
   }
 ])
+.controller('ItemCtrl', [
+  '$http',
+  '$scope',
+  '$location',
+  'session',
+  function($http, $scope, $location, session) {
+    var date = new Date();
+    var clicker = {
+      name: 'clicker',
+      description: 'click click click'
+    }
+    var eunice = {
+      firstName: 'Eunice',
+      lastName: 'Lin',
+      email: 'eunicel@mit.edu',
+      password: 'asdf'
+    }
+    var jeffrey = {
+      firstName: 'Jeffrey',
+      lastName: 'Sun',
+      email: 'jeffrey@mit.edu',
+      password: 'asdf'
+    }
+    var george = {
+      firstName: 'George',
+      lastName: 'Du',
+      email: 'gdu@mit.edu',
+      password: 'asdf'
+    }
+    var ami = {
+      firstName: 'Ami',
+      lastName: 'Suzuki',
+      email: 'ami@mit.edu',
+      password: 'asdf'
+    }
+    $scope.item = {
+      name: 'Clicker',
+      description: 'yada yada yada yada yada yada yada yada yada yada yada yada',
+      offers: [
+      {
+        postedBy: eunice,
+        item: clicker,
+        postedAt: date,
+        price: 3.5,
+        type: 'buy'
+      },
+      {
+        postedBy: ami,
+        item: clicker,
+        postedAt: date,
+        price: 5,
+        type: 'buy'
+      },
+      {
+        postedBy: george,
+        item: clicker,
+        postedAt: date,
+        price: 4,
+        type: 'buy'
+      },
+      {
+        postedBy: jeffrey,
+        item: clicker,
+        postedAt: date,
+        price: 3,
+        type: 'buy'
+      },
+      {
+        postedBy: eunice,
+        item: clicker,
+        postedAt: date,
+        price: 4,
+        type: 'sell'
+      },
+      {
+        postedBy: jeffrey,
+        item: clicker,
+        postedAt: date,
+        price: 10,
+        type: 'sell'
+      },
+      {
+        postedBy: george,
+        item: clicker,
+        postedAt: date,
+        price: 100,
+        type: 'sell'
+      },
+      {
+        postedBy: ami,
+        item: clicker,
+        postedAt: date,
+        price: 4,
+        type: 'sell'
+      }]
+    }
+    $scope.order = 'price';
+
+  }
+])
+
+
+

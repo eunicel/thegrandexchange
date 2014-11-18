@@ -80,6 +80,11 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
       templateUrl: '/views/profile.html',
       controller: 'ProfileCtrl'
     })
+    .state('item', {
+      url: '/items/{id}',
+      templateUrl: '/views/item.html',
+      controller: 'ItemCtrl'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 .factory('session', ['$cookieStore', function($cookieStore) {
@@ -120,22 +125,22 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
 .factory('items', ['$http', function($http) {
   return {
     getAll: function() {
-      return 0;
+      return $http.get('/api/items');
     },
-    create: function() {
-      return 0;
+    create: function(newItem) {
+      return $http.post('/api/items', newItem);
     },
-    get: function() {
-      return 0;
+    get: function(itemID) {
+      return $http.get('/api/items/' + itemID);
     },
-    getOffers: function() {
-      return 0;
+    getOffers: function(itemID) {
+      return $http.get('/api/items/' + itemID + '/offers');
     },
-    postOffer: function() {
-      return 0;
+    postOffer: function(itemID, offer) {
+      return $http.post('/api/items/' + itemID + '/offers', offer);
     },
-    deleteOffer: function() {
-      return 0;
+    deleteOffer: function(itemID, offerID) {
+      return $http.delete('/api/items/' + itemID + '/offers/' + offerID);
     }
   }
 }])
