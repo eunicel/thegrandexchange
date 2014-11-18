@@ -75,16 +75,18 @@ angular.module('thegrandexchange')
         lastName: $scope.lastName,
         email: $scope.email,
         password: $scope.password
-      }
-      users.create(newUser).then(
-        function (results) {
-          if (results.data) {
-            $location.path('sessions');
-          }
-          else {
-            alert('rekt');
-          }
-        });
+      };
+      users.create(newUser).then(function (response) {
+        console.log(response)
+        if (response.data) {
+          $location.path('sessions');
+        }
+        else {
+          alert('rekt');
+        }
+      }, function(error) {
+        console.log(error);
+      });
       $scope.name = '';
       $scope.password = '';
       $scope.department = '';
