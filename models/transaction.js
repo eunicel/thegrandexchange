@@ -49,7 +49,7 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
     }
   }, function(err, numaffected, doc) {
   });
-}
+};
 
 // /users/user_id/transactions/transaction_id GET
 // Get transaction by id
@@ -66,7 +66,7 @@ transactionSchema.statics.getTransactionById = function(user_id, transaction_id,
         callback("You are not authorized to view this transaction");
       }
     });
-}
+};
 
 // /users/user_id/transactions/transaction_id PUT
 // Add a review to a transaction
@@ -93,7 +93,7 @@ transactionSchema.statics.addTransactionReview = function(userid, transactionid,
       callback("You're not authorized to review this transaction, or you already reviewed it.");
     }
   });
-}
+};
 
 // POST
 // Rate a transaction: Changes reputation of other user in transaction

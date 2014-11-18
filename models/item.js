@@ -38,7 +38,7 @@ itemSchema.statics.getItems = function(callback) {
     utils.handleError(err);
     callback(items);
   });
-}
+};
 
 // POST - create new item
 itemSchema.statics.createItem = function(name, description, callback) {
@@ -50,7 +50,7 @@ itemSchema.statics.createItem = function(name, description, callback) {
   item.save(function(err, item) {
     callback(item);
   });
-}
+};
 
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
@@ -60,7 +60,7 @@ itemSchema.statics.getItemById = function(item_id, callback) {
     utils.handleError(err);
     callback(item);
   });
-}
+};
 
 // GET - get offers of item
 itemSchema.statics.getItemOffers = function(item_id, callback) {
@@ -71,8 +71,7 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
     var offers = item.offers;
     callback(offers);
   });
-}
-
+};
 
 // POST - create offer for item
 // Check for offer matches and create Transactions
@@ -95,15 +94,14 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
     })
     .exec(function(err, item) {
       utils.handleError(err);
-      var minSell = undefined;
       for (var i = 0; i<item.offers.length; i++) {
         if (item.offers[i].price <= offer.price ) { // possible match
-          if (minSell == undefined || item.offers[i].price < minSell) {
+          if (minSell === undefined || item.offers[i].price < minSell) {
             minSell = item.offers[i];
           }
         }
       }
-      if (! minSell) { // no matching offers; store offer for User and Item
+      if (!minSell) { // no matching offers; store offer for User and Item
         Item.update({_id: item_id}, {
           $addToSet: {
             offers: offer
@@ -134,10 +132,9 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
     })
     .exec(function(err, item) {
       utils.handleError(err);
-      var maxBuy = undefined;
-      for (var i = 0; i<item.offers.length; i++) {
+      for (var i = 0; i < item.offers.length; i++) {
         if (item.offers[i].price >= offer.price ) { // possible match
-          if (maxBuy == undefined || item.offers[i].price > maxBuy) {
+          if (maxBuy === undefined || item.offers[i].price > maxBuy) {
             maxBuy = item.offers[i];
           }
         }
@@ -165,7 +162,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       }
     });
   }
-}
+};
 
 // GET - get offer by id
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
@@ -181,7 +178,7 @@ itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
       callback("Failed to find offer with given id.");
     }
   });
-}
+};
 
 // Helper function to remove offer from Item and User
 itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, callback) {
@@ -203,7 +200,7 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
       });
     });
   });
-}
+};
 
 // DELETE - delete offer
 itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
@@ -211,7 +208,7 @@ itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
     utils.handleError(err);
     callback(offer);
   });
-}
+};
 
 // create model
 var Item = mongoose.model('Item', itemSchema);
@@ -220,4 +217,4 @@ var Item = mongoose.model('Item', itemSchema);
 module.exports = {
   Offer: Offer,
   Item: Item
-}
+};

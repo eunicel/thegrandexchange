@@ -27,7 +27,7 @@ router.post('/', function(req, res) {
   }
 
   Item.createItem(name, description, function(item) {
-    if(item != null){
+    if(item !== null) {
       res.json({item: item, success: true});
     } else {
       res.json({success: false});
@@ -39,7 +39,7 @@ router.post('/', function(req, res) {
 router.get('/:item_id', function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    if(item != null){
+    if(item !== null) {
       res.json({item: item, success: true});
     } else {
       res.json({success: false});
@@ -51,7 +51,7 @@ router.get('/:item_id', function(req, res) {
 router.get('/:item_id/offers', function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    if(item != null){
+    if(item !== null){
       res.json({offers: item.offers, success: true});
     } else {
       res.json({success: false});
@@ -79,9 +79,9 @@ router.post('/:item_id/offers', function(req, res) {
       price: req.body.price,
       type: req.body.type,
       item: item_id
-    }
+    };
     Item.createOffer(item_id, offer, function(offer) {
-      if(offer != null){
+      if(offer !== null) {
         res.json({offer: offer, success: true});
       } else {
         res.json({success: false});
@@ -96,7 +96,7 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
   Item.getOfferById(item_id, offer_id, function(offer){
-    if(offer != null){
+    if(offer !== null) {
       res.json({offer: offer, success: true});
     } else {
       res.json({success: false});
@@ -111,7 +111,7 @@ router.delete('/:item_id/offers/:offer_id', function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
   Item.deleteOffer(item_id, offer_id, function(offer) {
-    if(offer != null){
+    if(offer !== null) {
       res.json({offer: offer, success: true});
     } else {
       res.json({success: false});
