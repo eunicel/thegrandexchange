@@ -21,21 +21,29 @@ var userSchema = mongoose.Schema({
   }]
 });
 
+userSchema.statics.userExists = function(email, callback) {
+  User.find({email: email}, function(err, users) {
+    callback(users.length > 0);
+  });
+}
+
 // /users/ POST
 // Create a new user
 userSchema.statics.createUser = function(firstName, lastName, email, password, callback) {
-  user = new User({
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: password,
-    reputation: 0,
-    reviews: [],
-    transactions: []
-  });
-  user.save(function(err, user){
-    utils.handleError(err);
-    callback(user);
+  User.find({email: email}, function(err, users) {
+    user = new User({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      reputation: 0,
+      reviews: [],
+      transactions: []
+    });
+    user.save(function(err, user){
+      utils.handleError(err);
+      callback(user);
+    });
   });
 }
 
@@ -69,7 +77,9 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
   //     }
   //     callback(user_transactions);
   // });
-  User.findOne({_id: user_id}, function(err, user) {
+  User.findOne({_id: user_id})
+  .populate('transactions.transaction')
+  .exec(function(err, transactions) {
     utils.handleError(err);
     callback(user.transactions);
   });

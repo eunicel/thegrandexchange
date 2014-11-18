@@ -3,7 +3,8 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($scope, $location, session) {
+  'items',
+  function($scope, $location, session, items) {
 
     $scope.isLoggedIn = function() {
       return session.name() !== undefined;
@@ -13,27 +14,15 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
-
-    // marketplace
-    var clicker = {
-      _id: '546a926baffef9a915acf96b',
-      name:'clicker',
-      description:'click click click'
-    }
-    var book = {
-      _id: '546a9258feb618a71515cc96',
-      name:'book',
-      description:'asdfasdfasdf'
-    }
-    var bike = {
-      _id: '546a2a0fb1ced4910b80d11a',
-      name:'bike',
-      description:'bicyclesssss'
-    }
-    $scope.items = [clicker, book, bike];
-    $scope.toItem = function(item){
-      $location.url('items/'+ item._id);
-    }
+    console.log(items);
+    items.getAll().success(function(response) {
+      if (response.success === true) {
+        $scope.items = response.items;
+      }
+      else {
+        $scope.items = [{name:'no items found', description:'rekt'}];
+      }
+    });
 }])
 .controller('LoginCtrl', [
   '$http',
@@ -207,8 +196,13 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
-    $scope.name = session.name().username;
+  'users',
+  function($http, $scope, $location, session, users) {
+    users.get(session.name()._id).success(function(response) {
+      if (response.success === true) {
+        $scope.user = response.user;
+      }
+    });
   }
 ])
 .controller('OffersCtrl', [
