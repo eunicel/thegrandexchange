@@ -41,7 +41,6 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
       transactions: transaction
     }
   }, function(err, numaffected, doc) {
-    console.log("added transaction to buyer");
   });
 
   User.update({_id: sellOffer.postedBy}, {
@@ -49,7 +48,6 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
       transactions: transaction
     }
   }, function(err, numaffected, doc) {
-    console.log("added transaction to seller!!!");
   });
 }
 
@@ -57,8 +55,8 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
 // Get transaction by id
 transactionSchema.statics.getTransactionById = function(userid, transactionid, callback) {
   Transaction.findOne({_id:transactionid})
-    .populate('buyOffer', 'postedBy')
-    .populate('sellOffer', 'postedBy')
+    .populate('buyOffer sellOffer')
+    .populate('buyOffer.postedBy sellOffer.postedBy')
     .exec(function(err, transaction) {
       utils.handleError(err);
       if (transaction.buyOffer.postedBy === userid || transaction.sellOffer.postedBy === userid) {
