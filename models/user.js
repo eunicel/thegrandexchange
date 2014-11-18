@@ -50,7 +50,9 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
 // /users/user_id GET
 // Get user by id
 userSchema.statics.getUserById = function(user_id, callback) {
-  User.findOne({_id: user_id}, function(err, user) {
+  User.findOne({_id: user_id})
+  .populate('offers transactions')
+  .exec(function(err, user) {
     utils.handleError(err);
     callback(user);
   });

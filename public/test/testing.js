@@ -74,6 +74,7 @@
     });
   });
   var item_id;
+
   // create item
   asyncTest('create item', function(){
     $.ajax({

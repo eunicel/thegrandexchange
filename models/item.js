@@ -80,8 +80,6 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
     utils.handleError(err);
   });
 
-  // console.log(offer);
-
   //offer matching
   // buy: match with LOWEST sell offer
   // sell: match with HIGHEST buy offer where sell < buy
@@ -91,14 +89,13 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       path: 'offers',
       match: { type: "sell"},
     })
-    // .populate('offers', null, {type: "sell"})
     .exec(function(err, item) {
       utils.handleError(err);
       var minSell = undefined;
-      for (selloffer in item.offers) {
-        if (selloffer.price <= offer.price ) { // possible match
-          if (minSell == undefined || selloffer.price < minSell) {
-            minSell = selloffer;
+      for (var i = 0; i<item.offers.length; i++) {
+        if (item.offers[i].price <= offer.price ) { // possible match
+          if (minSell == undefined || item.offers[i].price < minSell) {
+            minSell = item.offers[i];
           }
         }
       }
@@ -108,39 +105,36 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             offers: offer
           }
         }, function(err, numaffected, doc) {
-          console.log("added buy offer!!!");
-          console.log(doc);
         });
-        User.update({_id: offerData.user_id}, {
+        User.update({_id: offerData.postedBy}, {
           $addToSet: {
             offers: offer
           }
+        }, function(err, numaffected, doc) {
         });
         callback("No match");
       }
-      else { // matching offers: create new transaction and store it under user
-        Transaction.createTransaction(offer, minSell, price, function(transaction) {
+      else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
+        Transaction.createTransaction(offer, minSell, minSell.price, function(transaction) {
+          Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
           callback(transaction);
         });
       }
     });
-    // Item.findOne({_id:item_id})
-    // .populate('offers')
-    // .exec(function(err,item) {
-    //   console.log("this is the item!");
-    //   console.log(item);
-    // });
   }
-  if (offer.type === "sell") {
-    Item.findOne({_id:item_id})
-    .populate('offers', null, {type: "buy"})
+  else { // sell offer
+    Item.findOne({_id: item_id})
+    .populate({
+      path: 'offers',
+      match: { type: "buy"},
+    })
     .exec(function(err, item) {
       utils.handleError(err);
       var maxBuy = undefined;
-      for (buyoffer in item.offers) {
-        if (buyoffer.price >= offer.price ) { // possible match
-          if (maxBuy == undefined || buyoffer.price > maxBuy) {
-            maxBuy = buyoffer;
+      for (var i = 0; i<item.offers.length; i++) {
+        if (item.offers[i].price >= offer.price ) { // possible match
+          if (maxBuy == undefined || item.offers[i].price > maxBuy) {
+            maxBuy = item.offers[i];
           }
         }
       }
@@ -149,16 +143,19 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
           $addToSet: {
             offers: offer
           }
+        }, function(err, numaffected, doc) {
         });
-        User.update({_id: offerData.user_id}, {
+        User.update({_id: offerData.postedBy}, {
           $addToSet: {
             offers: offer
           }
+        }, function(err, numaffected, doc) {
         });
         callback("No match");
       }
-      else { // matching offers: create new transaction and store it under user
-        Transaction.createTransaction(maxBuy, offer, price, function(transaction) {
+      else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
+        Transaction.createTransaction(maxBuy, offer, offer.price, function(transaction) {
+          Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
           callback(transaction);
         });
       }
@@ -180,6 +177,28 @@ itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
   });
 }
 
+// Helper function to remove offer from Item and User
+itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, callback) {
+  Item.findOne({ _id: item_id}, function(err, item) {
+    utils.handleError(err);
+    item.offers.remove(offer_id);
+    item.save(function(err, item){
+      utils.handleError(err);
+    });
+    Offer.findOne({_id:offer_id}, function(err, offer) {
+      utils.handleError(err);
+      User.findOne({_id: offer.postedBy}, function(err, user) {
+          utils.handleError(err);
+          user.offers.remove(offer_id);
+          user.save(function(err, user){
+            utils.handleError(err);
+          });
+          callback(offer);
+      });
+    });
+  });
+}
+
 // DELETE - delete offer
 itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
   Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
@@ -189,7 +208,6 @@ itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
 }
 
 // create model
-
 var Item = mongoose.model('Item', itemSchema);
 
 // export

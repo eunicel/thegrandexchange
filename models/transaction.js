@@ -1,6 +1,7 @@
 /* Transaction Model */
 var mongoose = require('mongoose');
 var utils = require('../utils');
+var User = require('../models/user');
 
 var transactionSchema = mongoose.Schema({
   buyOffer : {
@@ -39,12 +40,16 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
     $addToSet: {
       transactions: transaction
     }
+  }, function(err, numaffected, doc) {
+    console.log("added transaction to buyer");
   });
 
   User.update({_id: sellOffer.postedBy}, {
     $addToSet: {
       transactions: transaction
     }
+  }, function(err, numaffected, doc) {
+    console.log("added transaction to seller!!!");
   });
 }
 
