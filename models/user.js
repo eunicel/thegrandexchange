@@ -37,8 +37,9 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
       email: email,
       password: password,
       reputation: 0,
+      offers: []
       reviews: [],
-      transactions: []
+      transactions: [],
     });
     user.save(function(err, user){
       utils.handleError(err);

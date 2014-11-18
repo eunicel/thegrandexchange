@@ -55,9 +55,11 @@ angular.module('thegrandexchange')
           console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
+        } else {
+          $scope.warning = response.data.message;
         }
       }, function(error) {
-        $scope.warning = 'Invalid username or password.';
+        $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';
       $scope.password = '';
@@ -77,15 +79,14 @@ angular.module('thegrandexchange')
         password: $scope.password
       };
       users.create(newUser).then(function (response) {
-        console.log(response)
-        if (response.data) {
+        var data = response.data;
+        if (data.success === true) {
           $location.path('sessions');
-        }
-        else {
-          alert('rekt');
+        } else {
+          $scope.warning = response.data.message;
         }
       }, function(error) {
-        console.log(error);
+        $scope.warning = error.data.message;
       });
       $scope.name = '';
       $scope.password = '';

@@ -13,6 +13,7 @@
   <div class="form-group">
     <input type="password" placeholder="Password" ng-model="password"></input>
   </div>
+  <div ng-show="warning" class="alert alert-danger">{{warning}}</div>
   <button type="submit">Sign Up</button>
   </form>
 </div>
