@@ -1,10 +1,11 @@
 <div class="page-header">
-  <h1>{{name}}</h1>
+  <h1>{{user.email}}</h1>
   <h4>
-    Reputation:
+    Reputation: {{user.reputation}}
   </h4>
 
   <h3>My Reviews</h3>
-  <div>
+  <div ng-repeat="review in user.reviews">
+    {{review.text}}
   </div>
 </div>

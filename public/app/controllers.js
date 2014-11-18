@@ -3,7 +3,8 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($scope, $location, session) {
+  'items',
+  function($scope, $location, session, items) {
 
     $scope.isLoggedIn = function() {
       return session.name() !== undefined;
@@ -13,21 +14,15 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
-
-    // marketplace
-    var clicker = {
-      name:'clicker',
-      description:'click click click'
-    }
-    var book = {
-      name:'book',
-      description:'asdfasdfasdf'
-    }
-    var bike = {
-      name:'bike',
-      description:'bicyclesssss'
-    }
-    $scope.items = [clicker, book, bike];
+    console.log(items);
+    items.getAll().success(function(response) {
+      if (response.success === true) {
+        $scope.items = response.items;
+      }
+      else {
+        $scope.items = [{name:'no items found', description:'rekt'}];
+      }
+    });
 }])
 .controller('LoginCtrl', [
   '$http',
@@ -203,8 +198,13 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
-    $scope.name = session.name().username;
+  'users',
+  function($http, $scope, $location, session, users) {
+    users.get(session.name()._id).success(function(response) {
+      if (response.success === true) {
+        $scope.user = response.user;
+      }
+    });
   }
 ])
 .controller('OffersCtrl', [
