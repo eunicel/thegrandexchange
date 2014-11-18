@@ -117,15 +117,6 @@ userSchema.statics.getOffers = function(user_id, callback) {
   });
 }
 
-// GET /users/user_id/reviews
-// get all reviews for user with specified user_id
-userSchema.statics.getReviews = function(user_id, callback) {
-  User.findOne({_id: user_id}, function(err, user) {
-    utils.handleError(err);
-    callback(user.reviews);
-  });
-}
-
 var User = mongoose.model('User', userSchema);
 // var Review = mongoose.model('Review', reviewSchema);
 
