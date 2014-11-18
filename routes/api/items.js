@@ -8,7 +8,7 @@ var utils = require('../../utils');
 // get all items
 router.get('/', function(req, res) {
   Item.getItems(function(items) {
-    if(items != null){
+    if(items && items.length > 0) {
       res.json({items: items, success: true});
     } else {
       res.json({success: false});
@@ -21,6 +21,11 @@ router.get('/', function(req, res) {
 router.post('/', function(req, res) {
   var name = req.body.name;
   var description = req.body.description;
+
+  if(name === '' || description === ''){
+    return res.json({error: 'All fields are required.', success: false});
+  }
+
   Item.createItem(name, description, function(item) {
     if(item != null){
       res.json({item: item, success: true});
