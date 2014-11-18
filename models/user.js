@@ -55,6 +55,9 @@ userSchema.statics.getUserByEmail = function(email, callback) {
 
 // /users/user_id/transactions GET
 // Get all transactions of a user
+
+//populate item
+//populate buy and sell offer
 userSchema.statics.getUserTransactions = function(user_id, callback) {
   // Transaction.find({})
   //   .populate('buyer')
