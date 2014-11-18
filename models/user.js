@@ -77,7 +77,9 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
   //     }
   //     callback(user_transactions);
   // });
-  User.findOne({_id: user_id}, function(err, user) {
+  User.findOne({_id: user_id})
+  .populate('transactions.transaction')
+  .exec(function(err, transactions) {
     utils.handleError(err);
     callback(user.transactions);
   });

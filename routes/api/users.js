@@ -14,19 +14,19 @@ router.post('/', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
 
-  if(firstName === '' || lastName === '' || email === '' || password === ''){
-    return res.json({error: 'All fields are required.', success: false});
+  if(!firstName || !lastName || !email || !password) {
+    res.json({error: 'All fields are required.', success: false});
+  } else {
+    User.userExists(email, function(exists) {
+      if (exists) {
+        res.json({error: 'User with that email exists.', success: false});
+      } else {  
+        User.createUser(firstName, lastName, email, password, function(user) {
+          return res.json({user: user, success: true});
+        });
+      }
+    });
   }
-
-  User.userExists(email, function(exists) {
-    if (exists) {
-      return res.json({error: 'User with that email exists.', success: false});
-    }
-  });
-
-  User.createUser(firstName, lastName, email, password, function(user) {
-    return res.json({user: user, success: true});
-  });
 });
 
 // GET /users/:user_id
@@ -34,10 +34,10 @@ router.post('/', function(req, res) {
 router.get('/:user_id', function(req, res) {
   var user_id = req.param('user_id');
   User.getUserById(user_id, function(user) {
-    if (user != null) {
+    if (user) {
       res.json({user: user, success: true});
     } else {
-      res.json({success: false});
+      res.json({error: 'User does not exist.', success: false});
     }
   });
 });
@@ -73,19 +73,6 @@ router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var review = req.body.review;
   Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
     res.json({transaction: transaction});
-  });
-});
-
-// GET /users/:user_id/reviews
-// get all reviews for a user
-router.get('/:user_id/reviews', function(req, res) {
-  var user_id = req.param('user_id');
-  User.getReviews(user_id, function(reviews) {
-    if(reviews != null) {
-      res.json({reviews: reviews, success: true});
-    } else {
-      res.json({success: false});
-    }
   });
 });
 
