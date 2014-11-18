@@ -70,7 +70,10 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
 router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
   var transaction_id = req.param('transaction_id');
-  var review = req.body.review;
+  var review = {
+    text: req.body.text,
+    score: req.body.score
+  };
   Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
     res.json({transaction: transaction});
   });
