@@ -100,14 +100,19 @@ angular.module('thegrandexchange')
   'users',
   'session',
   function($http, $scope, $location, users, session) {
-    users.get(session.name()._id).then(function (response) {
-      var user = response.data.user;
-      $scope.transactions = user.transactions;
-    });
+    $http.get('api/users/' + session.name()._id + '/transactions')
+      .success(function(data, status, headers, config){
+        $scope.transactions = data.transactions;
+      });
     $scope.isBuyer = function(transaction){
-      if(transaction.buyOffer.postedBy.email === session.name().username){
+      console.log(transaction);
+      var buyer_id = transaction.buyOffer.postedBy;
+      var seller_id = transaction.sellOffer.postedBy;
+      if(buyer_id === session.name()._id){
+        console.log('is buyer');
         return true;
-      } else if (transaction.sellOffer.postedBy.email === session.name().username){
+      } else if (seller_id === session.name()._id){
+        console.log('is seller');
         return false;
       } else {
         console.log("Logged in user did not match buyer or seller.");

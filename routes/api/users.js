@@ -20,7 +20,7 @@ router.post('/', function(req, res) {
     User.userExists(email, function(exists) {
       if (exists) {
         res.json({message: 'User with that email exists.', success: false});
-      } else {  
+      } else {
         User.createUser(firstName, lastName, email, password, function(user) {
           return res.json({user: user, success: true});
         });
