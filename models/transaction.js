@@ -53,13 +53,13 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, pric
 
 // /users/user_id/transactions/transaction_id GET
 // Get transaction by id
-transactionSchema.statics.getTransactionById = function(userid, transactionid, callback) {
-  Transaction.findOne({_id:transactionid})
-    .populate('buyOffer sellOffer')
-    .populate('buyOffer.postedBy sellOffer.postedBy')
+transactionSchema.statics.getTransactionById = function(user_id, transaction_id, callback) {
+  Transaction.findOne({_id:transaction_id})
+    .populate('buyOffer sellOffer item')
+    // .populate('buyOffer.postedBy sellOffer.postedBy')
     .exec(function(err, transaction) {
       utils.handleError(err);
-      if (transaction.buyOffer.postedBy === userid || transaction.sellOffer.postedBy === userid) {
+      if (transaction.buyOffer.postedBy === user_id || transaction.sellOffer.postedBy === user_id) {
         callback(transaction);
       }
       else {
