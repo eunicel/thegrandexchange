@@ -75,7 +75,8 @@ router.post('/:item_id/offers', function(req, res) {
       postedBy: req.body.postedBy,
       postedAt: req.body.postedAt,
       price: req.body.price,
-      type: req.body.type
+      type: req.body.type,
+      item: item_id
     }
     Item.createOffer(item_id, offer, function(offer) {
       if(offer != null){
