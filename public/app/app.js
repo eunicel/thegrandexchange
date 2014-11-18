@@ -80,6 +80,11 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
       templateUrl: '/views/profile.html',
       controller: 'ProfileCtrl'
     })
+    .state('item', {
+      url: '/items/{id}',
+      templateUrl: '/views/item.html',
+      controller: 'ItemCtrl'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 .factory('session', ['$cookieStore', function($cookieStore) {

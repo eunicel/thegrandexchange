@@ -1,14 +1,8 @@
 var express = require('express');
 var router = express.Router();
-<<<<<<< HEAD:routes/items.js
-var Item = require('../models/item').Item;
-var Offer = require('../models/item').Offer;
-var utils = require('../utils');
-=======
 var Item = require('../../models/item').Item;
 var Offer = require('../../models/item').Offer;
 var utils = require('../../utils');
->>>>>>> 8b072d28c6f4fca110c19742aa777ecc500ff265:routes/api/items.js
 
 // GET /items
 // get all items

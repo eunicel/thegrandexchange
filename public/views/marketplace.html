@@ -1,9 +1,9 @@
-<div class="page-header">
+<div class="page-header" ng-controller="MainCtrl">
   <div class="row items_container">
     <div ng-repeat="item in items">
-      <div class="col-md-2 item">
+      <div class="col-md-2 item" ng-click="toItem(item)">
         <div>Sell: </div>
-        <div class="item_details">
+        <div class="item_details" type="submit">
           <h3>{{item.name}}</h3>
           <div>{{item.description}}</div>
         </div>
