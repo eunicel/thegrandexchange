@@ -47,8 +47,6 @@
           dataType: 'json',
           data: {},
           success: function(data){
-
-
             $.ajax({
               type: 'GET',
               url: connectionString + 'users/' + userid + '/transactions',
@@ -63,13 +61,6 @@
                 console.log("Failed to get user transactions:"+err);
               }
             });
-
-
-
-
-            // console.log(data);
-            // ok(data.success);
-            // start();
           },
           failure: function(err){
             console.log("Failed to get user:"+err);
@@ -81,24 +72,94 @@
       }
     });
   });
+  var item_id;
+  // create item
+  asyncTest('create item', function(){
+    $.ajax({
+      type: 'POST',
+      url: connectionString + 'items',
+      dataType: 'json',
+      data: {
+        name: 'clicker',
+        description: 'this is a description'
+      },
+      success: function(data){
+        console.log(data);
+        item_id = data.item._id;
+        ok(data.success);
+        start();
+      },
+      failure: function(err){
+        console.log('Failed to create item with error: ' + err);
+      }
+    });
+  });
 
-  // get user transactions
-  asyncTest('get user transactions', function() {
+  // get item by id
+  asyncTest('get item by id', function(){
     $.ajax({
       type: 'GET',
-      url: connectionString + 'users/' + testuserid + '/transactions',
+      url: connectionString + 'items/' + item_id,
       dataType: 'json',
-      data: {},
       success: function(data){
         console.log(data);
         ok(data.success);
         start();
       },
       failure: function(err){
-        console.log("Failed to get user transactions:"+err);
+        console.log('Failed to get user by id.');
       }
     });
   });
+
+  // create offer
+  asyncTest('create offer', function(){
+    var date = new Date();
+    var user = {
+      firstName: 'Eunice',
+      lastName: 'Lin',
+      email: 'eunicel@mit.edu',
+      password: 'asdf'
+    }
+    $.ajax({
+      type: 'POST',
+      url: connectionString + 'items/' + item_id +'/offers',
+      dataType: 'json',
+      data: {
+        postedBy: user,
+        postedAt: date,
+        price: 5.5,
+        type: 'buy'
+      },
+      success: function(data){
+        console.log(data);
+        ok(data.success);
+        start();
+      },
+      failure: function(err){
+        console.log('Failed to create new offer.');
+      }
+    });
+  });
+
+
+// get user transactions
+/*asyncTest('get user transactions', function() {
+  $.ajax({
+    type: 'GET',
+    url: connectionString + 'users/' + testuserid + '/transactions',
+    dataType: 'json',
+    data: {},
+    success: function(data){
+      console.log(data);
+      ok(data.success);
+      start();
+    },
+    failure: function(err){
+      console.log("Failed to get user transactions:"+err);
+    }
+  });
+});*/
 
 
 
