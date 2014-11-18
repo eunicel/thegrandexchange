@@ -247,7 +247,8 @@ angular.module('thegrandexchange')
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
+  'items',
+  function($http, $scope, $location, session, items) {
     var date = new Date();
     var clicker = {
       name: 'clicker',
@@ -339,7 +340,20 @@ angular.module('thegrandexchange')
       }]
     }
     $scope.order = 'price';
-
+    $scope.offer = function(type) {
+      // type = 'buy' or 'sell'
+      items.postOffer($scope.item._id, {
+        postedBy: session.username,
+        item: $scope.item._id,
+        postedAt: Date.now(),
+        price: $scope.price,
+        type: type
+      }).then(function(response) {
+        console.log(response);
+      }, function(error) {
+        console.log(error);
+      });
+    }
   }
 ])
 
