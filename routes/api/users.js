@@ -47,7 +47,7 @@ router.get('/:user_id', function(req, res) {
 router.get('/:user_id/transactions', function(req, res) {
   var user_id = req.param('user_id');
   User.getUserTransactions(user_id, function(transactions) {
-    if (transactions != null) {
+    if (transactions !== null) {
       res.json({transactions: transactions, success: true});
     } else {
       res.json({success: false});
@@ -85,7 +85,7 @@ router.get('/:user_id/offers', function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {
     console.log(offers);
-    if(offers != null) {
+    if(offers !== null) {
       res.json({offers: offers, success: true});
     } else {
       res.json({success: false});

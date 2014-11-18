@@ -9,6 +9,6 @@ var Router = function(passport) {
   });
 
   return router;
-}
+};
 
 module.exports = Router;
