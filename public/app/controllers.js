@@ -261,7 +261,7 @@ angular.module('thegrandexchange')
         postedBy: session.username,
         item: $scope.item._id,
         postedAt: Date.now(),
-        price: $scope.price,
+        price: parseInt($scope.price, 10),
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
