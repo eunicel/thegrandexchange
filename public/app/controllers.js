@@ -36,7 +36,7 @@ angular.module('thegrandexchange')
   'session',
   function($http, $scope, $location, session) {
     if (session.name()) {
-      $http.post('/sessions', session.name()).success(function(response) {
+      $http.post('/api/sessions', session.name()).success(function(response) {
         if (response.success === true) {
           $location.path('marketplace');
         } else {
@@ -50,8 +50,10 @@ angular.module('thegrandexchange')
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/sessions', userFields).success(function(response) {
+      $http.post('/api/sessions', userFields).success(function(response) {
         if (response.success === true) {
+          userFields._id = response.userID;
+          console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
         }
@@ -73,7 +75,7 @@ angular.module('thegrandexchange')
         email: $scope.email,
         password: $scope.password
       }
-      users.post(newUser).then(
+      users.create(newUser).then(
         function (results) {
           if (results.data) {
             $location.path('sessions');

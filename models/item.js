@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var utils = require('../utils');
+var Transaction = require('../models/transaction');
 
 // Offer schema
 var offerSchema = mongoose.Schema({
@@ -63,21 +64,80 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
   });
 }
 
+
 // POST - create offer for item
+// Check for offer matches and create Transactions
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
   var offer = new Offer(offerData);
 
-  Item.update({_id: item_id}, {
-    $addToSet: {
-      offers: offer
-    }
-  });
-  User.update({_id: offerData.user_id}, {
-    $addToSet: {
-      offers: offer
-    }
-  });
+  //offer matching
+  // buy: match with LOWEST sell offer
+  // sell: match with HIGHEST buy offer where sell < buy
+  if (offer.type === "buy") {
+    Item.findOne({_id:item_id})
+    .populate('offers', null, {type: "sell"})
+    .exec(function(err, item) {
+      utils.handleError(err);
+      var minSell = undefined;
+      for (selloffer in item.offers) {
+        if (selloffer.price <= offer.price ) { // possible match
+          if (minSell == undefined || selloffer.price < minSell) {
+            minSell = selloffer;
+          }
+        }
+      }
+      if (! minSell) { // no matching offers; store offer for User and Item
+        Item.update({_id: item_id}, {
+          $addToSet: {
+            offers: offer
+          }
+        });
+        User.update({_id: offerData.user_id}, {
+          $addToSet: {
+            offers: offer
+          }
+        });
+      }
+      else { // matching offers: create new transaction and store it under user
+        Transaction.createTransaction(offer, minSell, price, function(transaction) {
+          callback(transaction);
+        });
+      }
+    });
+  }
+  if (offer.type === "sell") {
+    Item.findOne({_id:item_id})
+    .populate('offers', null, {type: "buy"})
+    .exec(function(err, item) {
+      utils.handleError(err);
+      var maxBuy = undefined;
+      for (buyoffer in item.offers) {
+        if (buyoffer.price >= offer.price ) { // possible match
+          if (maxBuy == undefined || buyoffer.price > maxBuy) {
+            maxBuy = buyoffer;
+          }
+        }
+      }
+      if (! maxBuy) { // no matching offers; store offer for User and Item
+        Item.update({_id: item_id}, {
+          $addToSet: {
+            offers: offer
+          }
+        });
+        User.update({_id: offerData.user_id}, {
+          $addToSet: {
+            offers: offer
+          }
+        });
+      }
+      else { // matching offers: create new transaction and store it under user
+        Transaction.createTransaction(maxBuy, offer, price, function(transaction) {
+          callback(transaction);
+        });
+      }
+    });
+  }
 }
 
 // GET - get offer by id

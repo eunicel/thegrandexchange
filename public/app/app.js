@@ -97,10 +97,47 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
 }])
 .factory('users', ['$http', function($http) {
   return {
-    post: function(userData) {
-      return $http.post('/users', userData);
+    create: function(userData) {
+      return $http.post('/api/users', userData);
+    },
+    get: function(userID) {
+      return $http.get('/api/users/' + userID);
+    },
+    getOffers: function(userID) {
+      return $http.get('/api/users/' + userID + '/offers');
+    },
+    getReviews: function(userID) {
+      return $http.get('/api/users/' + userID + '/reviews');
+    },
+    getTransactions: function(userID) {
+      return $http.get('/api/users/' + userID + '/transactions');
+    },
+    postReview: function(userID, transactionID, review) {
+      return $http.post('/api/users/' + userID + '/transactions/' + transactionID, review);
     }
   };
+}])
+.factory('items', ['$http', function($http) {
+  return {
+    getAll: function() {
+      return 0;
+    },
+    create: function() {
+      return 0;
+    },
+    get: function() {
+      return 0;
+    },
+    getOffers: function() {
+      return 0;
+    },
+    postOffer: function() {
+      return 0;
+    },
+    deleteOffer: function() {
+      return 0;
+    }
+  }
 }])
 
 // Handle highlighting in the menubar.
@@ -108,6 +145,11 @@ $(document).ready(function() {
   $('.list-group-item').on('click', function(e) {
     var previous = $(this).closest(".list-group").children(".active");
     previous.removeClass('active'); // previous list-item
-    $(e.target).addClass('active'); // activated list-item
+    if (e.target.id === 'logout-tab') {
+      $('#market-tab').addClass('active');
+    }
+    else {
+      $(e.target).addClass('active'); // activated list-item
+    }
   });
 });
