@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../models/user');
-var Transaction = require('../models/transaction');
-var utils = require('../utils');
+var User = require('../../models/user');
+var Transaction = require('../../models/transaction');
+var utils = require('../../utils');
 
 /* POST /users
  * create new user

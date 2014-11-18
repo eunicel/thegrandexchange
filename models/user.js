@@ -12,8 +12,8 @@ var userSchema = mongoose.Schema({
     ref: 'Offer'
   }],
   reviews: [{
-    type : mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
+    text: String,
+    score: Number
   }],
   transactions: [{
     type : mongoose.Schema.Types.ObjectId,

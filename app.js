@@ -5,11 +5,6 @@ var app = express();
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-
-var User = require('./models/user');
-require('./config/passport')(passport, User, LocalStrategy);
 
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
@@ -22,9 +17,7 @@ db.once('open', function callback () {
 });
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var items = require('./routes/items');
-var sessions = require('./routes/sessions')(passport);
+var api = require('./routes/api');
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
@@ -35,17 +28,13 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', users);
-app.use('/items', items);
-app.use('/sessions', sessions);
+app.use('/api/', api);
 app.use('/', routes);
 
 app.listen(process.env.OPENSHIFT_NODEJS_PORT || 8080,

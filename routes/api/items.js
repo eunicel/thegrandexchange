@@ -42,13 +42,12 @@ router.get('/:item_id', function(req, res) {
   });
 });
 
-// GET /items/:item_id/offers/:offer_id
-// get offer with offer_id
-router.get('/:item_id/offers/:offer_id', function(req, res) {
-  var offer_id = req.param('offer_id');
-  Offer.getOfferById(offer_id, function(offer) {
-    if(offer != null){
-      res.json({offer: offer, success: true});
+// GET /items/:item_id/offers - get item with item_id
+router.get('/:item_id/offers', function(req, res) {
+  var item_id = req.param('item_id');
+  Item.getItemById(item_id, function(item) {
+    if(item != null){
+      res.json({offers: item.offers, success: true});
     } else {
       res.json({success: false});
     }
@@ -87,7 +86,7 @@ router.post('/:item_id/offers', function(req, res) {
 });
 
 // GET /items/:item_id/offers/:offer_id
-router.get('/:item_id/offers/_offer_id', function(req, res) {
+router.get('/:item_id/offers/:offer_id', function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
   Item.getOfferById(item_id, offer_id, function(offer){
