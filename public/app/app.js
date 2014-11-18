@@ -87,63 +87,6 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
     })
   $urlRouterProvider.otherwise('login');
 }])
-.factory('session', ['$cookieStore', function($cookieStore) {
-  return {
-    name: function() {
-      return $cookieStore.get('username');
-    },
-    setName: function(username) {
-      $cookieStore.put('username', username);
-    },
-    clear: function() {
-      $cookieStore.remove('username');
-    }
-  };
-}])
-.factory('users', ['$http', function($http) {
-  return {
-    create: function(userData) {
-      return $http.post('/api/users', userData);
-    },
-    get: function(userID) {
-      return $http.get('/api/users/' + userID);
-    },
-    getOffers: function(userID) {
-      return $http.get('/api/users/' + userID + '/offers');
-    },
-    getReviews: function(userID) {
-      return $http.get('/api/users/' + userID + '/reviews');
-    },
-    getTransactions: function(userID) {
-      return $http.get('/api/users/' + userID + '/transactions');
-    },
-    postReview: function(userID, transactionID, review) {
-      return $http.post('/api/users/' + userID + '/transactions/' + transactionID, review);
-    }
-  };
-}])
-.factory('items', ['$http', function($http) {
-  return {
-    getAll: function() {
-      return $http.get('/api/items');
-    },
-    create: function(newItem) {
-      return $http.post('/api/items', newItem);
-    },
-    get: function(itemID) {
-      return $http.get('/api/items/' + itemID);
-    },
-    getOffers: function(itemID) {
-      return $http.get('/api/items/' + itemID + '/offers');
-    },
-    postOffer: function(itemID, offer) {
-      return $http.post('/api/items/' + itemID + '/offers', offer);
-    },
-    deleteOffer: function(itemID, offerID) {
-      return $http.delete('/api/items/' + itemID + '/offers/' + offerID);
-    }
-  }
-}])
 
 // Handle highlighting in the menubar.
 $(document).ready(function() {
@@ -157,4 +100,4 @@ $(document).ready(function() {
       $(e.target).addClass('active'); // activated list-item
     }
   });
-});
+})
