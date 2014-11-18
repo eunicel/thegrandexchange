@@ -14,6 +14,9 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
+    $scope.toItem = function(item){
+      $location.url('items/'+ item._id);
+    }
     console.log(items);
     items.getAll().success(function(response) {
       if (response.success === true) {
