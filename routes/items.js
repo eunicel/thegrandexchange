@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var Item = require('../models/item');
-// var Offer = require('../models/offer');
+var Item = require('../models/item').Item;
+var Offer = require('../models/item').Offer;
 var utils = require('../utils');
 
 // GET /items

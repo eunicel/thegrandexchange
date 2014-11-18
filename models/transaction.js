@@ -22,10 +22,10 @@ var transactionSchema = mongoose.Schema({
 
 // /users/user_id/transactions POST
 // Create a new transaction, add transaction to user's transactions
-transactionSchema.statics.createTransaction = function(userid, buyOffer, sellOffer, price, callback) {
+transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, price, callback) {
   transaction = new Transaction({
-    buyOffer: buyOffer,
-    sellOffer: sellOffer,
+    buyOffer: buyOffer._id,
+    sellOffer: sellOffer._id,
     buyerRated: false,
     sellerRated: false,
     item: buyOffer.item,
@@ -35,7 +35,13 @@ transactionSchema.statics.createTransaction = function(userid, buyOffer, sellOff
     callback(transaction);
   });
 
-  User.update({_id: userid}, {
+  User.update({_id: buyOffer.postedBy}, {
+    $addToSet: {
+      transactions: transaction
+    }
+  });
+
+  User.update({_id: sellOffer.postedBy}, {
     $addToSet: {
       transactions: transaction
     }
