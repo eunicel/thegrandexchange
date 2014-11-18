@@ -37,7 +37,7 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
       email: email,
       password: password,
       reputation: 0,
-      offers: []
+      offers: [],
       reviews: [],
       transactions: [],
     });
