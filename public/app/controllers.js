@@ -246,100 +246,29 @@ angular.module('thegrandexchange')
   '$http',
   '$scope',
   '$location',
+  '$stateParams',
   'session',
-  function($http, $scope, $location, session) {
-    var date = new Date();
-    var clicker = {
-      name: 'clicker',
-      description: 'click click click'
-    }
-    var eunice = {
-      firstName: 'Eunice',
-      lastName: 'Lin',
-      email: 'eunicel@mit.edu',
-      password: 'asdf'
-    }
-    var jeffrey = {
-      firstName: 'Jeffrey',
-      lastName: 'Sun',
-      email: 'jeffrey@mit.edu',
-      password: 'asdf'
-    }
-    var george = {
-      firstName: 'George',
-      lastName: 'Du',
-      email: 'gdu@mit.edu',
-      password: 'asdf'
-    }
-    var ami = {
-      firstName: 'Ami',
-      lastName: 'Suzuki',
-      email: 'ami@mit.edu',
-      password: 'asdf'
-    }
-    $scope.item = {
-      name: 'Clicker',
-      description: 'yada yada yada yada yada yada yada yada yada yada yada yada',
-      offers: [
-      {
-        postedBy: eunice,
-        item: clicker,
-        postedAt: date,
-        price: 3.5,
-        type: 'buy'
-      },
-      {
-        postedBy: ami,
-        item: clicker,
-        postedAt: date,
-        price: 5,
-        type: 'buy'
-      },
-      {
-        postedBy: george,
-        item: clicker,
-        postedAt: date,
-        price: 4,
-        type: 'buy'
-      },
-      {
-        postedBy: jeffrey,
-        item: clicker,
-        postedAt: date,
-        price: 3,
-        type: 'buy'
-      },
-      {
-        postedBy: eunice,
-        item: clicker,
-        postedAt: date,
-        price: 4,
-        type: 'sell'
-      },
-      {
-        postedBy: jeffrey,
-        item: clicker,
-        postedAt: date,
-        price: 10,
-        type: 'sell'
-      },
-      {
-        postedBy: george,
-        item: clicker,
-        postedAt: date,
-        price: 100,
-        type: 'sell'
-      },
-      {
-        postedBy: ami,
-        item: clicker,
-        postedAt: date,
-        price: 4,
-        type: 'sell'
-      }]
-    }
+  'items',
+  function($http, $scope, $location, $stateParams, session, items) {
     $scope.order = 'price';
-
+    
+    items.get($stateParams.id).then(function(response) {
+      $scope.item = response.data.item;
+    });
+    $scope.offer = function(type) {
+      // type = 'buy' or 'sell'
+      items.postOffer($scope.item._id, {
+        postedBy: session.username,
+        item: $scope.item._id,
+        postedAt: Date.now(),
+        price: $scope.price,
+        type: type
+      }).then(function(response) {
+        console.log(response);
+      }, function(error) {
+        console.log(error);
+      });
+    }
   }
 ])
 

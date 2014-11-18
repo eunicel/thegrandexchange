@@ -18,10 +18,10 @@
     <h3> Description:</h3>
     <h4>{{item.description}}</h4>
     <h3>I'm willing to:</h3>
-    <button class="btn btn-default bid_button"><h4>Buy</h4></button><br>
-    <button class="btn btn-default bid_button"><h4>Sell</h4></button>
+    <button ng-click="offer('buy')" class="btn btn-default bid_button"><h4>Buy</h4></button><br>
+    <button ng-click="offer('sell')" class="btn btn-default bid_button"><h4>Sell</h4></button>
     <div class="enter_price">
-      for $ <input class="price" type="text"></input>
+      for $ <input ng-model="price" class="price" type="text"></input>
     </div>
   </form>
   </div>
