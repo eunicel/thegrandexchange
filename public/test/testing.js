@@ -1,8 +1,9 @@
 // Tests
 
 (function() {
-  var connectionString = 'http://localhost:8080/';
+  var connectionString = 'http://localhost:8080/api/';
   var testuserid = "546a7c7e0fe86ceb5355f66a"; //User id for eunicel@mit.edu
+  var testitemid = "546aa345e008498357e78a60";
 
   // create user
   asyncTest('create user', function() {
@@ -112,6 +113,18 @@
     });
   });
 
+  // // create item
+  // asyncTest('create item', function() {
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: connectionString + 'items',
+  //     dataType: 'json',
+  //     data: {
+  //       name: 'Clicker',
+  //       description: 'clicks'
+  //     },
+  //     success : function(data) {
+
   // create offer
   asyncTest('create offer', function(){
     var date = new Date();
@@ -136,8 +149,8 @@
         ok(data.success);
         start();
       },
-      failure: function(err){
-        console.log('Failed to create new offer.');
+      failure : function(err) {
+        console.log('Test failed with error: ' + err);
       }
     });
   });
@@ -160,8 +173,6 @@
     }
   });
 });*/
-
-
 
 
 
