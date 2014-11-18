@@ -14,12 +14,18 @@ router.post('/', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
 
-  User.createUser(firstName, lastName, email, password, function(user) {
-    if(firstName === '' || lastName === '' || email === '' || password === '' || user == null){
-      res.json({success: false});
-    } else {
-      res.json({user: user, success: true});
+  if(firstName === '' || lastName === '' || email === '' || password === ''){
+    return res.json({error: 'All fields are required.', success: false});
+  }
+
+  User.userExists(email, function(exists) {
+    if (exists) {
+      return res.json({error: 'User with that email exists.', success: false});
     }
+  });
+
+  User.createUser(firstName, lastName, email, password, function(user) {
+    return res.json({user: user, success: true});
   });
 });
 
