@@ -66,12 +66,14 @@ router.post('/:item_id/offers', function(req, res) {
 
   Item.getItemById(item_id, function(item){
     var offers = item.offers;
-    if(offers.length === 0){
-      id = 0;
-    } else {
-      offers[offers.length-1]._id+1;
-    }
+    // var id;
+    // if(offers.length === 0){
+    //   id = 0;
+    // } else {
+    //   id = offers[offers.length-1]._id+1;
+    // }
     var offer = {
+      // _id: id,
       postedBy: req.body.postedBy,
       postedAt: req.body.postedAt,
       price: req.body.price,
