@@ -96,9 +96,4 @@ router.get('/:user_id/offers', function(req, res) {
   });
 });
 
-
-// POST /users/:user_id/transactions/:transaction_id - rate transaction (not implemented for MVP)
-
-
-
 module.exports = router;

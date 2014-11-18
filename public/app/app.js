@@ -98,7 +98,7 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
 .factory('users', ['$http', function($http) {
   return {
     post: function(userData) {
-      return $http.post('/users', userData);
+      return $http.post('/api/users', userData);
     }
   };
 }])
