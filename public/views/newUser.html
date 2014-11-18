@@ -1,4 +1,4 @@
-<div class="page-header">
+<div>
   <h1>Sign Up</h1>
   <form ng-submit="addUser()">
   <div class="form-group">
@@ -13,6 +13,7 @@
   <div class="form-group">
     <input type="password" placeholder="Password" ng-model="password"></input>
   </div>
+  <div ng-show="warning" class="alert alert-danger">{{warning}}</div>
   <button type="submit">Sign Up</button>
   </form>
 </div>

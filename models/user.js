@@ -37,8 +37,9 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
       email: email,
       password: password,
       reputation: 0,
+      offers: [],
       reviews: [],
-      transactions: []
+      transactions: [],
     });
     user.save(function(err, user){
       utils.handleError(err);
@@ -50,7 +51,9 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
 // /users/user_id GET
 // Get user by id
 userSchema.statics.getUserById = function(user_id, callback) {
-  User.findOne({_id: user_id}, function(err, user) {
+  User.findOne({_id: user_id})
+  .populate('offers transactions')
+  .exec(function(err, user) {
     utils.handleError(err);
     callback(user);
   });
@@ -63,6 +66,9 @@ userSchema.statics.getUserByEmail = function(email, callback) {
 
 // /users/user_id/transactions GET
 // Get all transactions of a user
+
+//populate item
+//populate buy and sell offer
 userSchema.statics.getUserTransactions = function(user_id, callback) {
   // Transaction.find({})
   //   .populate('buyer')
@@ -78,8 +84,12 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
   //     callback(user_transactions);
   // });
   User.findOne({_id: user_id})
-  .populate('transactions.transaction')
+  .populate('transactions')
+  .populate('transactions.buyer')
+  .populate('transactions.seller')
+  .populate('transactions.item')
   .exec(function(err, transactions) {
+    Transaction.populate(transactions);
     utils.handleError(err);
     callback(user.transactions);
   });
@@ -88,7 +98,7 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
 // POST /users/user_id/reviews
 // add new review for user with specified user_id
 userSchema.statics.addReview = function(user_id, review, callback) {
-  User.find({id: user_id}, function(err, user) {
+  User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     user.reviews.push(review);
     user.reputation.$inc(review.score);
@@ -100,7 +110,8 @@ userSchema.statics.addReview = function(user_id, review, callback) {
 // GET /users/user_id/offers
 // get all offers for user with specified user_id
 userSchema.statics.getOffers = function(user_id, callback) {
-  User.find({id: user_id}, function(err, user) {
+  User.findOne({_id: user_id}, function(err, user) {
+    console.log(user);
     utils.handleError(err);
     callback(user.offers);
   });
@@ -109,7 +120,7 @@ userSchema.statics.getOffers = function(user_id, callback) {
 // GET /users/user_id/reviews
 // get all reviews for user with specified user_id
 userSchema.statics.getReviews = function(user_id, callback) {
-  User.find({id: user_id}, function(err, user) {
+  User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     callback(user.reviews);
   });

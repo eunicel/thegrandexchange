@@ -75,13 +75,18 @@ angular.module('thegrandexchange')
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).success(function(response) {
-        if (response.success === true) {
-          userFields._id = response.userID;
+      $http.post('/api/sessions', userFields).then(function(response) {
+        var data = response.data;
+        if (data.success === true) {
+          userFields._id = data.userID;
           console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
+        } else {
+          $scope.warning = response.data.message;
         }
+      }, function(error) {
+        $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';
       $scope.password = '';
@@ -99,16 +104,17 @@ angular.module('thegrandexchange')
         lastName: $scope.lastName,
         email: $scope.email,
         password: $scope.password
-      }
-      users.create(newUser).then(
-        function (results) {
-          if (results.data) {
-            $location.path('sessions');
-          }
-          else {
-            alert('rekt');
-          }
-        });
+      };
+      users.create(newUser).then(function (response) {
+        var data = response.data;
+        if (data.success === true) {
+          $location.path('sessions');
+        } else {
+          $scope.warning = response.data.message;
+        }
+      }, function(error) {
+        $scope.warning = error.data.message;
+      });
       $scope.name = '';
       $scope.password = '';
       $scope.department = '';

@@ -15,11 +15,11 @@ router.post('/', function(req, res) {
   var password = req.body.password;
 
   if(!firstName || !lastName || !email || !password) {
-    res.json({error: 'All fields are required.', success: false});
+    res.json({message: 'All fields are required.', success: false});
   } else {
     User.userExists(email, function(exists) {
       if (exists) {
-        res.json({error: 'User with that email exists.', success: false});
+        res.json({message: 'User with that email exists.', success: false});
       } else {  
         User.createUser(firstName, lastName, email, password, function(user) {
           return res.json({user: user, success: true});
@@ -37,7 +37,7 @@ router.get('/:user_id', function(req, res) {
     if (user) {
       res.json({user: user, success: true});
     } else {
-      res.json({error: 'User does not exist.', success: false});
+      res.json({message: 'User does not exist.', success: false});
     }
   });
 });
@@ -81,6 +81,7 @@ router.post('/:user_id/transactions/:transaction_id', function(req, res) {
 router.get('/:user_id/offers', function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {
+    console.log(offers);
     if(offers != null) {
       res.json({offers: offers, success: true});
     } else {
