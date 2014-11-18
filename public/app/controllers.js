@@ -17,6 +17,33 @@ angular.module('thegrandexchange')
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
     }
+    //$scope.bestBuy = Math.max.apply(Math,item.map(function(i){
+    //  return i.price;
+    //}));
+    /*function(){
+      console.log('bestSell');
+      var sells = [];
+      for(item in item.offers){
+        if(item.type === 'buy'){
+          sells.push(item);
+        }
+      }
+      var lowest;
+      if(sells.length >0){
+        sells[0];
+      } else {
+        console.log('no sell offers');
+      }
+      for(offer in sells){
+        if(offer.price < lowest){
+          lowest = offer.price;
+        }
+      }
+      console.log(lowest);
+      return lowest;
+    }
+    $scope.bestBuy = 3;
+    */
     console.log(items);
     items.getAll().success(function(response) {
       if (response.success === true) {

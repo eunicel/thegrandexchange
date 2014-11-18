@@ -2,12 +2,12 @@
   <div class="row items_container">
     <div ng-repeat="item in items">
       <div class="col-md-2 item" ng-click="toItem(item)">
-        <div>Sell: </div>
+        <div>Sell: ${{}}</div>
         <div class="item_details" type="submit">
           <h3>{{item.name}}</h3>
           <div>{{item.description}}</div>
         </div>
-        <div>Buy: </div>
+        <div>Buy: ${{}}</div>
       </div>
     </div>
   </div>
