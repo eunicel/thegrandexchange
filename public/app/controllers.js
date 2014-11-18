@@ -48,13 +48,16 @@ angular.module('thegrandexchange')
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).success(function(response) {
-        if (response.success === true) {
-          userFields._id = response.userID;
+      $http.post('/api/sessions', userFields).then(function(response) {
+        var data = response.data;
+        if (data.success === true) {
+          userFields._id = data.userID;
           console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
         }
+      }, function(error) {
+        $scope.warning = 'Invalid username or password.';
       });
       $scope.email = '';
       $scope.password = '';
