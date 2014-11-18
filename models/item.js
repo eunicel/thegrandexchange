@@ -32,7 +32,9 @@ var itemSchema = mongoose.Schema({
 
 // GET - returns all items
 itemSchema.statics.getItems = function(callback) {
-  Item.find({}, function(err, items) {
+  Item.find()
+  .populate('offers')
+  .exec(function(err, items) {
     utils.handleError(err);
     callback(items);
   });
@@ -62,7 +64,9 @@ itemSchema.statics.getItemById = function(item_id, callback) {
 
 // GET - get offers of item
 itemSchema.statics.getItemOffers = function(item_id, callback) {
-  Item.findOne({_id:item_id}, function(err, item) {
+  Item.findOne({_id:item_id})
+    .populate('offers')
+    .exec(function(err, item) {
     utils.handleError(err);
     var offers = item.offers;
     callback(offers);
@@ -164,9 +168,11 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
 }
 
 // GET - get offer by id
-// TODO: populate offer
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
-  Offer.findOne({_id:offer_id}, function(err, offer){
+  Offer.findOne({_id:offer_id})
+  .populate('postedBy')
+  .populate('item')
+  .exec(function(err, offer){
     utils.handleError(err);
     if (offer) {
       callback(offer);
