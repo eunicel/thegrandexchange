@@ -218,19 +218,22 @@ angular.module('thegrandexchange')
   '$http',
   '$scope',
   '$filter',
+  'users',
+  'session',
   'ngTableParams',
-  function($http, $scope, $filter, ngTableParams) {
-    $scope.offers = [{item:'clicker',price:30}, {item:'textbook',price:100}];
+  function($http, $scope, $filter, users, session, ngTableParams) {
+    users.getOffers(session.name()._id).then(function(response) {
+      $scope.offers = response.data.offers;
 
-    // Set up the table that allows sorting by field.
-    // Credit: http://bazalt-cms.com/ng-table/example/3
-    $scope.tableParams = new ngTableParams({
-      page: 1,          // show first page
-      count: 10,        // count per page
-      sorting: {
-        name: 'asc'     // initial sorting
-      }
-    }, {
+      // Set up the table that allows sorting by field.
+      // Credit: http://bazalt-cms.com/ng-table/example/3
+      $scope.tableParams = new ngTableParams({
+        page: 1,          // show first page
+        count: 10,        // count per page
+        sorting: {
+          name: 'asc'     // initial sorting
+        }
+      }, {
         total: $scope.offers.length, // length of data
         getData: function($defer, params) {
           // use built-in angular filter
@@ -239,6 +242,7 @@ angular.module('thegrandexchange')
                             $scope.offers;
           $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
+      });
     });
   }
 ])
