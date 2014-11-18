@@ -1,4 +1,4 @@
-<div class="page-header">
+<div class="jumbotron">
   <h1>The Grand Exchange</h1>
   <hr>
   <h2>Log In</h2>
@@ -10,6 +10,7 @@
   <div class="form-group">
     <input type="password" placeholder="Password" ng-model="password"></input>
   </div>
+  <div ng-show="warning" class="alert alert-danger" role="alert">{{warning}}</div>
   <button type="submit">Log In</button>
   </form>
   <a href="#/newUser">New User</a>

@@ -13,22 +13,20 @@
     <script src="app/controllers.js"></script>
 
   </head>
-  <body ng-app="thegrandexchange" ng-controller="MainCtrl">
-  	<table style="width: 100%">
-    	<tbody><tr>
-      	<td style="width: 15%; vertical-align: top; padding-top: 10px">
-        	<div ng-show="isLoggedIn()" class="list-group" ui-scrollfix="+10">
-          	<a href="#/marketplace" id="market-tab" class="list-group-item active">Marketplace</a>
-          	<a href="#/offers" class="list-group-item">My Offers</a>
-          	<a href="#/completed" class="list-group-item">Completed</a>
-            <a href="#/profile" class="list-group-item">My Profile</a>
-            <a id="logout-tab" class="list-group-item" ng-click="logout()">Logout</a>
-        	</div>
-      	</td>
-      	<td style="width: 85%; vertical-align: top; padding: 0px 0px 0px 30px">
-      	 <ui-view></ui-view>
-      	<td>
-    	</tr></tbody>
-  	</table>
+  <body ng-app="thegrandexchange" ng-controller="MainCtrl" class="container">
+    <div class="row">
+      <div class="col-xs-3">
+        <div ng-show="isLoggedIn()" class="list-group" ui-scrollfix="+10">
+          <a href="#/marketplace" id="market-tab" class="list-group-item active">Marketplace</a>
+          <a href="#/offers" class="list-group-item">My Offers</a>
+          <a href="#/completed" class="list-group-item">Completed</a>
+          <a href="#/profile" class="list-group-item">My Profile</a>
+          <a href="" id="logout-tab" class="list-group-item" ng-click="logout()">Logout</a>
+        </div>
+      </div>
+      <div class="col-xs-9">
+        <ui-view></ui-view>
+      </div>
+    </div>
   </body>
 </html>
