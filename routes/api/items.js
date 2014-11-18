@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Item = require('../models/item').Item;
-var Offer = require('../models/item').Offer;
-var utils = require('../utils');
+var Item = require('../../models/item').Item;
+var Offer = require('../../models/item').Offer;
+var utils = require('../../utils');
 
 // GET /items
 // get all items
