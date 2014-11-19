@@ -105,7 +105,7 @@ userSchema.statics.addReview = function(user_id, review, callback) {
   User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     user.reviews.push(review);
-    user.reputation.$inc(review.score);
+    user.reputation += review.score;
     user.save();
     callback(user);
   });
@@ -192,22 +192,21 @@ transactionSchema.statics.getTransactionById = function(user_id, transaction_id,
 // TODO: (Bug) you can review yourself
 transactionSchema.statics.addTransactionReview = function(userid, transactionid, review, callback) {
   Transaction.findOne({_id:transactionid})
-  .populate('buyOffer', 'postedBy')
-  .populate('sellOffer', 'postedBy')
+  .populate('buyOffer')
+  .populate('sellOffer')
   .exec(function(err, transaction) {
+    console.log(transaction.buyOffer.postedBy);
+    console.log(userid);
+    console.log(transaction.buyOffer.postedBy.toString() === userid);
     utils.handleError(err);
-    if (transaction.buyOffer.postedBy === userid && !transaction.buyerRated) {
-      User.findOne({_id: userid}).exec(function(err, user) {
-        user.addReview(userid, review, callback(user));
-      });
+    if (transaction.buyOffer.postedBy.toString() === userid && !transaction.buyerRated) {
       transaction.buyerRated = true;
       transaction.save();
-    } else if (transaction.sellOffer.postedBy === userid && !transaction.sellerRated) {
-      User.findOne({_id: userid}).exec(function(err, user) {
-        user.addReview(userid, review, callback(user));
-      });
+      User.addReview(userid, review, callback);
+    } else if (transaction.sellOffer.postedBy.toString() === userid && !transaction.sellerRated) {
       transaction.sellerRated = true;
       transaction.save();
+      User.addReview(userid, review, callback);
     } else {
       callback("You're not authorized to review this transaction, or you already reviewed it.");
     }
