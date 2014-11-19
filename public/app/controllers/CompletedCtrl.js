@@ -32,14 +32,16 @@ angular.module('thegrandexchange')
       } else {
         review_score = -1;
       }
-      var review = {
+      console.log('asdf');
+      console.log(transaction._id);
+      $http.post('api/users/' + session.name()._id + '/transactions/' + transaction._id,
+      {
         text: $scope.review_content,
         score: review_score
-      }
-      $http.post('api/users/' + session.name()._id + '/transactions/' + transaction._id, review)
+      })
         .success(function (response) {
           if(response.success){
-
+            console.log(response.transaction);
           } else {
             console.log('Error in adding review.');
           }

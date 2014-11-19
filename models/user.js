@@ -185,13 +185,13 @@ transactionSchema.statics.addTransactionReview = function(userid, transactionid,
     utils.handleError(err);
     if (transaction.buyOffer.postedBy === userid && !transaction.buyerRated) {
       User.findOne({_id: userid}).exec(function(err, user) {
-        user.addReview(review);
+        user.addReview(userid, review, callback(user));
       });
       transaction.buyerRated = true;
       transaction.save();
     } else if (transaction.sellOffer.postedBy === userid && !transaction.sellerRated) {
       User.findOne({_id: userid}).exec(function(err, user) {
-        user.addReview(review);
+        user.addReview(userid, review, callback(user));
       });
       transaction.sellerRated = true;
       transaction.save();
