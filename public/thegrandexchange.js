@@ -169,14 +169,10 @@ $(document).ready(function() {
       .success(function(data, status, headers, config){
         $scope.transactions = data.transactions;
       });
-    var buyer_id;
-    var seller_id;
     $scope.isBuyer = function(transaction){
-      if(transaction.buyOffer.postedBy === session.name()._id){
-        console.log('is buyer');
+      if(transaction.buyOffer.postedBy._id === session.name()._id){
         return true;
-      } else if (transaction.sellOffer.postedBy === session.name()._id){
-        console.log('is seller');
+      } else if (transaction.sellOffer.postedBy._id === session.name()._id){
         return false;
       } else {
         console.log("Logged in user did not match buyer or seller.");
@@ -191,14 +187,17 @@ $(document).ready(function() {
       } else {
         review_score = -1;
       }
-      var review = {
+      console.log('asdf');
+      console.log(transaction._id);
+      $http.post('api/users/' + session.name()._id + '/transactions/' + transaction._id,
+      {
         text: $scope.review_content,
         score: review_score
-      }
-      $http.post('api/users/' + session.name()._id + '/transactions/' + transaction._id, review)
+      })
         .success(function (response) {
           if(response.success){
-
+            console.log(response);
+            console.log(review);
           } else {
             console.log('Error in adding review.');
           }

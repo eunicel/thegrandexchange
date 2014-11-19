@@ -61,7 +61,7 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
   var transaction_id = req.param('transaction_id');
   Transaction.getTransactionById(user_id, transaction_id, function(transaction) {
-    res.json({transaction: transaction});
+    res.json({transaction: transaction, success: true});
   });
 });
 
@@ -75,7 +75,7 @@ router.post('/:user_id/transactions/:transaction_id', function(req, res) {
     score: req.body.score
   };
   Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
-    res.json({transaction: transaction});
+    res.json({transaction: transaction, success: true});
   });
 });
 
