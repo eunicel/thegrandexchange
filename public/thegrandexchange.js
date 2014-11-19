@@ -370,10 +370,13 @@ $(document).ready(function() {
   '$filter',
   'users',
   'session',
+  'items',
   'ngTableParams',
-  function($http, $scope, $filter, users, session, ngTableParams) {
+  function($http, $scope, $filter, users, session, items, ngTableParams) {
+    $scope.deleteOffer = function (offer) {
+      items.deleteOffer('offer.item._id', offer._id); // 'offer.item._id' doesn't actually get used
+    }
     users.getOffers(session.name()._id).then(function(response) {
-      console.log(response.data.offers);
       $scope.offers = response.data.offers;
 
       // Set up the table that allows sorting by field.
