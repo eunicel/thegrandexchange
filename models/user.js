@@ -95,7 +95,6 @@ userSchema.statics.getOffers = function(user_id, callback) {
   User.findOne({_id: user_id})
   .populate('offers')
   .exec(function(err, user) {
-    console.log(user);
     utils.handleError(err);
     callback(user.offers);
   });

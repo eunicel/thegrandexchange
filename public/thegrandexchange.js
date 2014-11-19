@@ -216,7 +216,8 @@ $(document).ready(function() {
   'items',
   function($http, $scope, $location, $stateParams, session, items) {
     $scope.order = 'price';
-
+    console.log('yay');
+    console.log(session.name()._id);
     items.get($stateParams.id).then(function(response) {
       $scope.item = response.data.item;
     });
