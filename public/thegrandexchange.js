@@ -223,7 +223,7 @@ $(document).ready(function() {
     $scope.offer = function(type) {
       // type = 'buy' or 'sell'
       var newOffer = {
-        postedBy: session.username,
+        postedBy: session.name()._id,
         item: $scope.item._id,
         postedAt: Date.now(),
         price: parseInt($scope.price, 10),
