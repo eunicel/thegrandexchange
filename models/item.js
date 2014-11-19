@@ -77,6 +77,7 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 // Check for offer matches and create Transactions
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
+  console.log(offerData);
   offerData.postedBy = ObjectId(offerData.postedBy);
   var offer = new Offer(offerData);
   offer.save(function(err, offer){
