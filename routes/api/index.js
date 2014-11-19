@@ -5,6 +5,7 @@ var passport = require('passport');
 var users = require('./users');
 var items = require('./items');
 var sessions = require('./sessions')(passport);
+var utils = require('../../utils');
 
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -14,8 +15,9 @@ require('../../config/passport')(passport, User, LocalStrategy);
 router.use(passport.initialize());
 router.use(passport.session());
 
+router.use('/sessions', sessions);
+
 router.use('/users', users);
 router.use('/items', items);
-router.use('/sessions', sessions);
 
 module.exports = router;
