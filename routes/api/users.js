@@ -13,21 +13,34 @@ router.post('/', function(req, res) {
   var lastName = req.body.lastName;
   var email = req.body.email;
   var password = req.body.password;
+  //First part of email only contain letters and numbers, and must be at least 1 character long
+  // var emailFrontRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*$/;
+
+  var mitEmailRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@mit.edu$/;
+  var csailRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@csail.mit.edu$/;
+  var mediaRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@media.mit.edu$/;
 
   if(!firstName || !lastName || !email || !password) {
     res.json({message: 'All fields are required.', success: false});
   } else {
-    User.userExists(email, function(exists) {
-      if (exists) {
-        res.json({message: 'User with that email exists.', success: false});
-      } else {
-        User.createUser(firstName, lastName, email, password, function(user) {
-          return res.json({user: user, success: true});
-        });
-      }
-    });
+    if (!mitEmailRegex.test(email) && !csailRegex.test(email) && !mediaRegex.test(email)) {
+      res.json({message: 'Valid MIT email address required.', success: false});
+    }
+    else {
+      User.userExists(email, function(exists) {
+        if (exists) {
+          res.json({message: 'User with that email exists.', success: false});
+        } else {
+          User.createUser(firstName, lastName, email, password, function(user) {
+            return res.json({user: user, success: true});
+          });
+        }
+      });
+    }
   }
 });
+
+router.use(utils.loggedIn);
 
 // GET /users/:user_id
 // get user with user_id
@@ -69,14 +82,19 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
 // rate and review transaction with transaction_id with user user_id
 router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
-  var transaction_id = req.param('transaction_id');
-  var review = {
-    text: req.body.text,
-    score: req.body.score
-  };
-  Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
-    res.json({transaction: transaction, success: true});
-  });
+
+  if (user_id === req.user._id) {
+    res.json({message: "You can't review yourself!", success: false});
+  } else {
+    var transaction_id = req.param('transaction_id');
+    var review = {
+      text: req.body.text,
+      score: req.body.score
+    };
+    Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
+      res.json({transaction: transaction, success: true});
+    });    
+  }
 });
 
 // GET /users/:user_id/offers

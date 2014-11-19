@@ -8,7 +8,10 @@ var User = require('../models/user').User;
 
 // Offer schema
 var offerSchema = mongoose.Schema({
-  postedBy: {type: String, ref: 'User'},
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   item: {type : String, ref: 'Item'},
   postedAt: Date,
   price: Number,
@@ -51,6 +54,7 @@ itemSchema.statics.createItem = function(name, description, callback) {
 
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
+  console.log(item_id);
   Item.findOne({_id:item_id})
   .lean()
   .populate({ path: 'offers' })
@@ -89,7 +93,6 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 // Check for offer matches and create Transactions
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
-  offerData.postedBy = ObjectId(offerData.postedBy);
   var offer = new Offer(offerData);
   offer.save(function(err, offer){
     utils.handleError(err);
@@ -180,10 +183,12 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
 
 // GET - get offer by id
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
-  Offer.findOne({_id:offer_id})
+  console.log('offer_id:' + offer_id);
+  Offer.findOne({_id: offer_id})
   .populate('postedBy')
   .populate('item')
   .exec(function(err, offer){
+    console.log(offer.item);
     utils.handleError(err);
     if (offer) {
       callback(offer);
@@ -217,11 +222,17 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
 };
 
 // DELETE - delete offer
-itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
-  Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
-    utils.handleError(err);
-    callback(offer);
-  });
+itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
+  Offer.findOne({_id: offer_id}, function(err, offer) {
+    if (userid === offer.postedBy) {
+      Offer.findOneAndRemove({_id: offer_id}, function(err, offer) {
+        utils.handleError(err);
+        callback(offer);
+      });      
+    } else {
+      callback("Must be user who posted offer.");
+    }
+  })
 };
 
 // create model
