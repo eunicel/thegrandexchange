@@ -167,11 +167,7 @@ $(document).ready(function() {
       transactions = response.data.transactions;
       displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
-<<<<<<< HEAD
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
-=======
-        if(transactions[i].buyOffer.postedBy._id === session.name()._id){
->>>>>>> d039315b1aabf5b5fa12d4d982c01fc9422d0685
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);
         } else if (transactions[i].sellOffer.postedBy._id === session.name()._id && !transactions[i].sellerRated){
