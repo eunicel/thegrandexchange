@@ -1,34 +1,18 @@
 <div ng-controller="CompletedCtrl">
   <h1>Your Completed Transactions</h1>
   <hr>
-    <div ng-repeat="transaction in transactions" >
-      <!-- buy transaction -->
-      <div ng-show="isBuyer(transaction)">
-        <h3> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.sellOffer.postedBy.firstName}} {{transaction.sellOffer.postedBy.lastName}}</h3>
-        <form ng-submit="review(transaction)">
-          <div class="form-group" >
-            Was the transaction completed in person?
-            <input type="checkbox" ng-true-value="true" ng-false-value="false">
-          </div>
-          <div class="form-group" >
-            <textarea class="review form-control" rows="3" placeholder="Enter your review here" ng-model="review_content"></textarea>
-          </div>
-          <input name="submit_review" class="btn btn-default" type="submit"></input>
-        </form>
-      </div>
-      <!-- sell transaction -->
-      <div ng-show="!isBuyer(transaction)">
-        <h3> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}</h3>
-        <form ng-submit="review(transaction)">
-          <div class="form-group" >
-            Was the transaction completed in person?
-            <input type="checkbox" ng-true-value="true" ng-false-value="false">
-          </div>
-          <div class="form-group" >
-            <textarea class="review form-control" rows="3" placeholder="Enter your review here"></textarea>
-          </div>
-          <input name="submit_review" class="btn btn-default" type="submit" ng-model="review_content"></input>
-        </form>
-      </div>
+    <div ng-repeat="transaction in transactions">
+      <div ng-show="transaction.isBuyer && !transaction.buyerRated"><h3> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.sellOffer.postedBy.firstName}} {{transaction.sellOffer.postedBy.lastName}}<h3></div>
+      <div ng-show="transaction.isSeller && !transaction.sellerRated"><h3> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}<h3></div>
+      <form ng-submit="review(transaction)">
+        <div class="form-group" >
+          Was the transaction completed in person?
+          <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="transaction.completed">
+        </div>
+        <div class="form-group" >
+          <textarea ng-model="transaction.review_content" class="review form-control" rows="3" placeholder="Enter your review here"></textarea>
+        </div>
+        <input name="submit_review" class="btn btn-default" type="submit"></input>
+      </form>
     </div>
 </div>
