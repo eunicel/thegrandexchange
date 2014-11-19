@@ -31,13 +31,10 @@ angular.module('thegrandexchange')
         text: transaction.review_content,
         score: review_score
       };
-      console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        console.log(response.data);
         if(response.data.success) {
           //
         } else {
-          console.log('Error in adding review.');
         }
       });
     };

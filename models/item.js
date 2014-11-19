@@ -54,7 +54,6 @@ itemSchema.statics.createItem = function(name, description, callback) {
 
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
-  console.log(item_id);
   Item.findOne({_id:item_id})
   .lean()
   .populate({ path: 'offers' })
@@ -183,12 +182,10 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
 
 // GET - get offer by id
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
-  console.log('offer_id:' + offer_id);
   Offer.findOne({_id: offer_id})
   .populate('postedBy')
   .populate('item')
   .exec(function(err, offer){
-    console.log(offer.item);
     utils.handleError(err);
     if (offer) {
       callback(offer);
@@ -227,7 +224,6 @@ itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
     if (userid.toString() == offer.postedBy.toString()) {
       Offer.findOneAndRemove({_id: offer_id}, function(err, offer) {
         utils.handleError(err);
-        console.log(offer);
         callback(offer);
       });
     } else {

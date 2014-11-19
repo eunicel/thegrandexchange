@@ -167,7 +167,11 @@ $(document).ready(function() {
       transactions = response.data.transactions;
       displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
+<<<<<<< HEAD
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
+=======
+        if(transactions[i].buyOffer.postedBy._id === session.name()._id){
+>>>>>>> d039315b1aabf5b5fa12d4d982c01fc9422d0685
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);
         } else if (transactions[i].sellOffer.postedBy._id === session.name()._id && !transactions[i].sellerRated){
@@ -190,13 +194,10 @@ $(document).ready(function() {
         text: transaction.review_content,
         score: review_score
       };
-      console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        console.log(response.data);
         if(response.data.success) {
           //
         } else {
-          console.log('Error in adding review.');
         }
       });
     };
@@ -224,7 +225,6 @@ $(document).ready(function() {
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        console.log(response.data);
         if (response.data.transaction === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
@@ -233,8 +233,6 @@ $(document).ready(function() {
           $scope.item.offers.push(newOffer);
         }
         else if (response.data.transaction) {
-          console.log('transaction matched');
-          console.log(response.data.transaction);
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
             if (offers[i].price === response.data.transaction.price) {
@@ -242,10 +240,8 @@ $(document).ready(function() {
               return;
             }
           }
-          console.log('failure to remove item');
         }
       }.bind(this), function(error) {
-        console.log(error);
       });
     }
   }
@@ -277,7 +273,6 @@ $(document).ready(function() {
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
           userFields.lastName = data.lastName;
-          console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
         } else {
