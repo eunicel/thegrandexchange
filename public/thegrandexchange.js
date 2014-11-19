@@ -168,6 +168,7 @@ $(document).ready(function() {
     $http.get('api/users/' + session.name()._id + '/transactions')
       .success(function(data, status, headers, config){
         $scope.transactions = data.transactions;
+        console.log($scope.transactions);
       });
     var buyer_id;
     var seller_id;
