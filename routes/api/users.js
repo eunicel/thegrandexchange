@@ -80,19 +80,14 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
 // rate and review transaction with transaction_id with user user_id
 router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
-
-  if (user_id === req.user._id) {
-    res.json({message: "You can't review yourself!", success: false});
-  } else {
-    var transaction_id = req.param('transaction_id');
-    var review = {
-      text: req.body.text,
-      score: req.body.score
-    };
-    Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
-      res.json({transaction: transaction, success: true});
-    });    
-  }
+  var transaction_id = req.param('transaction_id');
+  var review = {
+    text: req.body.text,
+    score: req.body.score
+  };
+  Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
+    res.json({transaction: transaction, success: true});
+  });
 });
 
 // GET /users/:user_id/offers
