@@ -68,11 +68,33 @@ userSchema.statics.getUserByEmail = function(email, callback) {
 // Get all transactions of a user
 userSchema.statics.getUserTransactions = function(user_id, callback) {
   User.findOne({_id: user_id})
-  .populate('transactions')
+  .lean()
+  .populate({ path: 'transactions' })
   .exec(function(err, user) {
-    Transaction.populate(user.transactions, 'buyOffer sellOffer item', function(err, transactions){
+    var options = {
+      path: 'transactions.buyOffer transactions.sellOffer',
+      model: 'Offer'
+    };
+    //populate user.transactions with buyOffer, sellOffer
+    Transaction.populate(user, options, function(err, withpopoffers){
       utils.handleError(err);
-      callback(transactions);
+      var options = {
+        path: 'transactions.buyOffer.postedBy transactions.sellOffer.postedBy',
+        model: 'User'
+      }
+      //populate user.transactions buyOffer, sellOffer with postedBy
+      Transaction.populate(withpopoffers, options, function(err, withpostedat) {
+        utils.handleError(err);
+        var options = {
+          path: 'transactions.item',
+          model: 'Item'
+        }
+        //populate user.transactions with items
+        Transaction.populate(withpostedat, options, function(err, withitem) {
+          utils.handleError(err);
+          callback(withitem);
+        });
+      });
     });
   });
 };
@@ -95,7 +117,6 @@ userSchema.statics.getOffers = function(user_id, callback) {
   User.findOne({_id: user_id})
   .populate('offers')
   .exec(function(err, user) {
-    console.log(user);
     utils.handleError(err);
     callback(user.offers);
   });
