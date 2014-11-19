@@ -94,6 +94,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
     })
     .exec(function(err, item) {
       utils.handleError(err);
+      var minSell = undefined;
       for (var i = 0; i<item.offers.length; i++) {
         if (item.offers[i].price <= offer.price ) { // possible match
           if (minSell === undefined || item.offers[i].price < minSell) {
@@ -132,6 +133,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
     })
     .exec(function(err, item) {
       utils.handleError(err);
+      var maxBuy = undefined;
       for (var i = 0; i < item.offers.length; i++) {
         if (item.offers[i].price >= offer.price ) { // possible match
           if (maxBuy === undefined || item.offers[i].price > maxBuy) {
