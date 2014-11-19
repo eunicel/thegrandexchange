@@ -22,6 +22,10 @@ angular.module('thegrandexchange')
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
         if (response.data.transaction === 'No match') {
+          newOffer.postedBy = {
+            firstName: session.name().firstName,
+            lastName: session.name().lastName
+          }
           $scope.item.offers.push(newOffer);
         }
         else if (response.data.transaction) {
