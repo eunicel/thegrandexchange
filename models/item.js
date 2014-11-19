@@ -225,7 +225,6 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
 itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
   Offer.findOne({_id: offer_id}, function(err, offer) {
     if (userid.toString() == offer.postedBy.toString()) {
-      console.log('same');
       Offer.findOneAndRemove({_id: offer_id}, function(err, offer) {
         utils.handleError(err);
         console.log(offer);
