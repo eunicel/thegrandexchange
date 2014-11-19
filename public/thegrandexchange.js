@@ -228,6 +228,7 @@ $(document).ready(function() {
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
+        console.log(response.data);
         if (response.data.transaction === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
@@ -237,6 +238,7 @@ $(document).ready(function() {
         }
         else if (response.data.transaction) {
           console.log('transaction matched');
+          console.log(response.data.transaction);
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
             if (offers[i].price === response.data.transaction.price) {
