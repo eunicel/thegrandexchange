@@ -173,7 +173,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         callback("No match");
       }
       else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
-        Transaction.createTransaction(maxBuy, offer, offer.price, function(transaction) {
+        Transaction.createTransaction(maxBuy, offer, maxBuy.price, function(transaction) {
           Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
           callback(transaction);
         });
