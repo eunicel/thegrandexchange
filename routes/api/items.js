@@ -82,6 +82,7 @@ router.post('/:item_id/offers', function(req, res) {
     };
     Item.createOffer(item_id, offer, function(transaction) {
       if(transaction !== null) {
+        console.log(transaction);
         res.json({transaction: transaction, success: true});
       } else {
         res.json({success: false});

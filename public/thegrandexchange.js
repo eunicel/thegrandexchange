@@ -159,15 +159,12 @@ $(document).ready(function() {
   };
 }]);angular.module('thegrandexchange')
 .controller('CompletedCtrl',[
-  '$http',
   '$scope',
-  '$location',
   'users',
   'session',
-  function($http, $scope, $location, users, session) {
-    $http.get('api/users/' + session.name()._id + '/transactions')
-      .success(function(data, status, headers, config){
-        $scope.transactions = data.transactions;
+  function($scope, users, session) {
+    users.getTransactions(session.name()._id).then(function (response) {
+        $scope.transactions = response.data.transactions;
       });
     $scope.isBuyer = function(transaction){
       if(transaction.buyOffer.postedBy._id === session.name()._id){
@@ -187,23 +184,14 @@ $(document).ready(function() {
       } else {
         review_score = -1;
       }
-      console.log('asdf');
-      console.log(transaction._id);
-      $http.post('api/users/' + session.name()._id + '/transactions/' + transaction._id,
-      {
-        text: $scope.review_content,
-        score: review_score
-      })
-        .success(function (response) {
-          if(response.success){
-            console.log(response);
-            console.log(review);
-          } else {
-            console.log('Error in adding review.');
-          }
-        });
+      users.postReview(session.name()._id, transaction._id, review).then(function (response) {
+        if(response.success){
+          //
+        } else {
+          console.log('Error in adding review.');
+        }
+      });
     }
-
   }
 ]);angular.module('thegrandexchange')
 .controller('ItemCtrl', [
@@ -228,6 +216,7 @@ $(document).ready(function() {
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
+        console.log(response.data);
         if (response.data.transaction === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
@@ -237,6 +226,7 @@ $(document).ready(function() {
         }
         else if (response.data.transaction) {
           console.log('transaction matched');
+          console.log(response.data.transaction);
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
             if (offers[i].price === response.data.transaction.price) {
@@ -327,8 +317,16 @@ $(document).ready(function() {
               sellPrices.push(price);
             }
           }
-          item.bestBuy = Math.max.apply(null, buyPrices);
-          item.bestSell = Math.min.apply(null, sellPrices);
+          if(buyPrices.length > 0){
+            item.bestBuy = '$' + Math.max.apply(null, buyPrices);
+          } else {
+            item.bestBuy = 'No offers';
+          }
+          if(sellPrices.length > 0){
+            item.bestSell = '$' + Math.min.apply(null, sellPrices);
+          } else {
+            item.bestSell = 'No offers'
+          }
         }
 
       }
