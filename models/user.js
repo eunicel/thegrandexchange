@@ -142,13 +142,13 @@ var transactionSchema = mongoose.Schema({
 
 // /users/user_id/transactions POST
 // Create a new transaction, add transaction to user's transactions
-transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, price, callback) {
+transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, item_id, price, callback) {
   transaction = new Transaction({
     buyOffer: buyOffer._id,
     sellOffer: sellOffer._id,
     buyerRated: false,
     sellerRated: false,
-    item: buyOffer.item,
+    item: item_id,
     price: price
   });
   transaction.save(function(err, transaction) {

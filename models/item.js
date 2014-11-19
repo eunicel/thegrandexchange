@@ -89,7 +89,6 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 // Check for offer matches and create Transactions
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
-  console.log(offerData);
   offerData.postedBy = ObjectId(offerData.postedBy);
   var offer = new Offer(offerData);
   offer.save(function(err, offer){
@@ -131,7 +130,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         callback("No match");
       }
       else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
-        Transaction.createTransaction(offer, minSell, minSell.price, function(transaction) {
+        Transaction.createTransaction(offer, minSell, item_id, minSell.price, function(transaction) {
           Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
           callback(transaction);
         });
@@ -170,7 +169,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         callback("No match");
       }
       else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
-        Transaction.createTransaction(maxBuy, offer, maxBuy.price, function(transaction) {
+        Transaction.createTransaction(maxBuy, offer, item_id, maxBuy.price, function(transaction) {
           Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
           callback(transaction);
         });
