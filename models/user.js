@@ -92,7 +92,7 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
         //populate user.transactions with items
         Transaction.populate(withpostedat, options, function(err, withitem) {
           utils.handleError(err);
-          callback(withitem);
+          callback(withitem.transactions);
         });
       });
     });
