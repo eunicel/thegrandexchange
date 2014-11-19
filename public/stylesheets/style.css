@@ -63,3 +63,12 @@ body {
   margin-top:20px;
   margin-bottom: 20px;
 }
+.delete_btn{
+  display:inline-block;
+  float:right;
+  color:#BDBDBD;
+}
+.delete_btn:hover{
+  cursor:pointer;
+  color:#000000;
+}
