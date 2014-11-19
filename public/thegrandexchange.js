@@ -168,16 +168,11 @@ $(document).ready(function() {
     $http.get('api/users/' + session.name()._id + '/transactions')
       .success(function(data, status, headers, config){
         $scope.transactions = data.transactions;
-        console.log($scope.transactions);
       });
-    var buyer_id;
-    var seller_id;
     $scope.isBuyer = function(transaction){
-      if(transaction.buyOffer.postedBy === session.name()._id){
-        console.log('is buyer');
+      if(transaction.buyOffer.postedBy._id === session.name()._id){
         return true;
-      } else if (transaction.sellOffer.postedBy === session.name()._id){
-        console.log('is seller');
+      } else if (transaction.sellOffer.postedBy._id === session.name()._id){
         return false;
       } else {
         console.log("Logged in user did not match buyer or seller.");
@@ -233,11 +228,19 @@ $(document).ready(function() {
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.offer === 'No match') {
+        if (response.data.transaction === 'No match') {
           $scope.item.offers.push(newOffer);
-        } else if (true) {
-          // check if response has a transaction
-          // show transaction related stuff
+        }
+        else if (response.data.transaction) {
+          console.log('transaction matched');
+          var offers = $scope.item.offers;
+          for (var i = 0; i < offers.length; i++) {
+            if (offers[i].price === response.data.transaction.price) {
+              offers.splice(i, 1);
+              return;
+            }
+          }
+          console.log('failure to remove item');
         }
       }.bind(this), function(error) {
         console.log(error);
@@ -349,6 +352,7 @@ $(document).ready(function() {
   'ngTableParams',
   function($http, $scope, $filter, users, session, ngTableParams) {
     users.getOffers(session.name()._id).then(function(response) {
+      console.log(response.data.offers);
       $scope.offers = response.data.offers;
 
       // Set up the table that allows sorting by field.

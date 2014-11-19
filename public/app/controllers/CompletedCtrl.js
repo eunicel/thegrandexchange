@@ -10,14 +10,10 @@ angular.module('thegrandexchange')
       .success(function(data, status, headers, config){
         $scope.transactions = data.transactions;
       });
-    var buyer_id;
-    var seller_id;
     $scope.isBuyer = function(transaction){
-      if(transaction.buyOffer.postedBy === session.name()._id){
-        console.log('is buyer');
+      if(transaction.buyOffer.postedBy._id === session.name()._id){
         return true;
-      } else if (transaction.sellOffer.postedBy === session.name()._id){
-        console.log('is seller');
+      } else if (transaction.sellOffer.postedBy._id === session.name()._id){
         return false;
       } else {
         console.log("Logged in user did not match buyer or seller.");
@@ -41,7 +37,8 @@ angular.module('thegrandexchange')
       })
         .success(function (response) {
           if(response.success){
-            console.log(response.transaction);
+            console.log(response);
+            console.log(review);
           } else {
             console.log('Error in adding review.');
           }
