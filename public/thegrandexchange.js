@@ -165,15 +165,17 @@ $(document).ready(function() {
   function($scope, users, session) {
     users.getTransactions(session.name()._id).then(function (response) {
       transactions = response.data.transactions;
+      displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
-        console.log(transactions[i]);
-        if(transactions[i].buyOffer.postedBy._id === session.name()._id){
+        if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
-        } else if (transactions[i].sellOffer.postedBy._id === session.name()._id){
+          displayed_transactions.push(transactions[i]);
+        } else if (transactions[i].sellOffer.postedBy._id === session.name()._id && !transactions[i].sellerRated){
           transactions[i].isBuyer = false;
+          displayed_transactions.push(transactions[i]);
         }
       }
-      $scope.transactions = response.data.transactions;
+      $scope.transactions = displayed_transactions;
     });
 
     $scope.review = function(transaction) {

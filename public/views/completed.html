@@ -3,7 +3,7 @@
   <hr>
     <div ng-repeat="transaction in transactions">
       <div ng-show="transaction.isBuyer"><h3> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.sellOffer.postedBy.firstName}} {{transaction.sellOffer.postedBy.lastName}}<h3></div>
-      <div ng-show="transaction.isSeller"><h3> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}<h3></div>
+      <div ng-show="!transaction.isBuyer"><h3> Sold {{transaction.item.name}} for ${{transaction.price}} to {{transaction.buyOffer.postedBy.firstName}} {{transaction.buyOffer.postedBy.lastName}}<h3></div>
       <form ng-submit="review(transaction)">
         <div class="form-group" >
           Was the transaction completed in person?

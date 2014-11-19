@@ -105,7 +105,7 @@ userSchema.statics.addReview = function(user_id, review, callback) {
   User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     user.reviews.push(review);
-    user.reputation += review.score;
+    user.reputation += parseInt(review.score);
     user.save();
     callback(user);
   });
