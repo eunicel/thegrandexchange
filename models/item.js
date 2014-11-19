@@ -54,22 +54,37 @@ itemSchema.statics.createItem = function(name, description, callback) {
 
 // GET - get item by id
 itemSchema.statics.getItemById = function(item_id, callback) {
-  Item.findOne({_id: item_id})
-  .populate('offers')
+  Item.findOne({_id:item_id})
+  .lean()
+  .populate({ path: 'offers' })
   .exec(function(err, item) {
     utils.handleError(err);
-    callback(item);
+    var options = {
+    path: 'offers.postedBy',
+    model: 'User'
+    };
+    Offer.populate(item, options, function(err, itemwithoffers) {
+      utils.handleError(err);
+      callback(itemwithoffers);
+    });
   });
 };
 
 // GET - get offers of item
 itemSchema.statics.getItemOffers = function(item_id, callback) {
   Item.findOne({_id:item_id})
-    .populate('offers')
-    .exec(function(err, item) {
+  .lean()
+  .populate({ path: 'offers' })
+  .exec(function(err, item) {
     utils.handleError(err);
-    var offers = item.offers;
-    callback(offers);
+    var options = {
+    path: 'offers.postedBy',
+    model: 'User'
+    };
+    Offer.populate(item, options, function(err, itemwithoffers) {
+      utils.handleError(err);
+      callback(itemwithoffers.offers);
+    });
   });
 };
 
