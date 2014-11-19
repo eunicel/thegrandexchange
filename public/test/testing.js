@@ -114,18 +114,6 @@
     });
   });
 
-  // // create item
-  // asyncTest('create item', function() {
-  //   $.ajax({
-  //     type: 'POST',
-  //     url: connectionString + 'items',
-  //     dataType: 'json',
-  //     data: {
-  //       name: 'Clicker',
-  //       description: 'clicks'
-  //     },
-  //     success : function(data) {
-
   // create offer
   asyncTest('create offer', function(){
     var date = new Date();
@@ -140,7 +128,7 @@
       url: connectionString + 'items/' + item_id +'/offers',
       dataType: 'json',
       data: {
-        postedBy: user,
+        postedBy: "546a7c7e0fe86ceb5355f66a",
         postedAt: date,
         price: 5.5,
         type: 'buy'
@@ -155,7 +143,6 @@
       }
     });
   });
-
 
 // get user transactions
 /*asyncTest('get user transactions', function() {
