@@ -216,14 +216,15 @@ $(document).ready(function() {
   'items',
   function($http, $scope, $location, $stateParams, session, items) {
     $scope.order = 'price';
-
+    console.log('yay');
+    console.log(session.name()._id);
     items.get($stateParams.id).then(function(response) {
       $scope.item = response.data.item;
     });
     $scope.offer = function(type) {
       // type = 'buy' or 'sell'
       var newOffer = {
-        postedBy: session.username,
+        postedBy: session.name()._id,
         item: $scope.item._id,
         postedAt: Date.now(),
         price: parseInt($scope.price, 10),
