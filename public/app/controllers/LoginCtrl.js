@@ -26,7 +26,6 @@ angular.module('thegrandexchange')
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
           userFields.lastName = data.lastName;
-          console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
         } else {

@@ -12,9 +12,6 @@ var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localh
 mongoose.connect(connectionString);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  console.log('connection successful');
-});
 
 var routes = require('./routes/index');
 var api = require('./routes/api');

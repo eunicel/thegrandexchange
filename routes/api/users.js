@@ -40,8 +40,6 @@ router.post('/', function(req, res) {
   }
 });
 
-router.use(utils.loggedIn);
-
 // GET /users/:user_id
 // get user with user_id
 router.get('/:user_id', function(req, res) {

@@ -195,9 +195,6 @@ transactionSchema.statics.addTransactionReview = function(userid, transactionid,
   .populate('buyOffer')
   .populate('sellOffer')
   .exec(function(err, transaction) {
-    console.log(transaction.buyOffer.postedBy);
-    console.log(userid);
-    console.log(transaction.buyOffer.postedBy.toString() === userid);
     utils.handleError(err);
     if (transaction.buyOffer.postedBy.toString() === userid && !transaction.buyerRated) {
       transaction.buyerRated = true;

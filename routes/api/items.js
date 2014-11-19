@@ -4,8 +4,6 @@ var Item = require('../../models/item').Item;
 var Offer = require('../../models/item').Offer;
 var utils = require('../../utils');
 
-router.use(utils.loggedIn);
-
 // GET /items
 // get all items
 router.get('/', function(req, res) {
@@ -84,7 +82,6 @@ router.post('/:item_id/offers', function(req, res) {
     };
     Item.createOffer(item_id, offer, function(transaction) {
       if(transaction !== null) {
-        console.log(transaction);
         res.json({transaction: transaction, success: true});
       } else {
         res.json({success: false});
