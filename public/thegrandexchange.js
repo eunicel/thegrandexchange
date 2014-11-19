@@ -229,6 +229,10 @@ $(document).ready(function() {
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
         if (response.data.transaction === 'No match') {
+          newOffer.postedBy = {
+            firstName: session.name().firstName,
+            lastName: session.name().lastName
+          }
           $scope.item.offers.push(newOffer);
         }
         else if (response.data.transaction) {
@@ -273,6 +277,8 @@ $(document).ready(function() {
         var data = response.data;
         if (data.success === true) {
           userFields._id = data.userID;
+          userFields.firstName = data.firstName;
+          userFields.lastName = data.lastName;
           console.log(userFields);
           session.setName(userFields);
           $location.path('marketplace');
