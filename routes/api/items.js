@@ -4,6 +4,8 @@ var Item = require('../../models/item').Item;
 var Offer = require('../../models/item').Offer;
 var utils = require('../../utils');
 
+router.use(utils.loggedIn);
+
 // GET /items
 // get all items
 router.get('/', function(req, res) {

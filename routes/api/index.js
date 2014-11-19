@@ -17,8 +17,6 @@ router.use(passport.session());
 
 router.use('/sessions', sessions);
 
-router.use(utils.loggedIn);
-
 router.use('/users', users);
 router.use('/items', items);
 
