@@ -80,9 +80,9 @@ router.post('/:item_id/offers', function(req, res) {
       type: req.body.type,
       item: item_id
     };
-    Item.createOffer(item_id, offer, function(offer) {
-      if(offer !== null) {
-        res.json({offer: offer, success: true});
+    Item.createOffer(item_id, offer, function(transaction) {
+      if(transaction !== null) {
+        res.json({transaction: transaction, success: true});
       } else {
         res.json({success: false});
       }
