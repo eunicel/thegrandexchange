@@ -34,8 +34,16 @@ angular.module('thegrandexchange')
               sellPrices.push(price);
             }
           }
-          item.bestBuy = Math.max.apply(null, buyPrices);
-          item.bestSell = Math.min.apply(null, sellPrices);
+          if(buyPrices.length > 0){
+            item.bestBuy = '$' + Math.max.apply(null, buyPrices);
+          } else {
+            item.bestBuy = 'No offers';
+          }
+          if(sellPrices.length > 0){
+            item.bestSell = '$' + Math.min.apply(null, sellPrices);
+          } else {
+            item.bestSell = 'No offers'
+          }
         }
 
       }
