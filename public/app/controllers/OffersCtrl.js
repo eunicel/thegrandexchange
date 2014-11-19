@@ -8,6 +8,7 @@ angular.module('thegrandexchange')
   'ngTableParams',
   function($http, $scope, $filter, users, session, ngTableParams) {
     users.getOffers(session.name()._id).then(function(response) {
+      console.log(response.data.offers);
       $scope.offers = response.data.offers;
 
       // Set up the table that allows sorting by field.

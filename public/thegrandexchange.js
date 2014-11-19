@@ -216,8 +216,6 @@ $(document).ready(function() {
   'items',
   function($http, $scope, $location, $stateParams, session, items) {
     $scope.order = 'price';
-    console.log('yay');
-    console.log(session.name()._id);
     items.get($stateParams.id).then(function(response) {
       $scope.item = response.data.item;
     });
@@ -231,11 +229,19 @@ $(document).ready(function() {
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.offer === 'No match') {
+        if (response.data.transaction === 'No match') {
           $scope.item.offers.push(newOffer);
-        } else if (true) {
-          // check if response has a transaction
-          // show transaction related stuff
+        }
+        else if (response.data.transaction) {
+          console.log('transaction matched');
+          var offers = $scope.item.offers;
+          for (var i = 0; i < offers.length; i++) {
+            if (offers[i].price === response.data.transaction.price) {
+              offers.splice(i, 1);
+              return;
+            }
+          }
+          console.log('failure to remove item');
         }
       }.bind(this), function(error) {
         console.log(error);
@@ -347,6 +353,7 @@ $(document).ready(function() {
   'ngTableParams',
   function($http, $scope, $filter, users, session, ngTableParams) {
     users.getOffers(session.name()._id).then(function(response) {
+      console.log(response.data.offers);
       $scope.offers = response.data.offers;
 
       // Set up the table that allows sorting by field.

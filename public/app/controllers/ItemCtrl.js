@@ -21,11 +21,19 @@ angular.module('thegrandexchange')
         type: type
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.offer === 'No match') {
+        if (response.data.transaction === 'No match') {
           $scope.item.offers.push(newOffer);
-        } else if (true) {
-          // check if response has a transaction
-          // show transaction related stuff
+        }
+        else if (response.data.transaction) {
+          console.log('transaction matched');
+          var offers = $scope.item.offers;
+          for (var i = 0; i < offers.length; i++) {
+            if (offers[i].price === response.data.transaction.price) {
+              offers.splice(i, 1);
+              return;
+            }
+          }
+          console.log('failure to remove item');
         }
       }.bind(this), function(error) {
         console.log(error);
