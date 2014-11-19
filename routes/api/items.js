@@ -110,7 +110,7 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
 router.delete('/:item_id/offers/:offer_id', function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
-  Item.deleteOffer(item_id, offer_id, function(offer) {
+  Item.deleteOffer(req.user._id, item_id, offer_id, function(offer) {
     if(offer !== null) {
       res.json({offer: offer, success: true});
     } else {

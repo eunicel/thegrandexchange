@@ -218,11 +218,17 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
 };
 
 // DELETE - delete offer
-itemSchema.statics.deleteOffer = function(item_id, offer_id, callback) {
-  Offer.findOneAndRemove({_id:offer_id}, function(err, offer) {
-    utils.handleError(err);
-    callback(offer);
-  });
+itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
+  Offer.findOne({_id: offer_id}, function(err, offer) {
+    if (userid === offer.postedBy) {
+      Offer.findOneAndRemove({_id: offer_id}, function(err, offer) {
+        utils.handleError(err);
+        callback(offer);
+      });      
+    } else {
+      callback("Must be user who posted offer.");
+    }
+  })
 };
 
 // create model
