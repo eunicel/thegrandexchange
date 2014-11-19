@@ -9,10 +9,7 @@ var User = require('../models/user').User;
 // Offer schema
 var offerSchema = mongoose.Schema({
   postedBy: {type: String, ref: 'User'},
-  item: {
-    type : mongoose.Schema.Types.ObjectId,
-    ref: 'Item'
-  },
+  item: {type : String, ref: 'Item'},
   postedAt: Date,
   price: Number,
   type: String
