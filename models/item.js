@@ -8,7 +8,10 @@ var User = require('../models/user').User;
 
 // Offer schema
 var offerSchema = mongoose.Schema({
-  postedBy: {type: String, ref: 'User'},
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   item: {type : String, ref: 'Item'},
   postedAt: Date,
   price: Number,
@@ -89,7 +92,6 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 // Check for offer matches and create Transactions
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
-  offerData.postedBy = ObjectId(offerData.postedBy);
   var offer = new Offer(offerData);
   offer.save(function(err, offer){
     utils.handleError(err);
