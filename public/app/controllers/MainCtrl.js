@@ -17,9 +17,16 @@ angular.module('thegrandexchange')
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
     }
-    console.log(items);
     items.getAll().success(function(response) {
       if (response.success === true) {
+        var items = response.items;
+        console.log(items);
+        for (var i = 0; i < items.length;i++){
+          var item = items[i];
+          console.log(item);
+          var offers = item.offers;
+          console.log(offers);
+        }
         $scope.items = response.items;
       }
       else {
