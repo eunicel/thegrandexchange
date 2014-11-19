@@ -8,7 +8,7 @@ var sessions = require('./sessions')(passport);
 
 var LocalStrategy = require('passport-local').Strategy;
 
-var User = require('../../models/user');
+var User = require('../../models/user').User;
 require('../../config/passport')(passport, User, LocalStrategy);
 
 router.use(passport.initialize());

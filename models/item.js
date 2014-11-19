@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 // var Schema = mongoose.Schema;
 var ObjectId = mongoose.Types.ObjectId;
 var utils = require('../utils');
-var Transaction = require('../models/transaction');
-var User = require('../models/user');
+var Transaction = require('../models/user').Transaction;
+var User = require('../models/user').User;
 
 // Offer schema
 var offerSchema = mongoose.Schema({
@@ -190,15 +190,15 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
     item.save(function(err, item){
       utils.handleError(err);
     });
-    Offer.findOne({_id:offer_id}, function(err, offer) {
+    Offer.findOne({_id: offer_id}, function(err, offer) {
       utils.handleError(err);
       User.findOne({_id: offer.postedBy}, function(err, user) {
+        utils.handleError(err);
+        user.offers.remove(offer_id);
+        user.save(function(err, user){
           utils.handleError(err);
-          user.offers.remove(offer_id);
-          user.save(function(err, user){
-            utils.handleError(err);
-          });
-          callback(offer);
+        });
+        callback(offer);
       });
     });
   });

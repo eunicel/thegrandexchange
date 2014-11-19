@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../../models/user');
-var Transaction = require('../../models/transaction');
+var User = require('../../models/user').User;
+var Transaction = require('../../models/user').Transaction;
 var utils = require('../../utils');
 
 /* POST /users
@@ -84,7 +84,6 @@ router.post('/:user_id/transactions/:transaction_id', function(req, res) {
 router.get('/:user_id/offers', function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {
-    console.log(offers);
     if(offers !== null) {
       res.json({offers: offers, success: true});
     } else {
