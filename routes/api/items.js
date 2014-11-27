@@ -64,31 +64,35 @@ router.get('/:item_id/offers', function(req, res) {
 router.post('/:item_id/offers', function(req, res) {
   var item_id = req.param('item_id');
 
-  Item.getItemById(item_id, function(item){
-    var offers = item.offers;
-    // var id;
-    // if(offers.length === 0){
-    //   id = 0;
-    // } else {
-    //   id = offers[offers.length-1]._id+1;
-    // }
-    var offer = {
-      // _id: id,
-      postedBy: req.body.postedBy,
-      postedAt: req.body.postedAt,
-      price: req.body.price,
-      type: req.body.type,
-      item: item.name
-    };
-    Item.createOffer(item_id, offer, function(transaction) {
-      if(transaction !== null) {
-        res.json({transaction: transaction, success: true});
-      } else {
-        res.json({success: false});
-      }
-    });
-  });
+  if (req.body.postedBy != req.user._id) {
+    res.json({message: "Unauthorized.", success: false});
+  } else {
 
+    Item.getItemById(item_id, function(item){
+      var offers = item.offers;
+      // var id;
+      // if(offers.length === 0){
+      //   id = 0;
+      // } else {
+      //   id = offers[offers.length-1]._id+1;
+      // }
+      var offer = {
+        // _id: id,
+        postedBy: req.body.postedBy,
+        postedAt: req.body.postedAt,
+        price: req.body.price,
+        type: req.body.type,
+        item: item.name
+      };
+      Item.createOffer(item_id, offer, function(transaction) {
+        if(transaction !== null) {
+          res.json({transaction: transaction, success: true});
+        } else {
+          res.json({success: false});
+        }
+      });
+    });
+  }
 });
 
 // GET /items/:item_id/offers/:offer_id

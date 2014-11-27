@@ -81,7 +81,7 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
 router.post('/:user_id/transactions/:transaction_id', function(req, res) {
   var user_id = req.param('user_id');
 
-  if (user_id === req.user._id) {
+  if (user_id == req.user._id) {
     res.json({message: "You can't review yourself!", success: false});
   } else {
     var transaction_id = req.param('transaction_id');

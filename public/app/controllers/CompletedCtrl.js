@@ -33,7 +33,7 @@ angular.module('thegrandexchange')
       };
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
         if(response.data.success) {
-          //
+          transactions.remove(transaction);
         } else {
         }
       });
