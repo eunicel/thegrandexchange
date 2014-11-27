@@ -1,20 +1,19 @@
-<div class="page-header">
+<div ng-controller="OffersCtrl">
   <h1>My Offers</h1>
+  <table ng-table="tableParams" class="table">
+    <tr ng-repeat="offer in $data">
+      <td data-title="'Item'" sortable="'item'">
+        {{offer.item}}
+      </td>
+      <td data-title="'Price'" sortable="'price'">
+        {{offer.price}}
+      </td>
+      <td data-title="'Type'" sortable="'type'">
+        {{offer.type}}
+      </td>
+      <td>
+        <div ng-click="deleteOffer(offer)" class="delete_btn">&times;</div>
+      </td>
+    </tr>
+  </table>
 </div>
-
-<table ng-table="tableParams" class="table">
-  <tr ng-repeat="offer in $data">
-    <td data-title="'Item'" sortable="'item'">
-      {{offer.item}}
-    </td>
-    <td data-title="'Price'" sortable="'price'">
-      {{offer.price}}
-    </td>
-    <td data-title="'Type'" sortable="'type'">
-      {{offer.type}}
-    </td>
-    <td>
-      <div ng-click="deleteOffer(offer)" class="delete_btn">&times;</div>
-    </td>
-  </tr>
-</table>

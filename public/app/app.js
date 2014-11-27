@@ -90,14 +90,14 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
 
 // Handle highlighting in the menubar.
 $(document).ready(function() {
-  $('.list-group-item').on('click', function(e) {
-    var previous = $(this).closest(".list-group").children(".active");
+  $('.sidebar-item').on('click', function(e) {
+    var previous = $(this).parent().children(".active");
     previous.removeClass('active'); // previous list-item
     if (e.target.id === 'logout-tab') {
       $('#market-tab').addClass('active');
     }
     else {
-      $(e.target).addClass('active'); // activated list-item
+      $(this).addClass('active'); // activated list-item
     }
   });
 })

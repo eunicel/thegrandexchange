@@ -1,5 +1,25 @@
-body {
-  padding: 50px;
+body { 
+  padding-top: 70px;
+  background-color: #45568A;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom; 
+  background-image: url("/images/bg-grandex.png");
+}
+
+.navbar-inverse .navbar-brand {
+  color: #eee;
+  font-size: 26px;
+}
+
+.sidebar {
+  border-radius: 5px;
+}
+
+.main-view {
+  border-radius: 5px;
+  background-color: #242538;
+  color: #DEDFFF;
 }
 
 .review{
