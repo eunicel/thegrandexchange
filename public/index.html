@@ -23,25 +23,36 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#">The Grand Exchange</a>
+
       </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-      </div>
-    </nav>
-    
-    <div ng-show="isLoggedIn()" class="col-xs-3">
-      <div class="sidebar" ui-scrollfix="+10">
-        <ul class="nav nav-pills nav-stacked">
-          <li class="sidebar-item"><a href="#/marketplace" id="market-tab">Marketplace</a></li>
-          <li class="sidebar-item"><a href="#/offers">My Offers</a></li>
-          <li class="sidebar-item"><a href="#/completed">Completed</a></li>
-          <li class="sidebar-item"><a href="#/profile">My Profile</a></li>
-          <li class="sidebar-item"><a href="" id="logout-tab" ng-click="logout()">Logout</a></li>
+      <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li>
+            <a ng-show="isLoggedIn()" class="logout navbar-link" ng-click="logout()">Logout</a>
+          </li>
         </ul>
       </div>
+    </nav>
+    <div class="col-sm-3">
+      <div ng-show="isLoggedIn()" class="col-xs-12">
+        <div ui-scrollfix="+10">
+          <div class="sidebar row">
+            <div class="col-xs-12">
+              <ul class="nav nav-pills nav-stacked">
+                <li class="sidebar-item"><a href="#/marketplace" id="market-tab">Marketplace</a></li>
+                <li class="sidebar-item"><a href="#/offers">My Offers</a></li>
+                <li class="sidebar-item"><a href="#/completed">Completed</a></li>
+                <li class="sidebar-item"><a href="#/profile">My Profile</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div ng-show="isLoggedIn()" class="col-xs-9 main-view">
-      <ui-view></ui-view>
+    <div class="col-sm-9">
+      <div ng-show="isLoggedIn()" class="col-xs-12 main-view">
+        <ui-view></ui-view>
+      </div>
     </div>
     <div ng-show="!isLoggedIn()" class="col-sm-6 main-view col-sm-offset-3">
       <ui-view></ui-view>

@@ -367,11 +367,16 @@ $(document).ready(function() {
   '$http',
   '$scope',
   '$filter',
+  '$location',
   'users',
   'session',
   'items',
   'ngTableParams',
-  function($http, $scope, $filter, users, session, items, ngTableParams) {
+  function($http, $scope, $filter, $location, users, session, items, ngTableParams) {
+    $scope.toItem = function(item){
+      console.log(item._id);
+      $location.url('items/'+ item._id);
+    }
     $scope.deleteOffer = function (offer) {
       items.deleteOffer('offer.item._id', offer._id); // 'offer.item._id' doesn't actually get used
     }
