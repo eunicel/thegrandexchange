@@ -145,3 +145,8 @@ form {
   color:red;
   cursor: pointer;
 }
+
+.plus-sign{
+  font-size: 80px;
+  padding-left:40px;
+}
