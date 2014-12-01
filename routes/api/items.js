@@ -111,11 +111,8 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
 router.post('/:item_id/flags', function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    console.log('flagging!!!');
     if(item !== null){
-      console.log('item not null');
       Item.flag(req.user._id, item_id, function(item) {
-        console.log('flagged!!!!!!');
         res.json({item: item, success: true});
       });
     } else {

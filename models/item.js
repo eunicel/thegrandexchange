@@ -240,7 +240,7 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
     var alreadyRated = false;
     if(item.flags.length < 2) {
       for (var i = 0; i < item.flags.length; i++){
-        if(item.flags[i] == userid){
+        if(item.flags[i].toString() === userid.toString()){
           alreadyRated = true;
         }
       }
@@ -251,10 +251,17 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
         callback(item);
       });
     } else if (item.flags.length === 2) {
-      Item.findOneAndRemove({_id: item_id}, function(err, item) {
-        utils.handleError(err);
-        callback(item);
-      });
+      for (var i = 0; i < item.flags.length; i++){
+        if(item.flags[i].toString() === userid.toString()){
+          alreadyRated = true;
+        }
+      }
+      if(!alreadyRated) {
+        Item.findOneAndRemove({_id: item_id}, function(err, item) {
+          utils.handleError(err);
+          callback(item);
+        });
+      }
     }
   });
 }
