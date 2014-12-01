@@ -120,6 +120,9 @@ $(document).ready(function() {
     },
     deleteOffer: function(itemID, offerID) {
       return $http.delete('/api/items/' + itemID + '/offers/' + offerID);
+    },
+    flag: function(userID, itemID) {
+      return $http.post('/api/items/' + itemID + '/flags');
     }
   }
 }]);angular.module('thegrandexchange')
@@ -296,6 +299,9 @@ $(document).ready(function() {
       session.clear();
       $location.path('login');
     }
+    $scope.flag = function(item_id){
+      items.flag(session.name()._id, item_id);
+    }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
     }
@@ -367,16 +373,11 @@ $(document).ready(function() {
   '$http',
   '$scope',
   '$filter',
-  '$location',
   'users',
   'session',
   'items',
   'ngTableParams',
-  function($http, $scope, $filter, $location, users, session, items, ngTableParams) {
-    $scope.toItem = function(item){
-      console.log(item._id);
-      $location.url('items/'+ item._id);
-    }
+  function($http, $scope, $filter, users, session, items, ngTableParams) {
     $scope.deleteOffer = function (offer) {
       items.deleteOffer('offer.item._id', offer._id); // 'offer.item._id' doesn't actually get used
     }

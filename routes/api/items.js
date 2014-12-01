@@ -109,6 +109,19 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
   });
 });
 
+router.post('/:item_id/flags', function(req, res) {
+  var item_id = req.param('item_id');
+  Item.getItemById(item_id, function(item) {
+    if(item !== null){
+      Item.flag(req.user._id, item_id, function(item) {
+        res.json({item: item, success: true});
+      });
+    } else {
+      res.json({success: false});
+    }
+  });
+});
+
 
 // DELETE /items/:item_id/offers/:offer_id
 // delete offer

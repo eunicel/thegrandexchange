@@ -28,7 +28,8 @@ var itemSchema = mongoose.Schema({
   offers: [{
     type : mongoose.Schema.Types.ObjectId,
     ref: 'Offer'
-  }]
+  }],
+  flags: Array
 });
 
 // GET - returns all items
@@ -46,7 +47,8 @@ itemSchema.statics.createItem = function(name, description, callback) {
   var item = new Item({
     name: name,
     description: description,
-    offers: []
+    offers: [],
+    flags: []
   });
   item.save(function(err, item) {
     callback(item);
@@ -245,6 +247,45 @@ itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
     }
   })
 };
+
+itemSchema.statics.flag = function (userid, item_id, callback) {
+  Item.findOne({_id: item_id}, function(err, item) {
+    utils.handleError(err);
+    var alreadyRated = false;
+    if(item.flags.length < 2) {
+      for (var i = 0; i < item.flags.length; i++){
+        if(item.flags[i].toString() === userid.toString()){
+          alreadyRated = true;
+        }
+      }
+      if(!alreadyRated){
+        item.flags.push(userid);
+      }
+      item.save(function(err, item) {
+        callback(item);
+      });
+    } else if (item.flags.length === 2) {
+      for (var i = 0; i < item.flags.length; i++){
+        if(item.flags[i].toString() === userid.toString()){
+          alreadyRated = true;
+        }
+      }
+      if(!alreadyRated) {
+        Item.findOneAndRemove({_id: item_id}, function(err, item) {
+          utils.handleError(err);
+          callback(item);
+        });
+      }
+    }
+  });
+}
+
+itemSchema.statics.deleteItem = function(item_id, callback) {
+  Item.findOneAndRemove({_id: item_id}, function(err, item) {
+    utils.handleError(err);
+    callback(item);
+  })
+}
 
 // create model
 var Item = mongoose.model('Item', itemSchema);
