@@ -18,6 +18,9 @@ angular.module('thegrandexchange')
     },
     deleteOffer: function(itemID, offerID) {
       return $http.delete('/api/items/' + itemID + '/offers/' + offerID);
+    },
+    flag: function(userID, itemID) {
+      return $http.post('/api/items/' + itemID + '/flags');
     }
   }
 }])

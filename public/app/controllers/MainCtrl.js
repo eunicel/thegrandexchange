@@ -14,6 +14,9 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
+    $scope.flag = function(item_id){
+      items.flag(session.name()._id, item_id);
+    }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
     }
