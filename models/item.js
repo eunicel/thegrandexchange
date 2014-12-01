@@ -154,7 +154,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       path: 'offers',
       match: { type: "buy"},
     })
-    .exec(function(err, item) {
+    .exec(function(err, itemwithoutuser) {
       utils.handleError(err);
       var options = {
         path: 'offers.postedBy',

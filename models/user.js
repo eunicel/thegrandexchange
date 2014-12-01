@@ -106,7 +106,7 @@ userSchema.statics.addReview = function(user_id, review, callback) {
     utils.handleError(err);
     user.reviews.push(review);
     var totalscore = 0
-    for (int i=0; i<user.reviews.length; i++) {
+    for (var i=0; i<user.reviews.length; i++) {
       totalscore += parseInt(user.reviews[i].score);
     }
     user.reputation = totalscore/user.reviews.length;

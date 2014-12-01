@@ -83,6 +83,7 @@ router.post('/:item_id/offers', function(req, res) {
         price: req.body.price,
         type: req.body.type,
         item: item.name,
+        // minReputation: 3
         minReputation: req.body.minReputation
       };
       Item.createOffer(item_id, offer, function(transaction) {
