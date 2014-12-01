@@ -18,7 +18,8 @@ angular.module('thegrandexchange')
         item: $scope.item._id,
         postedAt: Date.now(),
         price: parseInt($scope.price, 10),
-        type: type
+        type: type,
+        minReputation: $scope.reputation
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
         if (response.data.transaction === 'No match') {
