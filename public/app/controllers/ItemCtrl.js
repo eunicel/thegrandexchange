@@ -22,7 +22,7 @@ angular.module('thegrandexchange')
         minReputation: $scope.reputation
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        console.log(response.data);
+        $scope.message = undefined;
         if (response.data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
@@ -31,10 +31,9 @@ angular.module('thegrandexchange')
           $scope.item.offers.push(newOffer);
         }
         else if (response.data.success === false) {
-
           $scope.message = response.data.message;
         }
-        else if (response.data.transaction) {
+        else {
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
             if (offers[i].price === response.data.transaction.price) {

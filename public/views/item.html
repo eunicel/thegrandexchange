@@ -26,8 +26,8 @@
     <h3> from someone with reputation at least </h3>
     <input ng-model="reputation" class="reputation-required" type="text">
     </input>
+    <div ng-show="message" class="item_error">
+      {{message}}
+    </div>
   </form>
-  <div ng-show="message">
-    {{message}}
-  </div>
 </div>
