@@ -4,6 +4,10 @@ var User = require('../../models/user').User;
 var Transaction = require('../../models/user').Transaction;
 var utils = require('../../utils');
 
+var api_user = require('../../config/secrets').api_user;
+var api_key = require('../../config/secrets').api_key;
+var sendgrid  = require('sendgrid')(api_user, api_key);
+
 /* POST /users
  * create new user
  * firstName, lastName, email, and password cannot be empty
@@ -13,9 +17,8 @@ router.post('/', function(req, res) {
   var lastName = req.body.lastName;
   var email = req.body.email;
   var password = req.body.password;
-  //First part of email only contain letters and numbers, and must be at least 1 character long
-  // var emailFrontRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*$/;
-
+  // first part of email only contain letters and numbers, and must be at least 1 character long
+  // email must end with @mit.edu, @csail.mit.edu, or @media.mit.edu
   var mitEmailRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@mit.edu$/;
   var csailRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@csail.mit.edu$/;
   var mediaRegex = /^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*@media.mit.edu$/;
@@ -32,7 +35,17 @@ router.post('/', function(req, res) {
           res.json({message: 'User with that email exists.', success: false});
         } else {
           User.createUser(firstName, lastName, email, password, function(user) {
-            return res.json({user: user, success: true});
+            //send email with activation code (user id)
+            var activationCodeEmail = {
+              to      : email,
+              from    : "thegrandexchange@mit.edu",
+              subject : "Your Account Activation Code",
+              text    : "Your Activation Code is:  " + user._id
+            }
+            sendgrid.send(activationCodeEmail, function(err, json) {
+              if (err) { console.error(err); }
+            });
+            return res.json({success: true});
           });
         }
       });
@@ -49,6 +62,19 @@ router.get('/:user_id', utils.loggedIn, function(req, res) {
       res.json({user: user, success: true});
     } else {
       res.json({message: 'User does not exist.', success: false});
+    }
+  });
+});
+
+// PUT /users/:user_id/verification
+// verify user account with user_id
+router.put('/:user_id/verification', function(req, res) {
+  var user_id = req.param('user_id');
+  User.activate(user_id, function(user) {
+    if (user) {
+      res.json({user: user, success: true});
+    } else {
+      res.json({message: 'Could not activate account', success: false});
     }
   });
 });
@@ -91,7 +117,7 @@ router.post('/:user_id/transactions/:transaction_id', utils.loggedIn, function(r
     };
     Transaction.addTransactionReview(user_id, transaction_id, review, function(transaction) {
       res.json({transaction: transaction, success: true});
-    });    
+    });
   }
 });
 

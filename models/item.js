@@ -13,7 +13,7 @@ var sendgrid  = require('sendgrid')(api_user, api_key);
 
 
 // sends emails notification to buyer and seller of the match
-var emailTransactionNotification = function(type, buyer_email, seller_email, item_name, price) {
+var emailTransactionNotification = function(buyer_email, seller_email, item_name, price) {
   // if (type === "buy") { //you are the buyer
   var emailToBuyer = {
     to      : buyer_email,
@@ -185,7 +185,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
             User.findOne({_id:offer.postedBy}, function(err, buyer) {
               //send email notifications out for the new transaction
-              emailTransactionNotification("buy", buyer.email, minSell.postedBy.email, item.name, minSell.price);
+              emailTransactionNotification(buyer.email, minSell.postedBy.email, item.name, minSell.price);
             });
             callback(transaction, null);
           });
@@ -246,7 +246,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
             User.findOne({_id:offer.postedBy}, function(err, seller) {
               //send email notifications out for the new transaction
-              emailTransactionNotification("sell", maxBuy.postedBy.email, seller.email, item.name, maxBuy.price);
+              emailTransactionNotification(maxBuy.postedBy.email, seller.email, item.name, maxBuy.price);
             });
             callback(transaction, null);
           });
@@ -311,23 +311,31 @@ itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
 itemSchema.statics.flag = function (userid, item_id, callback) {
   Item.findOne({_id: item_id}, function(err, item) {
     utils.handleError(err);
-    var alreadyRated = item.flags.map(function(flag) {
-      return flag.toString();
-    }).indexOf(userid.toString()) > -1;
-    if (!alreadyRated) {
-      if(item.flags.length < 2) {
+    var alreadyRated = false;
+    if(item.flags.length < 2) {
+      for (var i = 0; i < item.flags.length; i++){
+        if(item.flags[i].toString() === userid.toString()){
+          alreadyRated = true;
+        }
+      }
+      if(!alreadyRated){
         item.flags.push(userid);
-        item.save(function(err, item) {
-          callback(item);
-        });
-      } else if (item.flags.length === 2) {
+      }
+      item.save(function(err, item) {
+        callback(item);
+      });
+    } else if (item.flags.length === 2) {
+      for (var i = 0; i < item.flags.length; i++){
+        if(item.flags[i].toString() === userid.toString()){
+          alreadyRated = true;
+        }
+      }
+      if(!alreadyRated) {
         Item.findOneAndRemove({_id: item_id}, function(err, item) {
           utils.handleError(err);
           callback(item);
         });
       }
-    } else {
-      callback("Already rated");
     }
   });
 }

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var utils = require('../utils');
 
 var userSchema = mongoose.Schema({
+  activated: Boolean,
   firstName: String,
   lastName: String,
   email: String,
@@ -21,8 +22,17 @@ var userSchema = mongoose.Schema({
   }]
 });
 
+userSchema.statics.activate = function(user_id, callback) {
+  User.update({_id: user_id}, {activated: true},
+    function(err, numaffected, doc) {
+      utils.handleError(err);
+      callback(doc);
+    });
+};
+
 userSchema.statics.userExists = function(email, callback) {
   User.find({email: email}, function(err, users) {
+    utils.handleError(err);
     callback(users.length > 0);
   });
 };
@@ -30,21 +40,20 @@ userSchema.statics.userExists = function(email, callback) {
 // /users/ POST
 // Create a new user
 userSchema.statics.createUser = function(firstName, lastName, email, password, callback) {
-  User.find({email: email}, function(err, users) {
-    user = new User({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-      reputation: 5, //initial reputation is 5
-      offers: [],
-      reviews: [],
-      transactions: [],
-    });
-    user.save(function(err, user){
-      utils.handleError(err);
-      callback(user);
-    });
+  user = new User({
+    activated: false,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    password: password,
+    reputation: 5, //initial reputation is 5
+    offers: [],
+    reviews: [],
+    transactions: [],
+  });
+  user.save(function(err, user){
+    utils.handleError(err);
+    callback(user);
   });
 };
 
@@ -71,6 +80,7 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
   .lean()
   .populate({ path: 'transactions' })
   .exec(function(err, user) {
+    utils.handleError(err);
     var options = {
       path: 'transactions.buyOffer transactions.sellOffer',
       model: 'Offer'
