@@ -7,7 +7,7 @@
         <th>Sell Price</th>
         <th>Seller Reputation</th>
       </tr>
-      <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true" ng-show="user.reputation >= sell.minReputation">
+      <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true" ng-show="userReputation >= sell.minReputation">
         <td>${{sell.price}}</td>
         <td>{{sell.postedBy.reputation}}</td>
       </tr>
@@ -19,7 +19,7 @@
         <th>Buy Price</th>
         <th>Buyer Reputation</th>
       </tr>
-      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true" ng-show="user.reputation >= buy.minReputation">
+      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true" ng-show="userReputation >= buy.minReputation">
         <td>${{buy.price}}</td>
         <td>{{buy.postedBy.reputation}}</td>
       </tr>
@@ -38,7 +38,17 @@
       <h3> from someone with reputation at least </h3>
       <input ng-model="reputation" class="reputation-required" type="text">
       </input>
-      <div ng-show="message" class="item_error">
+      <br><br>
+      <div role="alert" ng-show="error" class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {{message}}
+      </div>
+      <div role="alert" ng-show="posted" class="alert alert-info" >
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        {{message}}
+      </div>
+      <div role="alert" ng-show="matched" class="alert alert-success" >
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
         {{message}}
       </div>
     </form>

@@ -12,7 +12,7 @@ angular.module('thegrandexchange')
     $scope.offers = [];
 
     $scope.deleteOffer = function (offer) {
-      items.deleteOffer('offer.item._id', offer._id).then(function(response) {
+      items.deleteOffer('offer.item._id', offer._id).success(function(data) {
         for (var i = 0; i < $scope.offers.length; i++) {
           if ($scope.offers[i]._id === offer._id) {
             $scope.offers.splice(i, 1);
@@ -22,8 +22,8 @@ angular.module('thegrandexchange')
         }
       }); // 'offer.item._id' doesn't actually get used
     }
-    users.getOffers(session.name()._id).then(function(response) {
-      $scope.offers = response.data.offers;
+    users.getOffers(session.name()._id).success(function(data) {
+      $scope.offers = data.offers;
 
       // Set up the table that allows sorting by field.
       // Credit: http://bazalt-cms.com/ng-table/example/3

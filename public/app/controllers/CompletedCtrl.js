@@ -3,10 +3,16 @@ angular.module('thegrandexchange')
   '$scope',
   'users',
   'session',
+<<<<<<< HEAD
   'utils',
   function($scope, users, session, utils) {
     users.getTransactions(session.name()._id).then(function (response) {
       var transactions = response.data.transactions;
+=======
+  function($scope, users, session) {
+    users.getTransactions(session.name()._id).success(function (data) {
+      var transactions = data.transactions;
+>>>>>>> dfcb688fc63bd23d773117848af85b35956c4f39
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
@@ -26,20 +32,18 @@ angular.module('thegrandexchange')
         text: transaction.review_content,
         score: transaction.score
       };
-      console.log(utils.validate(newReview, 'text', 'score'));
-      // console.log(newReview);
-      // users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-      //   console.log(response);
-      //   if (response.data.success) {
-      //     for (var i = 0; i < $scope.transactions.length; i++) {
-      //       if ($scope.transactions[i]._id === transaction._id) {
-      //         $scope.transactions.splice(i, 1);
-      //         return;
-      //       }
-      //     }
-      //   } else {
-      //   }
-      // });
+      console.log(newReview);
+      users.postReview(session.name()._id, transaction._id, newReview).success(function (data) {
+        if (data.success) {
+          for (var i = 0; i < $scope.transactions.length; i++) {
+            if ($scope.transactions[i]._id === transaction._id) {
+              $scope.transactions.splice(i, 1);
+              return;
+            }
+          }
+        } else {
+        }
+      });
     };
   }
 ])

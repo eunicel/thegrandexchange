@@ -178,10 +178,16 @@ $(document).ready(function() {
   '$scope',
   'users',
   'session',
+<<<<<<< HEAD
   'utils',
   function($scope, users, session, utils) {
     users.getTransactions(session.name()._id).then(function (response) {
       var transactions = response.data.transactions;
+=======
+  function($scope, users, session) {
+    users.getTransactions(session.name()._id).success(function (data) {
+      var transactions = data.transactions;
+>>>>>>> dfcb688fc63bd23d773117848af85b35956c4f39
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
@@ -201,6 +207,7 @@ $(document).ready(function() {
         text: transaction.review_content,
         score: transaction.score
       };
+<<<<<<< HEAD
       console.log(utils.validate(newReview, 'text', 'score'));
       // console.log(newReview);
       // users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
@@ -215,6 +222,20 @@ $(document).ready(function() {
       //   } else {
       //   }
       // });
+=======
+      console.log(newReview);
+      users.postReview(session.name()._id, transaction._id, newReview).success(function (data) {
+        if (data.success) {
+          for (var i = 0; i < $scope.transactions.length; i++) {
+            if ($scope.transactions[i]._id === transaction._id) {
+              $scope.transactions.splice(i, 1);
+              return;
+            }
+          }
+        } else {
+        }
+      });
+>>>>>>> dfcb688fc63bd23d773117848af85b35956c4f39
     };
   }
 ]);angular.module('thegrandexchange')
@@ -227,14 +248,12 @@ $(document).ready(function() {
   'items',
   'users',
   function($http, $scope, $location, $stateParams, session, items, users) {
-    users.get(session.name()._id).success(function(response) {
-      if(response.success === true) {
-        $scope.user = response.user;
-      }
-    });
     $scope.order = 'price';
-    items.get($stateParams.id).then(function(response) {
-      $scope.item = response.data.item;
+    users.get(session.name()._id).success(function(data) {
+      $scope.userReputation = data.user.reputation;
+      items.get($stateParams.id).success(function(data2) {
+        $scope.item = data2.item;
+      });
     });
     $scope.offer = function(type) {
       // type = 'buy' or 'sell'
@@ -246,26 +265,38 @@ $(document).ready(function() {
         type: type,
         minReputation: $scope.reputation
       };
-      items.postOffer($scope.item._id, newOffer).then(function(response) {
+      items.postOffer($scope.item._id, newOffer).success(function(data) {
         $scope.message = undefined;
-        if (response.data.message === 'No match') {
-          // console.log(session.name());
+        $scope.error = false;
+        $scope.posted = false;
+        $scope.matched = false;
+        // posted
+        if (data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
-            // reputation: session.name().reputation
+            reputation: $scope.userReputation
           }
           $scope.item.offers.push(newOffer);
           $scope.price = '';
           $scope.reputation = '';
+          $scope.posted = true;
+          $scope.message = 'Your offer has been posted.'
         }
-        else if (response.data.success === false) {
+        // error
+        else if (data.success === false) {
+          $scope.error = true;
           $scope.message = response.data.message;
         }
+        // matched
         else {
+          $scope.matched = true;
+          $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
           var offers = $scope.item.offers;
+          $scope.price = '';
+          $scope.reputation = '';
           for (var i = 0; i < offers.length; i++) {
-            if (offers[i].price === response.data.transaction.price) {
+            if (offers[i].price === data.transaction.price) {
               offers.splice(i, 1);
               return;
             }
@@ -282,8 +313,8 @@ $(document).ready(function() {
   'session',
   function($http, $scope, $location, session) {
     if (session.name()) {
-      $http.post('/api/sessions', session.name()).success(function(response) {
-        if (response.success === true) {
+      $http.post('/api/sessions', session.name()).success(function(data) {
+        if (data.success === true) {
           $location.path('marketplace');
         } else {
           session.clear();
@@ -296,8 +327,7 @@ $(document).ready(function() {
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).then(function(response) {
-        var data = response.data;
+      $http.post('/api/sessions', userFields).success(function(data) {
         if (data.success === true) {
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
@@ -307,7 +337,8 @@ $(document).ready(function() {
         } else {
           $scope.warning = response.data.message;
         }
-      }, function(error) {
+      })
+      .error(function(error) {
         $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';
@@ -413,14 +444,14 @@ $(document).ready(function() {
           email: $scope.email,
           password: $scope.password
         };
-        users.create(newUser).then(function (response) {
-          var data = response.data;
+        users.create(newUser).success(function (data) {
           if (data.success === true) {
             $location.path('sessions');
           } else {
             $scope.warning = response.data.message;
           }
-        }, function(error) {
+        })
+        .error(function(error) {
           $scope.warning = error.data.message;
         });
       }
@@ -442,7 +473,7 @@ $(document).ready(function() {
     $scope.offers = [];
 
     $scope.deleteOffer = function (offer) {
-      items.deleteOffer('offer.item._id', offer._id).then(function(response) {
+      items.deleteOffer('offer.item._id', offer._id).success(function(data) {
         for (var i = 0; i < $scope.offers.length; i++) {
           if ($scope.offers[i]._id === offer._id) {
             $scope.offers.splice(i, 1);
@@ -452,8 +483,8 @@ $(document).ready(function() {
         }
       }); // 'offer.item._id' doesn't actually get used
     }
-    users.getOffers(session.name()._id).then(function(response) {
-      $scope.offers = response.data.offers;
+    users.getOffers(session.name()._id).success(function(data) {
+      $scope.offers = data.offers;
 
       // Set up the table that allows sorting by field.
       // Credit: http://bazalt-cms.com/ng-table/example/3
