@@ -239,6 +239,8 @@ $(document).ready(function() {
             lastName: session.name().lastName
           }
           $scope.item.offers.push(newOffer);
+          $scope.price = '';
+          $scope.reputation = '';
         }
         else if (response.data.success === false) {
           $scope.message = response.data.message;
