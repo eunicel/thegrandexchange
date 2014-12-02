@@ -225,12 +225,17 @@ $(document).ready(function() {
         minReputation: $scope.reputation
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.transaction === 'No match') {
+        console.log(response.data);
+        if (response.data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName
           }
           $scope.item.offers.push(newOffer);
+        }
+        else if (response.data.success === false) {
+
+          $scope.message = response.data.message;
         }
         else if (response.data.transaction) {
           var offers = $scope.item.offers;
@@ -241,7 +246,6 @@ $(document).ready(function() {
             }
           }
         }
-      }.bind(this), function(error) {
       });
     }
   }
