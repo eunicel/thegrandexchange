@@ -167,9 +167,10 @@ $(document).ready(function() {
   'session',
   function($scope, users, session) {
     users.getTransactions(session.name()._id).then(function (response) {
-      transactions = response.data.transactions;
-      displayed_transactions = [];
+      var transactions = response.data.transactions;
+      var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
+        console.log(transactions[i]);
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);
@@ -184,7 +185,7 @@ $(document).ready(function() {
     $scope.review = function(transaction) {
       var review_score = 0;
       // completed if checkbox is checked
-      if(transaction.completed){
+      if(transaction.completed) {
         review_score = 1;
       } else {
         review_score = -1;
@@ -195,7 +196,12 @@ $(document).ready(function() {
       };
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
         if(response.data.success) {
-          transactions.remove(transaction);
+          for (var i = 0; i < $scope.transactions.length; i++) {
+            if ($scope.transactions[i]._id === transaction._id) {
+              $scope.transactions.splice(i, 1);
+              return;
+            }
+          }
         } else {
         }
       });
@@ -373,13 +379,24 @@ $(document).ready(function() {
   '$http',
   '$scope',
   '$filter',
+  '$timeout',
   'users',
   'session',
   'items',
   'ngTableParams',
-  function($http, $scope, $filter, users, session, items, ngTableParams) {
+  function($http, $scope, $filter, $timeout, users, session, items, ngTableParams) {
+    $scope.offers = [];
+
     $scope.deleteOffer = function (offer) {
-      items.deleteOffer('offer.item._id', offer._id); // 'offer.item._id' doesn't actually get used
+      items.deleteOffer('offer.item._id', offer._id).then(function(response) {
+        for (var i = 0; i < $scope.offers.length; i++) {
+          if ($scope.offers[i]._id === offer._id) {
+            $scope.offers.splice(i, 1);
+            $scope.tableParams.reload();
+            return;
+          }
+        }
+      }); // 'offer.item._id' doesn't actually get used
     }
     users.getOffers(session.name()._id).then(function(response) {
       $scope.offers = response.data.offers;
@@ -393,15 +410,17 @@ $(document).ready(function() {
           name: 'asc'     // initial sorting
         }
       }, {
-        total: $scope.offers.length, // length of data
+        total: 0, // length of data
         getData: function($defer, params) {
-          // use built-in angular filter
+          var data = $scope.offers;
+          params.total(data.length);
           var orderedData = params.sorting() ?
-                            $filter('orderBy')($scope.offers, params.orderBy()) :
-                            $scope.offers;
+                            $filter('orderBy')(data, params.orderBy()) :
+                            data;
           $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
       });
+      $scope.tableParams.settings().$scope = $scope;
     });
   }
 ]);angular.module('thegrandexchange')

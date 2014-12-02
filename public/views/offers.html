@@ -1,7 +1,7 @@
 <div ng-controller="OffersCtrl">
   <h1>My Offers</h1>
   <table ng-table="tableParams" class="table">
-    <tr ng-repeat="offer in $data">
+    <tr ng-repeat="offer in offers">
       <td data-title="'Item'" sortable="'item'">
         {{offer.item}}
       </td>
