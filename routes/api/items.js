@@ -63,7 +63,6 @@ router.get('/:item_id/offers', utils.loggedIn, function(req, res) {
 // create new offer
 router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
-
   if (req.body.postedBy != req.user._id) {
     res.json({message: "Unauthorized.", success: false});
   }
@@ -73,7 +72,7 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   else if (req.body.price < 0) {
     res.json({message: "Price cannot be negative", success: false});
   }
-  else if (isNaN(req.body.minReputation)) {
+  else if (isNaN(req.body.minReputation) || req.body.minReputation === '') {
     res.json({message: "You must enter a minimum reputation between 1 and 5", success: false});
   }
   else if (req.body.minReputation < 0 || req.body.minReputation > 5) {

@@ -178,14 +178,9 @@ $(document).ready(function() {
   '$scope',
   'users',
   'session',
-<<<<<<< HEAD
   'utils',
   function($scope, users, session, utils) {
-    users.getTransactions(session.name()._id).then(function (data) {
-=======
-  function($scope, users, session) {
     users.getTransactions(session.name()._id).success(function (data) {
->>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
       var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
@@ -220,14 +215,8 @@ $(document).ready(function() {
           } else {
             // failed
           }
-<<<<<<< HEAD
         });
       }
-=======
-        } else {
-        }
-      });
->>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
     };
   }
 ]);angular.module('thegrandexchange')
@@ -264,6 +253,9 @@ $(document).ready(function() {
         $scope.matched = false;
         // posted
         if (data.message === 'No match') {
+          console.log('matched');
+          console.log($scope.reputation);
+          console.log(data.success);
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
@@ -282,6 +274,7 @@ $(document).ready(function() {
         }
         // matched
         else {
+          console.log('matched');
           $scope.matched = true;
           $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
           var offers = $scope.item.offers;
