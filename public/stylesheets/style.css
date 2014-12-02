@@ -191,6 +191,12 @@ hr {
   cursor: pointer;
 }
 
+.flag.flagged{
+  color: gray;
+  cursor: default;
+
+}
+
 .reputation-required{
   font-size: x-large;
   width:90px;
