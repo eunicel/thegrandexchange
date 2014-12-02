@@ -42,7 +42,7 @@ router.post('/', function(req, res) {
 
 // GET /users/:user_id
 // get user with user_id
-router.get('/:user_id', function(req, res) {
+router.get('/:user_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getUserById(user_id, function(user) {
     if (user) {
@@ -55,7 +55,7 @@ router.get('/:user_id', function(req, res) {
 
 // GET /users/:user_id/transactions
 // get all transactions of user with user_id
-router.get('/:user_id/transactions', function(req, res) {
+router.get('/:user_id/transactions', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getUserTransactions(user_id, function(transactions) {
     if (transactions !== null) {
@@ -68,7 +68,7 @@ router.get('/:user_id/transactions', function(req, res) {
 
 // GET /users/:user_id/transactions/:transaction_id
 // get transaction with transaction_id
-router.get('/:user_id/transactions/:transaction_id', function(req, res) {
+router.get('/:user_id/transactions/:transaction_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   var transaction_id = req.param('transaction_id');
   Transaction.getTransactionById(user_id, transaction_id, function(transaction) {
@@ -78,11 +78,11 @@ router.get('/:user_id/transactions/:transaction_id', function(req, res) {
 
 // POST /users/:user_id/transactions/:transaction_id
 // rate and review transaction with transaction_id with user user_id
-router.post('/:user_id/transactions/:transaction_id', function(req, res) {
+router.post('/:user_id/transactions/:transaction_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
 
-  if (user_id == req.user._id) {
-    res.json({message: "You can't review yourself!", success: false});
+  if (user_id !== req.user._id.toString()) {
+    res.json({message: "Unauthorized", success: false});
   } else {
     var transaction_id = req.param('transaction_id');
     var review = {
@@ -97,7 +97,7 @@ router.post('/:user_id/transactions/:transaction_id', function(req, res) {
 
 // GET /users/:user_id/offers
 // get all offers for a user
-router.get('/:user_id/offers', function(req, res) {
+router.get('/:user_id/offers', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {
     if(offers !== null) {
