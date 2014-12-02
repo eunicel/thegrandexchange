@@ -311,31 +311,23 @@ itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
 itemSchema.statics.flag = function (userid, item_id, callback) {
   Item.findOne({_id: item_id}, function(err, item) {
     utils.handleError(err);
-    var alreadyRated = false;
-    if(item.flags.length < 2) {
-      for (var i = 0; i < item.flags.length; i++){
-        if(item.flags[i].toString() === userid.toString()){
-          alreadyRated = true;
-        }
-      }
-      if(!alreadyRated){
+    var alreadyRated = item.flags.map(function(flag) {
+      return flag.toString();
+    }).indexOf(userid.toString()) > -1;
+    if (!alreadyRated) {
+      if(item.flags.length < 2) {
         item.flags.push(userid);
-      }
-      item.save(function(err, item) {
-        callback(item);
-      });
-    } else if (item.flags.length === 2) {
-      for (var i = 0; i < item.flags.length; i++){
-        if(item.flags[i].toString() === userid.toString()){
-          alreadyRated = true;
-        }
-      }
-      if(!alreadyRated) {
+        item.save(function(err, item) {
+          callback(item);
+        });
+      } else if (item.flags.length === 2) {
         Item.findOneAndRemove({_id: item_id}, function(err, item) {
           utils.handleError(err);
           callback(item);
         });
       }
+    } else {
+      callback("Already rated");
     }
   });
 }

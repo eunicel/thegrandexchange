@@ -7,7 +7,7 @@
         <th>Sell Price</th>
         <th>Seller Reputation</th>
       </tr>
-      <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true">
+      <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true" ng-show="userReputation >= sell.minReputation">
         <td>${{sell.price}}</td>
         <td>{{sell.postedBy.reputation}}</td>
       </tr>
@@ -19,7 +19,7 @@
         <th>Buy Price</th>
         <th>Buyer Reputation</th>
       </tr>
-      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true">
+      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true" ng-show="userReputation >= buy.minReputation">
         <td>${{buy.price}}</td>
         <td>{{buy.postedBy.reputation}}</td>
       </tr>
@@ -43,6 +43,4 @@
       </div>
     </form>
   </div>
-
-
 </div>

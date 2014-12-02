@@ -166,8 +166,8 @@ $(document).ready(function() {
   'users',
   'session',
   function($scope, users, session) {
-    users.getTransactions(session.name()._id).then(function (response) {
-      var transactions = response.data.transactions;
+    users.getTransactions(session.name()._id).success(function (data) {
+      var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
@@ -182,21 +182,14 @@ $(document).ready(function() {
     });
 
     $scope.review = function(transaction) {
-      var review_score = 0;
-      // completed if checkbox is checked
-      if(transaction.completed) {
-        review_score = 1;
-      } else {
-        review_score = -1;
-      }
+      var review_score = transaction.score;
       var newReview = {
         text: transaction.review_content,
-        score: review_score
+        score: transaction.score
       };
       console.log(newReview);
-      users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        console.log(response);
-        if (response.data.success) {
+      users.postReview(session.name()._id, transaction._id, newReview).success(function (data) {
+        if (data.success) {
           for (var i = 0; i < $scope.transactions.length; i++) {
             if ($scope.transactions[i]._id === transaction._id) {
               $scope.transactions.splice(i, 1);
@@ -216,10 +209,14 @@ $(document).ready(function() {
   '$stateParams',
   'session',
   'items',
-  function($http, $scope, $location, $stateParams, session, items) {
+  'users',
+  function($http, $scope, $location, $stateParams, session, items, users) {
     $scope.order = 'price';
-    items.get($stateParams.id).then(function(response) {
-      $scope.item = response.data.item;
+    users.get(session.name()._id).success(function(data) {
+      $scope.userReputation = data.user.reputation;
+      items.get($stateParams.id).success(function(data2) {
+        $scope.item = data2.item;
+      });
     });
     $scope.offer = function(type) {
       // type = 'buy' or 'sell'
@@ -231,26 +228,25 @@ $(document).ready(function() {
         type: type,
         minReputation: $scope.reputation
       };
-      items.postOffer($scope.item._id, newOffer).then(function(response) {
+      items.postOffer($scope.item._id, newOffer).success(function(data) {
         $scope.message = undefined;
-        if (response.data.message === 'No match') {
-          // console.log(session.name());
+        if (data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
-            // reputation: session.name().reputation
+            reputation: $scope.userReputation
           }
           $scope.item.offers.push(newOffer);
           $scope.price = '';
           $scope.reputation = '';
         }
-        else if (response.data.success === false) {
-          $scope.message = response.data.message;
+        else if (data.success === false) {
+          $scope.message = data.message;
         }
         else {
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
-            if (offers[i].price === response.data.transaction.price) {
+            if (offers[i].price === data.transaction.price) {
               offers.splice(i, 1);
               return;
             }
@@ -267,8 +263,8 @@ $(document).ready(function() {
   'session',
   function($http, $scope, $location, session) {
     if (session.name()) {
-      $http.post('/api/sessions', session.name()).success(function(response) {
-        if (response.success === true) {
+      $http.post('/api/sessions', session.name()).success(function(data) {
+        if (data.success === true) {
           $location.path('marketplace');
         } else {
           session.clear();
@@ -281,8 +277,7 @@ $(document).ready(function() {
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).then(function(response) {
-        var data = response.data;
+      $http.post('/api/sessions', userFields).success(function(data) {
         if (data.success === true) {
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
@@ -292,7 +287,8 @@ $(document).ready(function() {
         } else {
           $scope.warning = response.data.message;
         }
-      }, function(error) {
+      })
+      .error(function(error) {
         $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';
@@ -310,12 +306,24 @@ $(document).ready(function() {
       return session.name() !== undefined;
     }
 
+    $scope.flagged = function(item) {
+      return item.flags.indexOf(session.name()._id) > -1;
+    }
+
+    $scope.userid = function() {
+      return session.user()._id;
+    }
+
     $scope.logout = function() {
       session.clear();
       $location.path('login');
     }
-    $scope.flag = function(item_id){
-      items.flag(session.name()._id, item_id);
+    $scope.flag = function(item){
+      items.flag(session.name()._id, item._id).success(function(data) {
+        if (data.success) {
+          item.flags.push(session.name()._id);
+        }
+      }.bind(this));
     }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
@@ -386,14 +394,14 @@ $(document).ready(function() {
           email: $scope.email,
           password: $scope.password
         };
-        users.create(newUser).then(function (response) {
-          var data = response.data;
+        users.create(newUser).success(function (data) {
           if (data.success === true) {
             $location.path('sessions');
           } else {
             $scope.warning = response.data.message;
           }
-        }, function(error) {
+        })
+        .error(function(error) {
           $scope.warning = error.data.message;
         });
       }
@@ -415,7 +423,7 @@ $(document).ready(function() {
     $scope.offers = [];
 
     $scope.deleteOffer = function (offer) {
-      items.deleteOffer('offer.item._id', offer._id).then(function(response) {
+      items.deleteOffer('offer.item._id', offer._id).success(function(data) {
         for (var i = 0; i < $scope.offers.length; i++) {
           if ($scope.offers[i]._id === offer._id) {
             $scope.offers.splice(i, 1);
@@ -425,8 +433,8 @@ $(document).ready(function() {
         }
       }); // 'offer.item._id' doesn't actually get used
     }
-    users.getOffers(session.name()._id).then(function(response) {
-      $scope.offers = response.data.offers;
+    users.getOffers(session.name()._id).success(function(data) {
+      $scope.offers = data.offers;
 
       // Set up the table that allows sorting by field.
       // Credit: http://bazalt-cms.com/ng-table/example/3

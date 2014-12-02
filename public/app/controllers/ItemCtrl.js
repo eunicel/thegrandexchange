@@ -6,10 +6,14 @@ angular.module('thegrandexchange')
   '$stateParams',
   'session',
   'items',
-  function($http, $scope, $location, $stateParams, session, items) {
+  'users',
+  function($http, $scope, $location, $stateParams, session, items, users) {
     $scope.order = 'price';
-    items.get($stateParams.id).then(function(response) {
-      $scope.item = response.data.item;
+    users.get(session.name()._id).success(function(data) {
+      $scope.userReputation = data.user.reputation;
+      items.get($stateParams.id).success(function(data2) {
+        $scope.item = data2.item;
+      });
     });
     $scope.offer = function(type) {
       // type = 'buy' or 'sell'
@@ -21,26 +25,25 @@ angular.module('thegrandexchange')
         type: type,
         minReputation: $scope.reputation
       };
-      items.postOffer($scope.item._id, newOffer).then(function(response) {
+      items.postOffer($scope.item._id, newOffer).success(function(data) {
         $scope.message = undefined;
-        if (response.data.message === 'No match') {
-          // console.log(session.name());
+        if (data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
-            // reputation: session.name().reputation
+            reputation: $scope.userReputation
           }
           $scope.item.offers.push(newOffer);
           $scope.price = '';
           $scope.reputation = '';
         }
-        else if (response.data.success === false) {
-          $scope.message = response.data.message;
+        else if (data.success === false) {
+          $scope.message = data.message;
         }
         else {
           var offers = $scope.item.offers;
           for (var i = 0; i < offers.length; i++) {
-            if (offers[i].price === response.data.transaction.price) {
+            if (offers[i].price === data.transaction.price) {
               offers.splice(i, 1);
               return;
             }
