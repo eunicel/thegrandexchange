@@ -114,6 +114,7 @@ form {
 
 .price{
   width:90px;
+  color: #011A41;
 }
 
 .item_left{
@@ -166,6 +167,7 @@ form {
   font-size: x-large;
   width:90px;
   display:inline-block;
+  color: #011A41;
 }
 
 .new-item{
