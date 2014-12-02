@@ -117,7 +117,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         var minSell = undefined;
         for (var i = 0; i<item.offers.length; i++) {
           if (item.offers[i].price <= offer.price) { // matchable price
-            if (item.offers[i].postedBy === offer.postedBy) { //BAD: a previous offer by the same user has a matchable price!
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
               callback("You cannot post an offer that would match your own offer");
               return;
             }
@@ -174,7 +174,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         var maxBuy = undefined;
         for (var i = 0; i < item.offers.length; i++) {
           if (item.offers[i].price >= offer.price) { // matchable price
-            if (item.offers[i].postedBy === offer.postedBy) { //BAD: a previous offer by the same user has a matchable price!
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
               callback("You cannot post an offer that would match your own offer");
               return;
             }
