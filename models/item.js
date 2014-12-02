@@ -6,6 +6,38 @@ var utils = require('../utils');
 var Transaction = require('../models/user').Transaction;
 var User = require('../models/user').User;
 
+var api_user = require('../config/secrets').api_user;
+var api_key = require('../config/secrets').api_key;
+var sendgrid  = require('sendgrid')(api_user, api_key);
+
+
+
+// sends emails notification to buyer and seller of the match
+var emailTransactionNotification = function(type, buyer_email, seller_email, item_name, price) {
+  // if (type === "buy") { //you are the buyer
+  var emailToBuyer = {
+    to      : buyer_email,
+    from    : "thegrandexchange@mit.edu",
+    subject : "Your Buy Offer was Matched!",
+    text    : "Your offer to buy " + item_name + " was matched with " + seller_email + " for $" + price +
+              ". \nDon't forget to review your transaction! \n\n The Grand Exchange"
+  }
+  var emailToSeller = {
+    to      : seller_email,
+    from    : "thegrandexchange@mit.edu",
+    subject : "Your Sell Offer was Matched!",
+    text    : "Your offer to sell " + item_name + " was matched with " + buyer_email + " for $" + price +
+              ". \nDon't forget to review your transaction! \n\n The Grand Exchange"
+  }
+  sendgrid.send(emailToBuyer, function(err, json) {
+    if (err) { console.error(err); }
+  });
+  sendgrid.send(emailToSeller, function(err, json) {
+    if (err) { console.error(err); }
+  });
+}
+
+
 // Offer schema
 var offerSchema = mongoose.Schema({
   postedBy: {
@@ -128,7 +160,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             }
           }
         }
-
+        //store only valid new offers (where user's previous offers would not match this new offer)
         offer.save(function(err, offer){
           utils.handleError(err);
         });
@@ -151,6 +183,10 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
           Transaction.createTransaction(offer, minSell, item_id, minSell.price, function(transaction) {
             Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
+            User.findOne({_id:offer.postedBy}, function(err, buyer) {
+              //send email notifications out for the new transaction
+              emailTransactionNotification("buy", buyer.email, minSell.postedBy.email, item.name, minSell.price);
+            });
             callback(transaction, null);
           });
         }
@@ -185,7 +221,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             }
           }
         }
-
+        //store only valid new offers (where user's previous offers would not match this new offer)
         offer.save(function(err, offer){
           utils.handleError(err);
         });
@@ -208,6 +244,10 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
           Transaction.createTransaction(maxBuy, offer, item_id, maxBuy.price, function(transaction) {
             Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
+            User.findOne({_id:offer.postedBy}, function(err, seller) {
+              //send email notifications out for the new transaction
+              emailTransactionNotification("sell", maxBuy.postedBy.email, seller.email, item.name, maxBuy.price);
+            });
             callback(transaction, null);
           });
         }

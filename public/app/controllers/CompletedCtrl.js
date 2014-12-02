@@ -4,8 +4,8 @@ angular.module('thegrandexchange')
   'users',
   'session',
   function($scope, users, session) {
-    users.getTransactions(session.name()._id).then(function (response) {
-      var transactions = response.data.transactions;
+    users.getTransactions(session.name()._id).success(function (data) {
+      var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
@@ -26,9 +26,8 @@ angular.module('thegrandexchange')
         score: transaction.score
       };
       console.log(newReview);
-      users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        console.log(response);
-        if (response.data.success) {
+      users.postReview(session.name()._id, transaction._id, newReview).success(function (data) {
+        if (data.success) {
           for (var i = 0; i < $scope.transactions.length; i++) {
             if ($scope.transactions[i]._id === transaction._id) {
               $scope.transactions.splice(i, 1);
