@@ -27,6 +27,10 @@ angular.module('thegrandexchange')
       };
       items.postOffer($scope.item._id, newOffer).success(function(data) {
         $scope.message = undefined;
+        $scope.error = false;
+        $scope.posted = false;
+        $scope.matched = false;
+        // posted
         if (data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
@@ -36,12 +40,21 @@ angular.module('thegrandexchange')
           $scope.item.offers.push(newOffer);
           $scope.price = '';
           $scope.reputation = '';
+          $scope.posted = true;
+          $scope.message = 'Your offer has been posted.'
         }
+        // error
         else if (data.success === false) {
-          $scope.message = data.message;
+          $scope.error = true;
+          $scope.message = response.data.message;
         }
+        // matched
         else {
+          $scope.matched = true;
+          $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
           var offers = $scope.item.offers;
+          $scope.price = '';
+          $scope.reputation = '';
           for (var i = 0; i < offers.length; i++) {
             if (offers[i].price === data.transaction.price) {
               offers.splice(i, 1);
