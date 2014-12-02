@@ -11,6 +11,10 @@ form {
   margin-bottom: 0px;
 }
 
+hr {
+  visibility: hidden;
+}
+
 .navbar-inverse .navbar-brand {
   color: #eee;
   font-size: 26px;
@@ -86,8 +90,8 @@ form {
 }
 
 .item_description{
-  width:50%;
   display:inline-block;
+  float: right;
 }
 
 .item_error{
@@ -118,11 +122,35 @@ form {
 
 .item_left{
   display:inline-block;
-  width:40%;
+  width:50%;
+  vertical-align: top;
 }
+
+.item_offers_table{
+  color:#DEDFFF;
+}
+
+.item_offers_table td{
+  padding:5px;
+}
+
+.item_offers_table td + td{
+  border-left:1px solid white;
+  text-align: center;
+}
+
+.item_offers_table th{
+  border-bottom: solid 1px white;
+  padding-right:5px;
+  text-align: center;
+}
+.item_offers_table th + th{ border-left:1px solid white; }
 
 .item_right{
   display:inline-block;
+  width:45%;
+  vertical-align:top;
+  float:right;
 }
 
 .item_name{

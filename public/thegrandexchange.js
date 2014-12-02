@@ -234,9 +234,11 @@ $(document).ready(function() {
       items.postOffer($scope.item._id, newOffer).then(function(response) {
         $scope.message = undefined;
         if (response.data.message === 'No match') {
+          console.log(session.name());
           newOffer.postedBy = {
             firstName: session.name().firstName,
-            lastName: session.name().lastName
+            lastName: session.name().lastName,
+            reputation: session.name().reputation
           }
           $scope.item.offers.push(newOffer);
         }
