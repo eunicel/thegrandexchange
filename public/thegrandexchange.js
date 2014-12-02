@@ -212,9 +212,8 @@ $(document).ready(function() {
   'users',
   function($http, $scope, $location, $stateParams, session, items, users) {
     $scope.order = 'price';
-    var userReputation = undefined;
     users.get(session.name()._id).success(function(data) {
-      userReputation = data.user.reputation;
+      $scope.userReputation = data.user.reputation;
       items.get($stateParams.id).success(function(data2) {
         $scope.item = data2.item;
       });
@@ -235,7 +234,7 @@ $(document).ready(function() {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
-            reputation: userReputation
+            reputation: $scope.userReputation
           }
           $scope.item.offers.push(newOffer);
           $scope.price = '';
