@@ -6,7 +6,13 @@ angular.module('thegrandexchange')
   '$stateParams',
   'session',
   'items',
-  function($http, $scope, $location, $stateParams, session, items) {
+  'users',
+  function($http, $scope, $location, $stateParams, session, items, users) {
+    users.get(session.name()._id).success(function(response) {
+      if(response.success === true) {
+        $scope.user = response.user;
+      }
+    });
     $scope.order = 'price';
     items.get($stateParams.id).then(function(response) {
       $scope.item = response.data.item;
