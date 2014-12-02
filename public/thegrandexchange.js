@@ -170,7 +170,6 @@ $(document).ready(function() {
       var transactions = response.data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
-        console.log(transactions[i]);
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);
@@ -194,7 +193,9 @@ $(document).ready(function() {
         text: transaction.review_content,
         score: review_score
       };
+      console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
+        console.log(response);
         if (response.data.success) {
           for (var i = 0; i < $scope.transactions.length; i++) {
             if ($scope.transactions[i]._id === transaction._id) {
@@ -322,10 +323,13 @@ $(document).ready(function() {
         name: $scope.name,
         description: $scope.description
       }
-      items.create(item);
-      item.bestSell = 'No offers';
-      item.bestBuy = 'No offers';
-      $scope.items.push(item);
+      items.create(item).success(function(data) {
+        data.item.bestSell = 'No offers';
+        data.item.bestBuy = 'No offers';
+        $scope.items.push(data.item);
+        $scope.name = '';
+        $scope.description = '';
+      });
     }
     items.getAll().success(function(response) {
       $scope.items = response.items;
@@ -369,25 +373,29 @@ $(document).ready(function() {
   'users',
   function($http, $scope, $location, users) {
     $scope.addUser = function() {
-      var newUser = {
-        firstName: $scope.firstName,
-        lastName: $scope.lastName,
-        email: $scope.email,
-        password: $scope.password
-      };
-      users.create(newUser).then(function (response) {
-        var data = response.data;
-        if (data.success === true) {
-          $location.path('sessions');
-        } else {
-          $scope.warning = response.data.message;
-        }
-      }, function(error) {
-        $scope.warning = error.data.message;
-      });
-      $scope.name = '';
+      if ($scope.password !== $scope.passwordCheck) {
+        $scope.warning = 'Passwords do not match';
+      }
+      else {
+        var newUser = {
+          firstName: $scope.firstName,
+          lastName: $scope.lastName,
+          email: $scope.email,
+          password: $scope.password
+        };
+        users.create(newUser).then(function (response) {
+          var data = response.data;
+          if (data.success === true) {
+            $location.path('sessions');
+          } else {
+            $scope.warning = response.data.message;
+          }
+        }, function(error) {
+          $scope.warning = error.data.message;
+        });
+      }
       $scope.password = '';
-      $scope.department = '';
+      $scope.passwordCheck = '';
     }
   }
 ]);angular.module('thegrandexchange')

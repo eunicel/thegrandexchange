@@ -6,7 +6,7 @@ var utils = require('../../utils');
 
 // GET /items
 // get all items
-router.get('/', function(req, res) {
+router.get('/', utils.loggedIn, function(req, res) {
   Item.getItems(function(items) {
     if(items && items.length > 0) {
       res.json({items: items, success: true});
@@ -18,7 +18,7 @@ router.get('/', function(req, res) {
 
 // POST /items
 // create items
-router.post('/', function(req, res) {
+router.post('/', utils.loggedIn, function(req, res) {
   var name = req.body.name;
   var description = req.body.description;
 
@@ -36,7 +36,7 @@ router.post('/', function(req, res) {
 });
 
 // GET /items/:item_id - get item with item_id
-router.get('/:item_id', function(req, res) {
+router.get('/:item_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
     if(item !== null) {
@@ -48,7 +48,7 @@ router.get('/:item_id', function(req, res) {
 });
 
 // GET /items/:item_id/offers - get offers of item with item_id
-router.get('/:item_id/offers', function(req, res) {
+router.get('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
     if(item !== null){
@@ -61,7 +61,7 @@ router.get('/:item_id/offers', function(req, res) {
 
 // POST /items/:item_id/offers
 // create new offer
-router.post('/:item_id/offers', function(req, res) {
+router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
 
   if (req.body.postedBy != req.user._id) {
@@ -79,9 +79,7 @@ router.post('/:item_id/offers', function(req, res) {
   else if (req.body.minReputation < 0 || req.body.minReputation > 5) {
     res.json({message: "Minimum reputation must be between 1 and 5", success: false});
   }
-
   else {
-
     Item.getItemById(item_id, function(item){
       var offers = item.offers;
       // var id;
@@ -112,7 +110,7 @@ router.post('/:item_id/offers', function(req, res) {
 });
 
 // GET /items/:item_id/offers/:offer_id
-router.get('/:item_id/offers/:offer_id', function(req, res) {
+router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
   Item.getOfferById(item_id, offer_id, function(offer){
@@ -124,7 +122,7 @@ router.get('/:item_id/offers/:offer_id', function(req, res) {
   });
 });
 
-router.post('/:item_id/flags', function(req, res) {
+router.post('/:item_id/flags', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
     if(item !== null){
@@ -140,7 +138,7 @@ router.post('/:item_id/flags', function(req, res) {
 
 // DELETE /items/:item_id/offers/:offer_id
 // delete offer
-router.delete('/:item_id/offers/:offer_id', function(req, res){
+router.delete('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
   Item.deleteOffer(req.user._id, item_id, offer_id, function(offer) {
