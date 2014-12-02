@@ -30,6 +30,7 @@ angular.module('thegrandexchange')
       item.bestSell = 'No offers';
       item.bestBuy = 'No offers';
       $scope.items.push(item);
+
     }
     items.getAll().success(function(response) {
       $scope.items = response.items;
