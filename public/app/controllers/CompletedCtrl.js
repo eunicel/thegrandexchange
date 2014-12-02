@@ -20,16 +20,10 @@ angular.module('thegrandexchange')
     });
 
     $scope.review = function(transaction) {
-      var review_score = 0;
-      // completed if checkbox is checked
-      if(transaction.completed) {
-        review_score = 1;
-      } else {
-        review_score = -1;
-      }
+      var review_score = transaction.score;
       var newReview = {
         text: transaction.review_content,
-        score: review_score
+        score: transaction.score
       };
       console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {

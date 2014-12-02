@@ -182,16 +182,16 @@ $(document).ready(function() {
     });
 
     $scope.review = function(transaction) {
-      var review_score = 0;
+      var review_score = transaction.score;
       // completed if checkbox is checked
-      if(transaction.completed) {
+      /*if(transaction.completed) {
         review_score = 1;
       } else {
         review_score = -1;
-      }
+      }*/
       var newReview = {
         text: transaction.review_content,
-        score: review_score
+        score: transaction.score
       };
       console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
@@ -216,7 +216,13 @@ $(document).ready(function() {
   '$stateParams',
   'session',
   'items',
-  function($http, $scope, $location, $stateParams, session, items) {
+  'users',
+  function($http, $scope, $location, $stateParams, session, items, users) {
+    users.get(session.name()._id).success(function(response) {
+      if(response.success === true) {
+        $scope.user = response.user;
+      }
+    });
     $scope.order = 'price';
     items.get($stateParams.id).then(function(response) {
       $scope.item = response.data.item;
