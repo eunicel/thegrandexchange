@@ -58,7 +58,7 @@ router.get('/:user_id', utils.loggedIn, function(req, res) {
 router.get('/:user_id/transactions', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getUserTransactions(user_id, function(transactions) {
-    if (transactions !== null) {
+    if (transactions) {
       res.json({transactions: transactions, success: true});
     } else {
       res.json({success: false});
@@ -100,7 +100,7 @@ router.post('/:user_id/transactions/:transaction_id', utils.loggedIn, function(r
 router.get('/:user_id/offers', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {
-    if(offers !== null) {
+    if (offers) {
       res.json({offers: offers, success: true});
     } else {
       res.json({success: false});
