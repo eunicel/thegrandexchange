@@ -1,11 +1,11 @@
 <div ng-controller="ItemCtrl">
+  <h1 class="item_name">{{item.name}}</h1>
   <hr>
   <div class="item_left">
     <h3>Sell:</h3>
     <div ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true">
       ${{sell.price}} {{sell.postedBy.firstName}} {{sell.postedBy.lastName}}
     </div>
-    <h1 class="item_name">{{item.name}}</h1>
     <h3>Buy:</h3>
     <div ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true">
       ${{buy.price}} {{buy.postedBy.firstName}} {{buy.postedBy.lastName}}
