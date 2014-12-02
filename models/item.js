@@ -96,9 +96,7 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
   var offer = new Offer(offerData);
-  offer.save(function(err, offer){
-    utils.handleError(err);
-  });
+
   //offer matching
   // buy: match with LOWEST sell offer
   // sell: match with HIGHEST buy offer where sell < buy
@@ -118,12 +116,23 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         utils.handleError(err);
         var minSell = undefined;
         for (var i = 0; i<item.offers.length; i++) {
-          if (item.offers[i].price <= offer.price && item.offers[i].postedBy.reputation >= offer.minReputation) { // possible match
-            if (minSell === undefined || item.offers[i].price < minSell) {
-              minSell = item.offers[i];
+          if (item.offers[i].price <= offer.price) { // matchable price
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+              callback("You cannot post an offer that would match your own offer");
+              return;
+            }
+            if (item.offers[i].postedBy.reputation >= offer.minReputation) { // matchable reputation
+              if (minSell === undefined || item.offers[i].price < minSell) { // better price match
+                minSell = item.offers[i];
+              }
             }
           }
         }
+
+        offer.save(function(err, offer){
+          utils.handleError(err);
+        });
+
         if (!minSell) { // no matching offers; store offer for User and Item
           Item.update({_id: item_id}, {
             $addToSet: {
@@ -164,12 +173,23 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         utils.handleError(err);
         var maxBuy = undefined;
         for (var i = 0; i < item.offers.length; i++) {
-          if (item.offers[i].price >= offer.price && item.offers[i].postedBy.reputation >= offer.minReputation) { // possible match
-            if (maxBuy === undefined || item.offers[i].price > maxBuy) {
-              maxBuy = item.offers[i];
+          if (item.offers[i].price >= offer.price) { // matchable price
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+              callback("You cannot post an offer that would match your own offer");
+              return;
+            }
+            if (item.offers[i].postedBy.reputation >= offer.minReputation) { //matchable reputation
+              if (maxBuy === undefined || item.offers[i].price > maxBuy) { //better price match
+                maxBuy = item.offers[i];
+              }
             }
           }
         }
+
+        offer.save(function(err, offer){
+          utils.handleError(err);
+        });
+
         if (! maxBuy) { // no matching offers; store offer for User and Item
           Item.update({_id: item_id}, {
             $addToSet: {
