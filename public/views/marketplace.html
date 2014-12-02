@@ -1,17 +1,17 @@
 <div ng-controller="MainCtrl">
   <div class="items_container">
     <div ng-repeat="item in items">
-      <div class="col-sm-4 col-md-2 item" >
+      <div class="col-sm-5 col-md-2 item" >
         <div>Sell: {{item.bestSell}}</div>
         <div class="item_details" type="submit" ng-click="toItem(item)">
           <h3>{{item.name}}</h3>
           <div>{{item.description}}</div>
         </div>
         <div class="bestbuy">Buy: {{item.bestBuy}}</div>
-        <div class="flag" ng-click="flag(item._id)">Flag item</div>
+        <span class="flag glyphicon glyphicon-flag" ng-click="flag(item._id)"></span>
       </div>
     </div>
-    <div class="col-sm-4 col-md-2 item" >
+    <div class="col-sm-5 col-md-2 item" >
       <form ng-submit="addItem()">
         <div>Add new item</div>
         <div class="item_details_add">

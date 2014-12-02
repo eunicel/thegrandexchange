@@ -20,6 +20,7 @@ angular.module('thegrandexchange')
       return $http.delete('/api/items/' + itemID + '/offers/' + offerID);
     },
     flag: function(userID, itemID) {
+      console.log('post flag request');
       return $http.post('/api/items/' + itemID + '/flags');
     }
   }
