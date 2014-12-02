@@ -28,10 +28,12 @@ angular.module('thegrandexchange')
           session.setName(userFields);
           $location.path('marketplace');
         } else {
-          $scope.warning = response.data.message;
+          $scope.warning = data.message;
         }
       })
-      .error(function(error) {
+      .error(function(data) {
+        console.log(arguments);
+        console.log(data);
         $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';

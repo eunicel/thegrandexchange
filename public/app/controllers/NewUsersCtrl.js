@@ -20,7 +20,7 @@ angular.module('thegrandexchange')
           if (data.success === true) {
             $location.path('sessions');
           } else {
-            $scope.warning = response.data.message;
+            $scope.warning = data.message;
           }
         })
         .error(function(error) {

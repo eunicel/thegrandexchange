@@ -46,7 +46,7 @@ angular.module('thegrandexchange')
         // error
         else if (data.success === false) {
           $scope.error = true;
-          $scope.message = response.data.message;
+          $scope.message = data.message;
         }
         // matched
         else {
