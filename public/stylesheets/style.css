@@ -69,6 +69,17 @@ form {
   cursor:pointer;
 }
 
+.item_details_add{
+  height:125px;
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:2px;
+  cursor:pointer;
+}
+.item_details_add:hover{
+  background-color: rgba(50, 50, 70, 0.9);
+  color: #EEEFFF;
+}
 .item_details:hover{
   background-color: rgba(50, 50, 70, 0.9);
   color: #EEEFFF;
@@ -145,3 +156,25 @@ form {
   color:red;
   cursor: pointer;
 }
+
+.reputation-required{
+  font-size: x-large;
+  width:90px;
+  display:inline-block;
+}
+
+.new-item{
+  margin-bottom: 6px;
+}
+
+.new-item-submit{
+  background: transparent;
+  border:1px solid;
+  border-color:#E8E8E8;
+}
+
+.new-item-submit:hover{
+  background-color:#E8E8E8;
+}
+
+

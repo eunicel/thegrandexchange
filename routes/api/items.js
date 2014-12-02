@@ -66,7 +66,21 @@ router.post('/:item_id/offers', function(req, res) {
 
   if (req.body.postedBy != req.user._id) {
     res.json({message: "Unauthorized.", success: false});
-  } else {
+  }
+  else if (isNaN(req.body.price)) {
+    res.json({message: "You must enter a price", success: false});
+  }
+  else if (req.body.price < 0) {
+    res.json({message: "Price cannot be negative", success: false});
+  }
+  else if (isNaN(req.body.minReputation)) {
+    res.json({message: "You must enter a minimum reputation between 1 and 5", success: false});
+  }
+  else if (req.body.minReputation < 0 || req.body.minReputation > 5) {
+    res.json({message: "Minimum reputation must be between 1 and 5", success: false});
+  }
+
+  else {
 
     Item.getItemById(item_id, function(item){
       var offers = item.offers;
@@ -82,13 +96,15 @@ router.post('/:item_id/offers', function(req, res) {
         postedAt: req.body.postedAt,
         price: req.body.price,
         type: req.body.type,
-        item: item.name
+        item: item.name,
+        // minReputation: 3
+        minReputation: req.body.minReputation
       };
-      Item.createOffer(item_id, offer, function(transaction) {
+      Item.createOffer(item_id, offer, function(transaction, message) {
         if(transaction !== null) {
-          res.json({transaction: transaction, success: true});
+          res.json({transaction: transaction, message: message, success: true});
         } else {
-          res.json({success: false});
+          res.json({message: message, success: false});
         }
       });
     });

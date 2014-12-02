@@ -15,7 +15,8 @@ var offerSchema = mongoose.Schema({
   item: {type : String, ref: 'Item'},
   postedAt: Date,
   price: Number,
-  type: String
+  type: String,
+  minReputation: Number
 });
 
 var Offer = mongoose.model('Offer', offerSchema);
@@ -95,50 +96,65 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   // offerData may need to be augmented with item_id and user_id
   var offer = new Offer(offerData);
-  offer.save(function(err, offer){
-    utils.handleError(err);
-  });
 
   //offer matching
   // buy: match with LOWEST sell offer
   // sell: match with HIGHEST buy offer where sell < buy
   if (offer.type === "buy") {
-    Item.findOne({_id: item_id})
+    Item.findOne({_id: item_id}) //populate item with offers
     .populate({
       path: 'offers',
       match: { type: "sell"},
     })
-    .exec(function(err, item) {
+    .exec(function(err, itemwithoutuser) {
       utils.handleError(err);
-      var minSell = undefined;
-      for (var i = 0; i<item.offers.length; i++) {
-        if (item.offers[i].price <= offer.price ) { // possible match
-          if (minSell === undefined || item.offers[i].price < minSell) {
-            minSell = item.offers[i];
+      var options = {
+        path: 'offers.postedBy',
+        model: 'User'
+      }
+      Item.populate(itemwithoutuser, options, function(err, item) {
+        utils.handleError(err);
+        var minSell = undefined;
+        for (var i = 0; i<item.offers.length; i++) {
+          if (item.offers[i].price <= offer.price) { // matchable price
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+              callback(null, "You cannot post an offer that would match your own offer");
+              return;
+            }
+            if (item.offers[i].postedBy.reputation >= offer.minReputation) { // matchable reputation
+              if (minSell === undefined || item.offers[i].price < minSell) { // better price match
+                minSell = item.offers[i];
+              }
+            }
           }
         }
-      }
-      if (!minSell) { // no matching offers; store offer for User and Item
-        Item.update({_id: item_id}, {
-          $addToSet: {
-            offers: offer
-          }
-        }, function(err, numaffected, doc) {
+
+        offer.save(function(err, offer){
+          utils.handleError(err);
         });
-        User.update({_id: offerData.postedBy}, {
-          $addToSet: {
-            offers: offer
-          }
-        }, function(err, numaffected, doc) {
-        });
-        callback("No match");
-      }
-      else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
-        Transaction.createTransaction(offer, minSell, item_id, minSell.price, function(transaction) {
-          Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
-          callback(transaction);
-        });
-      }
+
+        if (!minSell) { // no matching offers; store offer for User and Item
+          Item.update({_id: item_id}, {
+            $addToSet: {
+              offers: offer
+            }
+          }, function(err, numaffected, doc) {
+          });
+          User.update({_id: offerData.postedBy}, {
+            $addToSet: {
+              offers: offer
+            }
+          }, function(err, numaffected, doc) {
+          });
+          callback(null, "No match");
+        }
+        else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
+          Transaction.createTransaction(offer, minSell, item_id, minSell.price, function(transaction) {
+            Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
+            callback(transaction, null);
+          });
+        }
+      });
     });
   }
   else { // sell offer
@@ -147,37 +163,55 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       path: 'offers',
       match: { type: "buy"},
     })
-    .exec(function(err, item) {
+    .exec(function(err, itemwithoutuser) {
       utils.handleError(err);
-      var maxBuy = undefined;
-      for (var i = 0; i < item.offers.length; i++) {
-        if (item.offers[i].price >= offer.price ) { // possible match
-          if (maxBuy === undefined || item.offers[i].price > maxBuy) {
-            maxBuy = item.offers[i];
+      var options = {
+        path: 'offers.postedBy',
+        model: 'User'
+      }
+      Item.populate(itemwithoutuser, options, function(err, item) {
+        utils.handleError(err);
+        var maxBuy = undefined;
+        for (var i = 0; i < item.offers.length; i++) {
+          if (item.offers[i].price >= offer.price) { // matchable price
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+              callback(null, "You cannot post an offer that would match your own offer");
+              return;
+            }
+            if (item.offers[i].postedBy.reputation >= offer.minReputation) { //matchable reputation
+              if (maxBuy === undefined || item.offers[i].price > maxBuy) { //better price match
+                maxBuy = item.offers[i];
+              }
+            }
           }
         }
-      }
-      if (! maxBuy) { // no matching offers; store offer for User and Item
-        Item.update({_id: item_id}, {
-          $addToSet: {
-            offers: offer
-          }
-        }, function(err, numaffected, doc) {
+
+        offer.save(function(err, offer){
+          utils.handleError(err);
         });
-        User.update({_id: offerData.postedBy}, {
-          $addToSet: {
-            offers: offer
-          }
-        }, function(err, numaffected, doc) {
-        });
-        callback("No match");
-      }
-      else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
-        Transaction.createTransaction(maxBuy, offer, item_id, maxBuy.price, function(transaction) {
-          Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
-          callback(transaction);
-        });
-      }
+
+        if (! maxBuy) { // no matching offers; store offer for User and Item
+          Item.update({_id: item_id}, {
+            $addToSet: {
+              offers: offer
+            }
+          }, function(err, numaffected, doc) {
+          });
+          User.update({_id: offerData.postedBy}, {
+            $addToSet: {
+              offers: offer
+            }
+          }, function(err, numaffected, doc) {
+          });
+          callback(null, "No match");
+        }
+        else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
+          Transaction.createTransaction(maxBuy, offer, item_id, maxBuy.price, function(transaction) {
+            Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
+            callback(transaction, null);
+          });
+        }
+      });
     });
   }
 };

@@ -20,6 +20,17 @@ angular.module('thegrandexchange')
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
     }
+    $scope.addItem = function(){
+      console.log('adding item');
+      var item = {
+        name: $scope.name,
+        description: $scope.description
+      }
+      items.create(item);
+      item.bestSell = 'No offers';
+      item.bestBuy = 'No offers';
+      $scope.items.push(item);
+    }
     items.getAll().success(function(response) {
       $scope.items = response.items;
       if (response.success === true) {

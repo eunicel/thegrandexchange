@@ -18,15 +18,21 @@ angular.module('thegrandexchange')
         item: $scope.item._id,
         postedAt: Date.now(),
         price: parseInt($scope.price, 10),
-        type: type
+        type: type,
+        minReputation: $scope.reputation
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.transaction === 'No match') {
+        console.log(response.data);
+        if (response.data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName
           }
           $scope.item.offers.push(newOffer);
+        }
+        else if (response.data.success === false) {
+
+          $scope.message = response.data.message;
         }
         else if (response.data.transaction) {
           var offers = $scope.item.offers;
@@ -37,7 +43,6 @@ angular.module('thegrandexchange')
             }
           }
         }
-      }.bind(this), function(error) {
       });
     }
   }

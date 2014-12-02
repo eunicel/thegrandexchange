@@ -11,5 +11,15 @@
         <div class="flag" ng-click="flag(item._id)">Flag item</div>
       </div>
     </div>
+    <div class="col-sm-4 col-md-2 item" >
+      <form ng-submit="addItem()">
+        <div>Add new item</div>
+        <div class="item_details_add">
+          <input class="form-control new-item" type="text" placeholder="Name" ng-model="name"></input>
+          <textarea class="form-control new-item" rows="3" placeholder="Description" ng-model="description"></textarea>
+          <input type="submit" class="new-item-submit btn"></input>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

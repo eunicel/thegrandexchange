@@ -195,7 +195,7 @@ $(document).ready(function() {
         score: review_score
       };
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        if(response.data.success) {
+        if (response.data.success) {
           for (var i = 0; i < $scope.transactions.length; i++) {
             if ($scope.transactions[i]._id === transaction._id) {
               $scope.transactions.splice(i, 1);
@@ -227,15 +227,21 @@ $(document).ready(function() {
         item: $scope.item._id,
         postedAt: Date.now(),
         price: parseInt($scope.price, 10),
-        type: type
+        type: type,
+        minReputation: $scope.reputation
       };
       items.postOffer($scope.item._id, newOffer).then(function(response) {
-        if (response.data.transaction === 'No match') {
+        console.log(response.data);
+        if (response.data.message === 'No match') {
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName
           }
           $scope.item.offers.push(newOffer);
+        }
+        else if (response.data.success === false) {
+
+          $scope.message = response.data.message;
         }
         else if (response.data.transaction) {
           var offers = $scope.item.offers;
@@ -246,7 +252,6 @@ $(document).ready(function() {
             }
           }
         }
-      }.bind(this), function(error) {
       });
     }
   }
@@ -310,6 +315,17 @@ $(document).ready(function() {
     }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
+    }
+    $scope.addItem = function(){
+      console.log('adding item');
+      var item = {
+        name: $scope.name,
+        description: $scope.description
+      }
+      items.create(item);
+      item.bestSell = 'No offers';
+      item.bestBuy = 'No offers';
+      $scope.items.push(item);
     }
     items.getAll().success(function(response) {
       $scope.items = response.items;
