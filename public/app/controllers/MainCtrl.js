@@ -10,15 +10,24 @@ angular.module('thegrandexchange')
       return session.name() !== undefined;
     }
 
+    $scope.flagged = function(item) {
+      return item.flags.indexOf(session.name()._id) > -1;
+    }
+
+    $scope.userid = function() {
+      return session.user()._id;
+    }
+
     $scope.logout = function() {
       session.clear();
       $location.path('login');
     }
-    $scope.flag = function(item_id){
-      console.log('flag method');
-      items.flag(session.name()._id, item_id).success(function(data) {
-        console.log(data);
-      });
+    $scope.flag = function(item){
+      items.flag(session.name()._id, item._id).success(function(data) {
+        if (data.success) {
+          item.flags.push(session.name()._id);
+        }
+      }.bind(this));
     }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);

@@ -287,7 +287,7 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
         });
       }
     } else {
-      // return "already rated"
+      callback("Already rated");
     }
   });
 }
