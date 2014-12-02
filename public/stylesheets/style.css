@@ -1,14 +1,18 @@
-body { 
+body {
   padding-top: 85px;
   background-color: #45568A;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: bottom; 
+  background-position: bottom;
   background-image: url("/images/bg-grandex.png");
 }
 
 form {
   margin-bottom: 0px;
+}
+
+hr {
+  visibility: hidden;
 }
 
 .navbar-inverse .navbar-brand {
@@ -58,11 +62,6 @@ form {
   background-color: rgba(45, 45, 60, 0.9);
 }
 
-.item:hover{
-  background-color: rgba(50, 50, 70, 0.9);
-  color: #EEEFFF;
-}
-
 .item_details{
   border-radius:4px;
   border:1px solid;
@@ -74,9 +73,30 @@ form {
   cursor:pointer;
 }
 
+.item_details_add{
+  height:125px;
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:2px;
+  cursor:pointer;
+}
+.item_details_add:hover{
+  background-color: rgba(50, 50, 70, 0.9);
+  color: #EEEFFF;
+}
+.item_details:hover{
+  background-color: rgba(50, 50, 70, 0.9);
+  color: #EEEFFF;
+}
+
 .item_description{
-  width:50%;
   display:inline-block;
+  float: right;
+}
+
+.item_error{
+  color: red;
+  padding: 3px;
 }
 
 .bid_button{
@@ -98,15 +118,40 @@ form {
 
 .price{
   width:90px;
+  color: #011A41;
 }
 
 .item_left{
   display:inline-block;
-  width:40%;
+  width:50%;
+  vertical-align: top;
 }
+
+.item_offers_table{
+  color:#DEDFFF;
+}
+
+.item_offers_table td{
+  padding:5px;
+}
+
+.item_offers_table td + td{
+  border-left:1px solid white;
+  text-align: center;
+}
+
+.item_offers_table th{
+  border-bottom: solid 1px white;
+  padding-right:5px;
+  text-align: center;
+}
+.item_offers_table th + th{ border-left:1px solid white; }
 
 .item_right{
   display:inline-block;
+  width:45%;
+  vertical-align:top;
+  float:right;
 }
 
 .item_name{
@@ -128,3 +173,43 @@ form {
   cursor:pointer;
   color:#000000;
 }
+
+.bestbuy{
+  display: inline-block;
+}
+
+.flag{
+  font-size: x-small;
+  display:inline-block;
+  float: right;
+  padding-top:4px;
+  z-index: 100;
+}
+
+.flag:hover{
+  color:red;
+  cursor: pointer;
+}
+
+.reputation-required{
+  font-size: x-large;
+  width:90px;
+  display:inline-block;
+  color: #011A41;
+}
+
+.new-item{
+  margin-bottom: 6px;
+}
+
+.new-item-submit{
+  background: transparent;
+  border:1px solid;
+  border-color:#E8E8E8;
+}
+
+.new-item-submit:hover{
+  background-color:#E8E8E8;
+}
+
+

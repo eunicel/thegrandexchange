@@ -36,7 +36,7 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
       lastName: lastName,
       email: email,
       password: password,
-      reputation: 0,
+      reputation: 5, //initial reputation is 5
       offers: [],
       reviews: [],
       transactions: [],
@@ -105,7 +105,11 @@ userSchema.statics.addReview = function(user_id, review, callback) {
   User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
     user.reviews.push(review);
-    user.reputation += parseInt(review.score);
+    var totalscore = 0
+    for (var i=0; i<user.reviews.length; i++) {
+      totalscore += parseInt(user.reviews[i].score);
+    }
+    user.reputation = totalscore/user.reviews.length;
     user.save();
     callback(user);
   });

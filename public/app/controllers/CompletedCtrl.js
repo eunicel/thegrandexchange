@@ -5,8 +5,8 @@ angular.module('thegrandexchange')
   'session',
   function($scope, users, session) {
     users.getTransactions(session.name()._id).then(function (response) {
-      transactions = response.data.transactions;
-      displayed_transactions = [];
+      var transactions = response.data.transactions;
+      var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
@@ -22,7 +22,7 @@ angular.module('thegrandexchange')
     $scope.review = function(transaction) {
       var review_score = 0;
       // completed if checkbox is checked
-      if(transaction.completed){
+      if(transaction.completed) {
         review_score = 1;
       } else {
         review_score = -1;
@@ -31,9 +31,16 @@ angular.module('thegrandexchange')
         text: transaction.review_content,
         score: review_score
       };
+      console.log(newReview);
       users.postReview(session.name()._id, transaction._id, newReview).then(function (response) {
-        if(response.data.success) {
-          transactions.remove(transaction);
+        console.log(response);
+        if (response.data.success) {
+          for (var i = 0; i < $scope.transactions.length; i++) {
+            if ($scope.transactions[i]._id === transaction._id) {
+              $scope.transactions.splice(i, 1);
+              return;
+            }
+          }
         } else {
         }
       });

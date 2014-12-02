@@ -3,13 +3,24 @@ angular.module('thegrandexchange')
   '$http',
   '$scope',
   '$filter',
+  '$timeout',
   'users',
   'session',
   'items',
   'ngTableParams',
-  function($http, $scope, $filter, users, session, items, ngTableParams) {
+  function($http, $scope, $filter, $timeout, users, session, items, ngTableParams) {
+    $scope.offers = [];
+
     $scope.deleteOffer = function (offer) {
-      items.deleteOffer('offer.item._id', offer._id); // 'offer.item._id' doesn't actually get used
+      items.deleteOffer('offer.item._id', offer._id).then(function(response) {
+        for (var i = 0; i < $scope.offers.length; i++) {
+          if ($scope.offers[i]._id === offer._id) {
+            $scope.offers.splice(i, 1);
+            $scope.tableParams.reload();
+            return;
+          }
+        }
+      }); // 'offer.item._id' doesn't actually get used
     }
     users.getOffers(session.name()._id).then(function(response) {
       $scope.offers = response.data.offers;
@@ -23,15 +34,17 @@ angular.module('thegrandexchange')
           name: 'asc'     // initial sorting
         }
       }, {
-        total: $scope.offers.length, // length of data
+        total: 0, // length of data
         getData: function($defer, params) {
-          // use built-in angular filter
+          var data = $scope.offers;
+          params.total(data.length);
           var orderedData = params.sorting() ?
-                            $filter('orderBy')($scope.offers, params.orderBy()) :
-                            $scope.offers;
+                            $filter('orderBy')(data, params.orderBy()) :
+                            data;
           $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
       });
+      $scope.tableParams.settings().$scope = $scope;
     });
   }
 ])

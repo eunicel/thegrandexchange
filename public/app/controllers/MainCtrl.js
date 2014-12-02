@@ -14,8 +14,25 @@ angular.module('thegrandexchange')
       session.clear();
       $location.path('login');
     }
+    $scope.flag = function(item_id){
+      items.flag(session.name()._id, item_id);
+    }
     $scope.toItem = function(item){
       $location.url('items/'+ item._id);
+    }
+    $scope.addItem = function(){
+      console.log('adding item');
+      var item = {
+        name: $scope.name,
+        description: $scope.description
+      }
+      items.create(item).success(function(data) {
+        data.item.bestSell = 'No offers';
+        data.item.bestBuy = 'No offers';
+        $scope.items.push(data.item);
+        $scope.name = '';
+        $scope.description = '';
+      });
     }
     items.getAll().success(function(response) {
       $scope.items = response.items;
