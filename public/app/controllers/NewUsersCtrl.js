@@ -16,14 +16,14 @@ angular.module('thegrandexchange')
           email: $scope.email,
           password: $scope.password
         };
-        users.create(newUser).then(function (response) {
-          var data = response.data;
+        users.create(newUser).success(function (data) {
           if (data.success === true) {
             $location.path('sessions');
           } else {
             $scope.warning = response.data.message;
           }
-        }, function(error) {
+        })
+        .error(function(error) {
           $scope.warning = error.data.message;
         });
       }

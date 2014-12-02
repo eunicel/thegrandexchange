@@ -6,8 +6,8 @@ angular.module('thegrandexchange')
   'session',
   function($http, $scope, $location, session) {
     if (session.name()) {
-      $http.post('/api/sessions', session.name()).success(function(response) {
-        if (response.success === true) {
+      $http.post('/api/sessions', session.name()).success(function(data) {
+        if (data.success === true) {
           $location.path('marketplace');
         } else {
           session.clear();
@@ -20,8 +20,7 @@ angular.module('thegrandexchange')
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).then(function(response) {
-        var data = response.data;
+      $http.post('/api/sessions', userFields).success(function(data) {
         if (data.success === true) {
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
@@ -31,7 +30,8 @@ angular.module('thegrandexchange')
         } else {
           $scope.warning = response.data.message;
         }
-      }, function(error) {
+      })
+      .error(function(error) {
         $scope.warning = 'Invalid username and password.';
       });
       $scope.email = '';
