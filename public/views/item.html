@@ -19,10 +19,10 @@
         <th>Buy Price</th>
         <th>Buyer Reputation</th>
       </tr>
-    <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true">
-      <td>${{buy.price}}</td>
-      <td>{{buy.postedBy.reputation}}</td>
-    </tr>
+      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true">
+        <td>${{buy.price}}</td>
+        <td>{{buy.postedBy.reputation}}</td>
+      </tr>
     </table>
   </div>
   <div class="item_right">

@@ -234,13 +234,15 @@ $(document).ready(function() {
       items.postOffer($scope.item._id, newOffer).then(function(response) {
         $scope.message = undefined;
         if (response.data.message === 'No match') {
-          console.log(session.name());
+          // console.log(session.name());
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
-            reputation: session.name().reputation
+            // reputation: session.name().reputation
           }
           $scope.item.offers.push(newOffer);
+          $scope.price = '';
+          $scope.reputation = '';
         }
         else if (response.data.success === false) {
           $scope.message = response.data.message;

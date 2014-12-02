@@ -31,6 +31,8 @@ angular.module('thegrandexchange')
             // reputation: session.name().reputation
           }
           $scope.item.offers.push(newOffer);
+          $scope.price = '';
+          $scope.reputation = '';
         }
         else if (response.data.success === false) {
           $scope.message = response.data.message;

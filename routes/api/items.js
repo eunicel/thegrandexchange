@@ -27,7 +27,7 @@ router.post('/', utils.loggedIn, function(req, res) {
   }
 
   Item.createItem(name, description, function(item) {
-    if(item !== null) {
+    if (item) {
       res.json({item: item, success: true});
     } else {
       res.json({success: false});
@@ -39,7 +39,7 @@ router.post('/', utils.loggedIn, function(req, res) {
 router.get('/:item_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    if(item !== null) {
+    if (item) {
       res.json({item: item, success: true});
     } else {
       res.json({success: false});
@@ -51,7 +51,7 @@ router.get('/:item_id', utils.loggedIn, function(req, res) {
 router.get('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    if(item !== null){
+    if (item) {
       res.json({offers: item.offers, success: true});
     } else {
       res.json({success: false});
@@ -98,7 +98,7 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
         minReputation: req.body.minReputation
       };
       Item.createOffer(item_id, offer, function(transaction, message) {
-        if(transaction !== null) {
+        if (transaction) {
           res.json({transaction: transaction, message: message, success: true});
         } else {
           res.json({message: message, success: false});
@@ -113,7 +113,7 @@ router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
   Item.getOfferById(item_id, offer_id, function(offer){
-    if(offer !== null) {
+    if (offer) {
       res.json({offer: offer, success: true});
     } else {
       res.json({success: false});
@@ -124,7 +124,7 @@ router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
 router.post('/:item_id/flags', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
-    if(item !== null){
+    if (item) {
       Item.flag(req.user._id, item_id, function(item) {
         res.json({item: item, success: true});
       });
@@ -141,7 +141,7 @@ router.delete('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
   Item.deleteOffer(req.user._id, item_id, offer_id, function(offer) {
-    if(offer !== null) {
+    if (offer) {
       res.json({offer: offer, success: true});
     } else {
       res.json({success: false});

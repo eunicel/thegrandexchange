@@ -118,6 +118,7 @@ hr {
 
 .price{
   width:90px;
+  color: #011A41;
 }
 
 .item_left{
@@ -194,6 +195,7 @@ hr {
   font-size: x-large;
   width:90px;
   display:inline-block;
+  color: #011A41;
 }
 
 .new-item{
