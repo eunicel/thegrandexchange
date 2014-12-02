@@ -9,7 +9,7 @@
         </div>
         <div class="bestbuy">Buy: {{item.bestBuy}}</div>
         <div class="flag">
-          <span class="glyphicon glyphicon-flag {{flagged(item) == true ? 'flagged' : ''}}" ng-click="flag(item)"></span>
+          <span title="Flag this item as inappropriate" class="glyphicon glyphicon-flag {{flagged(item) == true ? 'flagged' : ''}}" ng-click="flag(item)"></span>
         </div>
       </div>
     </div>
