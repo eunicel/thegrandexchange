@@ -181,7 +181,9 @@ hr {
 .flag{
   font-size: x-small;
   display:inline-block;
-  float: right;
+  bottom: 5px;
+  right: 5px;
+  position: absolute;
   padding-top:4px;
   z-index: 100;
 }
@@ -191,7 +193,7 @@ hr {
   cursor: pointer;
 }
 
-.flag.flagged{
+.flag .flagged{
   color: gray;
   cursor: default;
 

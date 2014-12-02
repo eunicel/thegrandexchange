@@ -183,12 +183,6 @@ $(document).ready(function() {
 
     $scope.review = function(transaction) {
       var review_score = transaction.score;
-      // completed if checkbox is checked
-      /*if(transaction.completed) {
-        review_score = 1;
-      } else {
-        review_score = -1;
-      }*/
       var newReview = {
         text: transaction.review_content,
         score: transaction.score
