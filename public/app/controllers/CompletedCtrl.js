@@ -5,10 +5,11 @@ angular.module('thegrandexchange')
   'session',
   'utils',
   function($scope, users, session, utils) {
-    users.getTransactions(session.name()._id).then(function (data) {
+    users.getTransactions(session.name()._id).success(function (data) {
       var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
+        transactions[i].index = i;
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);

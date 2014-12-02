@@ -178,12 +178,18 @@ $(document).ready(function() {
   '$scope',
   'users',
   'session',
+<<<<<<< HEAD
   'utils',
   function($scope, users, session, utils) {
     users.getTransactions(session.name()._id).then(function (data) {
+=======
+  function($scope, users, session) {
+    users.getTransactions(session.name()._id).success(function (data) {
+>>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
       var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
+        transactions[i].index = i;
         if(transactions[i].buyOffer.postedBy._id === session.name()._id && !transactions[i].buyerRated){
           transactions[i].isBuyer = true;
           displayed_transactions.push(transactions[i]);
@@ -214,8 +220,14 @@ $(document).ready(function() {
           } else {
             // failed
           }
+<<<<<<< HEAD
         });
       }
+=======
+        } else {
+        }
+      });
+>>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
     };
   }
 ]);angular.module('thegrandexchange')
