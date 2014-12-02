@@ -90,6 +90,11 @@ form {
   display:inline-block;
 }
 
+.item_error{
+  color: red;
+  padding: 3px;
+}
+
 .bid_button{
   padding-top:2px;
   padding-bottom:2px;

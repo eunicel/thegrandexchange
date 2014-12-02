@@ -26,11 +26,13 @@ angular.module('thegrandexchange')
         name: $scope.name,
         description: $scope.description
       }
-      items.create(item);
-      item.bestSell = 'No offers';
-      item.bestBuy = 'No offers';
-      $scope.items.push(item);
-
+      items.create(item).success(function(data) {
+        data.item.bestSell = 'No offers';
+        data.item.bestBuy = 'No offers';
+        $scope.items.push(data.item);
+        $scope.name = '';
+        $scope.description = '';
+      });
     }
     items.getAll().success(function(response) {
       $scope.items = response.items;

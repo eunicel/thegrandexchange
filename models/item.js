@@ -118,7 +118,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         for (var i = 0; i<item.offers.length; i++) {
           if (item.offers[i].price <= offer.price) { // matchable price
             if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
-              callback("You cannot post an offer that would match your own offer");
+              callback(null, "You cannot post an offer that would match your own offer");
               return;
             }
             if (item.offers[i].postedBy.reputation >= offer.minReputation) { // matchable reputation
@@ -146,12 +146,12 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             }
           }, function(err, numaffected, doc) {
           });
-          callback("No match");
+          callback(null, "No match");
         }
         else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
           Transaction.createTransaction(offer, minSell, item_id, minSell.price, function(transaction) {
             Item.removeOfferFromItemAndUser(item_id, minSell._id, function(offer){});
-            callback(transaction);
+            callback(transaction, null);
           });
         }
       });
@@ -175,7 +175,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
         for (var i = 0; i < item.offers.length; i++) {
           if (item.offers[i].price >= offer.price) { // matchable price
             if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
-              callback("You cannot post an offer that would match your own offer");
+              callback(null, "You cannot post an offer that would match your own offer");
               return;
             }
             if (item.offers[i].postedBy.reputation >= offer.minReputation) { //matchable reputation
@@ -203,12 +203,12 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
             }
           }, function(err, numaffected, doc) {
           });
-          callback("No match");
+          callback(null, "No match");
         }
         else { // matching offers: create new transaction with seller price (automatically stored under users), delete other offer from other user and from item
           Transaction.createTransaction(maxBuy, offer, item_id, maxBuy.price, function(transaction) {
             Item.removeOfferFromItemAndUser(item_id, maxBuy._id, function(offer){});
-            callback(transaction);
+            callback(transaction, null);
           });
         }
       });
