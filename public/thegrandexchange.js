@@ -93,7 +93,7 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
     .state('send', {
       url: '/send',
       templateUrl: '/views/send.html',
-      controller: 'SendController'
+      controller: 'SendCtrl'
     })
   $urlRouterProvider.otherwise('login');
 }])
@@ -554,11 +554,16 @@ $(document).ready(function() {
   'users',
   function($http, $scope, $location, session, users) {
     $scope.send = function() {
+      console.log('sending');
       users.send($scope.email).success(function(data) {
+        console.log('data = ');
+        console.log(data);
         if (data.success) {
+          console.log('success');
           $location.path('login');
         }
         else {
+          console.log('fail');
           $scope.email = '';
           $scope.warning = data.message;
         }

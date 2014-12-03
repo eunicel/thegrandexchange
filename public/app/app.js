@@ -93,7 +93,7 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
     .state('send', {
       url: '/send',
       templateUrl: '/views/send.html',
-      controller: 'SendController'
+      controller: 'SendCtrl'
     })
   $urlRouterProvider.otherwise('login');
 }])

@@ -10,8 +10,7 @@ angular.module('thegrandexchange')
       users.send($scope.email).success(function(data) {
         if (data.success) {
           $location.path('login');
-        }
-        else {
+        } else {
           $scope.email = '';
           $scope.warning = data.message;
         }
