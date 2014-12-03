@@ -1,13 +1,12 @@
 angular.module('thegrandexchange')
 .controller('LoginCtrl', [
-  '$http',
   '$scope',
   '$location',
   'session',
   'utils',
-  function($http, $scope, $location, session, utils) {
+  function($scope, $location, session, utils) {
     if (session.name()) {
-      $http.post('/api/sessions', session.name()).success(function(data) {
+      session.serverLogin(session.name()).success(function(data) {
         if (data.success === true) {
           $location.path('marketplace');
         } else {
@@ -22,7 +21,7 @@ angular.module('thegrandexchange')
         password: $scope.password
       };
       if (utils.validate(userFields, 'username', 'password')) {
-        $http.post('/api/sessions', userFields).success(function(data) {
+        server.serverLogin(userFields).success(function(data) {
           if (data.success === true) {
             userFields._id = data.userID;
             userFields.firstName = data.firstName;
@@ -40,7 +39,8 @@ angular.module('thegrandexchange')
         });
         $scope.email = '';
         $scope.password = '';
-      } else {
+      }
+      else {
         $scope.warning = 'Please fill out username and password.';
       }
     }

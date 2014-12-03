@@ -326,15 +326,16 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
           alreadyRated = true;
         }
       }
-      if(!alreadyRated){
+      if(!alreadyRated) {
         item.flags.push(userid);
       }
       item.save(function(err, item) {
         callback(item);
       });
-    } else if (item.flags.length === 2) {
-      for (var i = 0; i < item.flags.length; i++){
-        if(item.flags[i].toString() === userid.toString()){
+    }
+    else if (item.flags.length === 2) {
+      for (var i = 0; i < item.flags.length; i++) {
+        if(item.flags[i].toString() === userid.toString()) {
           alreadyRated = true;
         }
       }
@@ -359,6 +360,9 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
           utils.handleError(err);
           callback(item);
         });
+      }
+      else {
+        callback(item);
       }
     }
   });
