@@ -5,6 +5,7 @@ finalProj
 
 
 URL: thegrandexchange-dug.rhcloud.com
+Testing URL: thegrandexchange-dug.rhcloud.com/test
 
 
 User Account creations requires an MIT email address (@mit.edu, @csail.mit.edu, @media.mit.edu).

@@ -1,7 +1,7 @@
 // Tests
 
 (function() {
-  var connectionString = 'http://localhost:8080/api/';
+  var connectionString = 'http://thegrandexchange-dug.rhcloud.com/api/';
 
   var userid;
   // login
