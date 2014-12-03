@@ -328,7 +328,8 @@ $(document).ready(function() {
         }
       })
       .error(function(data) {
-        console.log(arguments);
+        // console.log(arguments);
+        console.log("error");
         console.log(data);
         $scope.warning = 'Invalid username and password.';
       });
