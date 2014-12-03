@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var utils = require('../utils');
 
+// User schema
 var userSchema = mongoose.Schema({
   activated: Boolean,
   firstName: String,
@@ -22,6 +23,7 @@ var userSchema = mongoose.Schema({
   }]
 });
 
+// Activate a user's account by taking in the user ID
 userSchema.statics.activate = function(user_id, callback) {
   if (mongoose.Types.ObjectId.isValid(user_id)) {
       User.findOne({_id:user_id}, function(err, user) {
@@ -43,6 +45,7 @@ userSchema.statics.activate = function(user_id, callback) {
   }
 };
 
+// Check if a user exists
 userSchema.statics.userExists = function(email, callback) {
   User.find({email: email}, function(err, users) {
     utils.handleError(err);
@@ -50,8 +53,9 @@ userSchema.statics.userExists = function(email, callback) {
   });
 };
 
-// /users/ POST
 // Create a new user
+// New user accounts are initially not activated
+// A new user has an initial reputation of 5. After that, the reputation is the average score of a user's reviews
 userSchema.statics.createUser = function(firstName, lastName, email, password, callback) {
   user = new User({
     activated: false,
@@ -70,8 +74,7 @@ userSchema.statics.createUser = function(firstName, lastName, email, password, c
   });
 };
 
-// /users/user_id GET
-// Get user by id
+// Get a user with a specific user ID
 userSchema.statics.getUserById = function(user_id, callback) {
   User.findOne({_id: user_id})
   .populate('offers transactions')
@@ -81,13 +84,13 @@ userSchema.statics.getUserById = function(user_id, callback) {
   });
 };
 
+// Get a user with a specific email address
 // Here, two arguments are passed to callback: err, user in that order.
 userSchema.statics.getUserByEmail = function(email, callback) {
   User.findOne({email: email}, callback);
 };
 
-// /users/user_id/transactions GET
-// Get all transactions of a user
+// Get all transactions (populated with item, buyOffer, sellOffer and their postedBy) of a user
 userSchema.statics.getUserTransactions = function(user_id, callback) {
   User.findOne({_id: user_id})
   .lean()
@@ -122,8 +125,8 @@ userSchema.statics.getUserTransactions = function(user_id, callback) {
   });
 };
 
-// POST /users/user_id/reviews
-// add new review for user with specified user_id
+// Add a new review for user with specified user_id
+// Updates the user's reputation, which is the average of all the user's review scores
 userSchema.statics.addReview = function(user_id, review, callback) {
   User.findOne({_id: user_id}, function(err, user) {
     utils.handleError(err);
@@ -138,8 +141,7 @@ userSchema.statics.addReview = function(user_id, review, callback) {
   });
 };
 
-// GET /users/user_id/offers
-// get all offers for user with specified user_id
+// Get all offers for user with specified user_id
 userSchema.statics.getOffers = function(user_id, callback) {
   User.findOne({_id: user_id})
   .populate('offers')
@@ -149,6 +151,7 @@ userSchema.statics.getOffers = function(user_id, callback) {
   });
 };
 
+// Transaction schema
 var transactionSchema = mongoose.Schema({
   buyOffer : {
     type : mongoose.Schema.Types.ObjectId,
@@ -167,8 +170,7 @@ var transactionSchema = mongoose.Schema({
   price: Number
 });
 
-// /users/user_id/transactions POST
-// Create a new transaction, add transaction to user's transactions
+// Create a new transaction and add the transaction to user's transactions
 transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, item_id, price, callback) {
   transaction = new Transaction({
     buyOffer: buyOffer._id,
@@ -197,12 +199,10 @@ transactionSchema.statics.createTransaction = function(buyOffer, sellOffer, item
   });
 };
 
-// /users/user_id/transactions/transaction_id GET
-// Get transaction by id
+// Get a transaction with a specific transaction ID
 transactionSchema.statics.getTransactionById = function(user_id, transaction_id, callback) {
   Transaction.findOne({_id:transaction_id})
     .populate('buyOffer sellOffer item')
-    // .populate('buyOffer.postedBy sellOffer.postedBy')
     .exec(function(err, transaction) {
       utils.handleError(err);
       if (transaction.buyOffer.postedBy === user_id || transaction.sellOffer.postedBy === user_id) {
@@ -214,9 +214,8 @@ transactionSchema.statics.getTransactionById = function(user_id, transaction_id,
     });
 };
 
-// /users/user_id/transactions/transaction_id PUT
 // Add a review to a transaction
-// TODO: (Bug) you can review yourself
+// This will also add the review to the other user involved in the transaction, and thus affect their reputation
 transactionSchema.statics.addTransactionReview = function(userid, transactionid, review, callback) {
   Transaction.findOne({_id:transactionid})
   .populate('buyOffer')
@@ -241,13 +240,11 @@ transactionSchema.statics.addTransactionReview = function(userid, transactionid,
   });
 };
 
-// POST
-// Rate a transaction: Changes reputation of other user in transaction
-// transactionSchema.statics.addTransactionReview = function(reviewerid, transactionid, rating, callback) {
-// }
-
+// create model
 var Transaction = mongoose.model('Transaction', transactionSchema);
 var User = mongoose.model('User', userSchema);
+
+// export
 module.exports = {
   User: User,
   Transaction: Transaction
