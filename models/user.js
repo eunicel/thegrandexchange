@@ -192,7 +192,7 @@ transactionSchema.statics.getTransactionById = function(user_id, transaction_id,
     // .populate('buyOffer.postedBy sellOffer.postedBy')
     .exec(function(err, transaction) {
       utils.handleError(err);
-      if (transaction.buyOffer.postedBy === user_id || transaction.sellOffer.postedBy === user_id) {
+      if (transaction.buyOffer.postedBy.toString() === user_id || transaction.sellOffer.postedBy.toString() === user_id) {
         callback(transaction);
       }
       else {
@@ -214,13 +214,17 @@ transactionSchema.statics.addTransactionReview = function(userid, transactionid,
       transaction.buyerRated = true;
       transaction.save();
       User.findOne({_id: transaction.sellOffer.postedBy}, function(err, user) {
-        User.addReview(user._id, review, callback);
+        User.addReview(user._id, review, function() {
+          callback(transaction);
+        });
       });
     } else if (transaction.sellOffer.postedBy.toString() === userid && !transaction.sellerRated) {
       transaction.sellerRated = true;
       transaction.save();
       User.findOne({_id: transaction.buyOffer.postedBy}, function(err, user) {
-        User.addReview(user._id, review, callback);
+        User.addReview(user._id, review, function() {
+          callback(transaction);
+        });
       });
     } else {
       callback("You're not authorized to review this transaction, or you already reviewed it.");

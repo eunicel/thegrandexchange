@@ -20,7 +20,9 @@ angular.module('thegrandexchange')
 
     $scope.logout = function() {
       session.clear();
-      $location.path('login');
+      session.serverLogout().success(function(data) {
+        $location.path('login');
+      });
     }
     $scope.flag = function(item){
       items.flag(session.name()._id, item._id).success(function(data) {

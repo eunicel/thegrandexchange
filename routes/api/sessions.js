@@ -13,6 +13,11 @@ var Router = function(passport) {
     });
   });
 
+  router.delete('/', function(request,response) {
+    request.logout();
+    response.json({success: true});
+  });
+
   return router;
 };
 

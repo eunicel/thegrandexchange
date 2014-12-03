@@ -1,5 +1,5 @@
 angular.module('thegrandexchange')
-.factory('session', ['$cookieStore', function($cookieStore) {
+.factory('session', ['$cookieStore', '$http', function($cookieStore, $http) {
   return {
     name: function() {
       return $cookieStore.get('username');
@@ -9,6 +9,12 @@ angular.module('thegrandexchange')
     },
     clear: function() {
       $cookieStore.remove('username');
+    },
+    serverLogin: function(userFields) {
+      return $http.post('/api/sessions', userFields);
+    },
+    serverLogout: function() {
+      return $http.delete('/api/sessions');
     }
   };
 }])

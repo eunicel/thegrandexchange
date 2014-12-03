@@ -1,12 +1,11 @@
 angular.module('thegrandexchange')
 .controller('LoginCtrl', [
-  '$http',
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
+  function($scope, $location, session) {
     if (session.name()) {
-      $http.post('/api/sessions', session.name()).success(function(data) {
+      session.serverLogin(session.name()).success(function(data) {
         if (data.success === true) {
           $location.path('marketplace');
         } else {
@@ -20,7 +19,7 @@ angular.module('thegrandexchange')
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).success(function(data) {
+      session.serverLogin(userFields).success(function(data) {
         if (data.success === true) {
           userFields._id = data.userID;
           userFields.firstName = data.firstName;
