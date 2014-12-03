@@ -90,6 +90,11 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
       templateUrl: '/views/verification.html',
       controller: 'VerificationCtrl'
     })
+    .state('send', {
+      url: '/send',
+      templateUrl: '/views/send.html',
+      controller: 'SendCtrl'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 
@@ -172,6 +177,9 @@ $(document).ready(function() {
     },
     verify: function(userID) {
       return $http.put('/api/users/' + userID + '/verification');
+    },
+    send: function(userEmail){
+      return $http.post('/api/users/' + userEmail + '/send');
     }
   };
 }]);angular.module('thegrandexchange')
@@ -548,6 +556,24 @@ $(document).ready(function() {
     });
   }
 ]);angular.module('thegrandexchange')
+.controller('SendCtrl', [
+  '$http',
+  '$scope',
+  '$location',
+  'session',
+  'users',
+  function($http, $scope, $location, session, users) {
+    $scope.send = function() {
+      users.send($scope.email).success(function(data) {
+        if (data.success) {
+          $location.path('login');
+        } else {
+          $scope.email = '';
+          $scope.warning = data.message;
+        }
+      });
+    }
+}]);angular.module('thegrandexchange')
 .controller('VerificationCtrl', [
   '$http',
   '$scope',

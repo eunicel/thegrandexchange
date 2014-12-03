@@ -10,6 +10,7 @@ var sendgrid  = require('sendgrid')(api_user, api_key);
 
 // Helper function to send email with activation code
 var sendActivationCode = function(email, user_id) {
+  console.log('sending activation code');
   var activationCodeEmail = {
     to      : email,
     from    : "thegrandexchange@mit.edu",
@@ -58,6 +59,7 @@ router.post('/', function(req, res) {
   }
 });
 
+// POST /users/:user_email/send
 // Send an email with activation code to user with user_email
 router.post('/:user_email/send', function(req, res) {
   var email = req.param('user_email');
