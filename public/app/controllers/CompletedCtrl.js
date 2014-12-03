@@ -41,6 +41,8 @@ angular.module('thegrandexchange')
             // failed
           }
         });
+      } else {
+        alert("Please rate and leave a message.");
       }
     };
   }

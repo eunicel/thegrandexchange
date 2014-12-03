@@ -1,6 +1,5 @@
 /* Item Model */
 var mongoose = require('mongoose');
-// var Schema = mongoose.Schema;
 var ObjectId = mongoose.Types.ObjectId;
 var utils = require('../utils');
 var Transaction = require('../models/user').Transaction;
@@ -11,10 +10,8 @@ var api_key = require('../config/secrets').api_key;
 var sendgrid  = require('sendgrid')(api_user, api_key);
 
 
-
-// sends emails notification to buyer and seller of the match
+// Send email notifications to buyer and seller of the matched offers
 var emailTransactionNotification = function(buyer_email, seller_email, item_name, price) {
-  // if (type === "buy") { //you are the buyer
   var emailToBuyer = {
     to      : buyer_email,
     from    : "thegrandexchange@mit.edu",
@@ -53,7 +50,7 @@ var offerSchema = mongoose.Schema({
 
 var Offer = mongoose.model('Offer', offerSchema);
 
-// item schema
+// Item schema
 var itemSchema = mongoose.Schema({
   name: String,
   description: String,
@@ -64,7 +61,7 @@ var itemSchema = mongoose.Schema({
   flags: Array
 });
 
-// GET - returns all items
+// Get all Items
 itemSchema.statics.getItems = function(callback) {
   Item.find()
   .populate('offers')
@@ -74,7 +71,7 @@ itemSchema.statics.getItems = function(callback) {
   });
 };
 
-// POST - create new item
+// Create a new Item
 itemSchema.statics.createItem = function(name, description, callback) {
   var item = new Item({
     name: name,
@@ -87,7 +84,7 @@ itemSchema.statics.createItem = function(name, description, callback) {
   });
 };
 
-// GET - get item by id
+// Get an item with a specific item ID
 itemSchema.statics.getItemById = function(item_id, callback) {
   Item.findOne({_id:item_id})
   .lean()
@@ -105,7 +102,7 @@ itemSchema.statics.getItemById = function(item_id, callback) {
   });
 };
 
-// GET - get offers of item
+// Get all the offers of a specific item with item ID
 itemSchema.statics.getItemOffers = function(item_id, callback) {
   Item.findOne({_id:item_id})
   .lean()
@@ -123,13 +120,21 @@ itemSchema.statics.getItemOffers = function(item_id, callback) {
   });
 };
 
-// POST - create offer for item
-// Check for offer matches and create Transactions
+// Create an offer for a specific item
+// Checks for offers that may match.
+// Buy offers are matched with the lowest sell offer where sell price < buy price
+// Sell offers are matched with the highest buy offer where sell price < buy price
+// If no match is found:
+//      the new Offer is added to the User and Item
+// If a match is found:
+//      a new Transaction is created
+//      the offers are removed from users and the Item
+//      the new Transaction is added to the users
+//      email notifications are sent to the users of the transaction
 itemSchema.statics.createOffer = function(item_id, offerData, callback) {
-  // offerData may need to be augmented with item_id and user_id
   var offer = new Offer(offerData);
 
-  //offer matching
+  // Offer matching
   // buy: match with LOWEST sell offer
   // sell: match with HIGHEST buy offer where sell < buy
   if (offer.type === "buy") {
@@ -147,14 +152,14 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       Item.populate(itemwithoutuser, options, function(err, item) {
         utils.handleError(err);
         var minSell = undefined;
-        for (var i = 0; i<item.offers.length; i++) {
+        for (var i = 0; i<item.offers.length; i++) { // check each sell offer of the item
           if (item.offers[i].price <= offer.price) { // matchable price
-            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { // BAD: a previous offer by the same user has a matchable price!
               callback(null, "You cannot post an offer that would match your own offer");
               return;
             }
             if (item.offers[i].postedBy.reputation >= offer.minReputation) { // matchable reputation
-              if (minSell === undefined || item.offers[i].price < minSell) { // better price match
+              if (minSell === undefined || item.offers[i].price < minSell) { // keep track of the best price
                 minSell = item.offers[i];
               }
             }
@@ -165,7 +170,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
           utils.handleError(err);
         });
 
-        if (!minSell) { // no matching offers; store offer for User and Item
+        if (!minSell) { // no match; store offer for User and Item
           Item.update({_id: item_id}, {
             $addToSet: {
               offers: offer
@@ -208,14 +213,14 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
       Item.populate(itemwithoutuser, options, function(err, item) {
         utils.handleError(err);
         var maxBuy = undefined;
-        for (var i = 0; i < item.offers.length; i++) {
+        for (var i = 0; i < item.offers.length; i++) { // check each buy offer of the item
           if (item.offers[i].price >= offer.price) { // matchable price
-            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { //BAD: a previous offer by the same user has a matchable price!
+            if (item.offers[i].postedBy._id.toString() === offer.postedBy.toString()) { // BAD: a previous offer by the same user has a matchable price!
               callback(null, "You cannot post an offer that would match your own offer");
               return;
             }
-            if (item.offers[i].postedBy.reputation >= offer.minReputation) { //matchable reputation
-              if (maxBuy === undefined || item.offers[i].price > maxBuy) { //better price match
+            if (item.offers[i].postedBy.reputation >= offer.minReputation) { // matchable reputation
+              if (maxBuy === undefined || item.offers[i].price > maxBuy) { // keep track of the best price
                 maxBuy = item.offers[i];
               }
             }
@@ -226,7 +231,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
           utils.handleError(err);
         });
 
-        if (! maxBuy) { // no matching offers; store offer for User and Item
+        if (! maxBuy) { // no match; store offer for User and Item
           Item.update({_id: item_id}, {
             $addToSet: {
               offers: offer
@@ -256,7 +261,7 @@ itemSchema.statics.createOffer = function(item_id, offerData, callback) {
   }
 };
 
-// GET - get offer by id
+// Get an offer by its ID
 itemSchema.statics.getOfferById = function(item_id, offer_id, callback) {
   Offer.findOne({_id: offer_id})
   .populate('postedBy')
@@ -294,7 +299,7 @@ itemSchema.statics.removeOfferFromItemAndUser = function(item_id, offer_id, call
   });
 };
 
-// DELETE - delete offer
+// Delete an offer (must be postedBy the current session user)
 itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
   Offer.findOne({_id: offer_id}, function(err, offer) {
     if (userid.toString() == offer.postedBy.toString()) {
@@ -308,6 +313,9 @@ itemSchema.statics.deleteOffer = function(userid, item_id, offer_id, callback) {
   })
 };
 
+// Flag an Item
+// Users may flag any item they find inappropriate. A user may flag each item only once
+// Items that receive 3 flags are deleted
 itemSchema.statics.flag = function (userid, item_id, callback) {
   Item.findOne({_id: item_id}, function(err, item) {
     utils.handleError(err);
@@ -332,6 +340,22 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
         }
       }
       if(!alreadyRated) {
+        Item.findOne({_id: item_id}, function(err, item) {
+          utils.handleError(err);
+          var offers = item.offers;
+          for (var i = 0; i < offers.length; i++) {
+            Offer.findOneAndRemove({_id: offers[i]}, function(err, offer){
+              User.findOne({_id: offer.postedBy}, function(err, user) {
+                for (var i = user.offers.length-1; i >= 0; i--){
+                  if(user.offers[i] === offer._id){
+                    user.offers.splice(1, i);
+                  }
+                }
+                user.save(function(err){});
+              })
+            });
+          }
+        });
         Item.findOneAndRemove({_id: item_id}, function(err, item) {
           utils.handleError(err);
           callback(item);
@@ -344,6 +368,7 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
   });
 }
 
+// Delete an item from the database
 itemSchema.statics.deleteItem = function(item_id, callback) {
   Item.findOneAndRemove({_id: item_id}, function(err, item) {
     utils.handleError(err);

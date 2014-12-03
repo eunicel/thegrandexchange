@@ -21,9 +21,6 @@ module.exports = function(passport, User, LocalStrategy) {
       if (!(user.password === password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
-      if (!(user.activated)) {
-        return done(null, false, { message: 'You must activate your account.' });
-      }
       return done(null, user);
     });
   }));

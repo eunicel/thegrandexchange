@@ -1,6 +1,6 @@
 <div ng-controller="ItemCtrl">
-  <hr>
-  <div class="item_left">
+  <h1>{{item.name}} <small>{{item.description}}</small></h1>
+  <div class="col-sm-4">
     <h3>Sell:</h3>
     <table class="item_offers_table">
       <tr>
@@ -12,7 +12,6 @@
         <td>{{sell.postedBy.reputation}}</td>
       </tr>
     </table>
-    <h1 class="item_name">{{item.name}}</h1>
     <h3>Buy:</h3>
     <table class="item_offers_table">
       <tr>
@@ -25,32 +24,44 @@
       </tr>
     </table>
   </div>
-  <div class="item_right">
-    <form class="item_description">
-      <h3> Description:</h3>
-      <h4>{{item.description}}</h4>
-      <h3>I'm willing to:</h3>
-      <button ng-click="offer('buy')" class="btn btn-default bid_button"><h4>Buy</h4></button><br>
-      <button ng-click="offer('sell')" class="btn btn-default bid_button"><h4>Sell</h4></button>
-      <div class="enter_price">
-        for $ <input ng-model="price" class="price" type="text"></input>
+  <div class="col-sm-8">
+    <form class="form-horizontal" role="form">
+      <div class="text-right">
+        <h3>Make an Offer</h3>
       </div>
-      <h3> from someone with reputation at least </h3>
-      <input ng-model="reputation" class="reputation-required" type="text">
-      </input>
-      <br><br>
-      <div role="alert" ng-show="error" class="alert alert-danger">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        {{message}}
+      <div class="form-group">
+        <label for="offer" class="col-xs-4 control-label">$</label>
+        <div class="col-xs-8">
+          <input ng-model="price" type="text" class="price form-control" id="offer" placeholder="Offer">
+        </div>
+      <div class="form-group">
+        <label for="reputation" class="col-xs-4 control-label">Reputation</label>
+        <div class="reputation-wrapper col-xs-8">
+          <input ng-model="reputation" type="range" name="points" id="reputation" value="3" min="1" max="5" data-show-value="true" data-hightlight="true"></input>
+          <div class="slider-label">1</div>
+          <div class="slider-label">2</div>
+          <div class="slider-label">3</div>
+          <div class="slider-label">4</div>
+          <div class="slider-label-last">5</div>
+          <!-- <input ng-model="reputation" type="text" class="reputation-required form-control" id="reputation" placeholder="Match with this or higher"> -->
+        </div>
       </div>
-      <div role="alert" ng-show="posted" class="alert alert-info" >
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        {{message}}
-      </div>
-      <div role="alert" ng-show="matched" class="alert alert-success" >
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        {{message}}
+      <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
+        <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>
+        <a ng-click="offer('sell')" class="btn btn-primary bid_button">Sell</a>
       </div>
     </form>
+    <div role="alert" ng-show="error" class="alert alert-danger">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      {{message}}
+    </div>
+    <div role="alert" ng-show="posted" class="alert alert-info" >
+      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+      {{message}}
+    </div>
+    <div role="alert" ng-show="matched" class="alert alert-success" >
+      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+      {{message}}
+    </div>
   </div>
 </div>
