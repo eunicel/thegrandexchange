@@ -8,10 +8,8 @@ var api_user = require('../../config/secrets').api_user;
 var api_key = require('../../config/secrets').api_key;
 var sendgrid  = require('sendgrid')(api_user, api_key);
 
-/* POST /users
- * create new user
- * firstName, lastName, email, and password cannot be empty
- */
+// POST /users
+// Create a user
 router.post('/', function(req, res) {
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
@@ -54,7 +52,7 @@ router.post('/', function(req, res) {
 });
 
 // GET /users/:user_id
-// get user with user_id
+// Get user with user_id
 router.get('/:user_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getUserById(user_id, function(user) {
@@ -67,7 +65,7 @@ router.get('/:user_id', utils.loggedIn, function(req, res) {
 });
 
 // PUT /users/:user_id/verification
-// verify user account with user_id
+// Verify user account with user_id
 router.put('/:user_id/verification', function(req, res) {
   var user_id = req.param('user_id');
   User.activate(user_id, function(user, msg) {
@@ -80,7 +78,7 @@ router.put('/:user_id/verification', function(req, res) {
 });
 
 // GET /users/:user_id/transactions
-// get all transactions of user with user_id
+// Get all transactions of user with user_id
 router.get('/:user_id/transactions', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getUserTransactions(user_id, function(transactions) {
@@ -93,7 +91,7 @@ router.get('/:user_id/transactions', utils.loggedIn, function(req, res) {
 });
 
 // GET /users/:user_id/transactions/:transaction_id
-// get transaction with transaction_id
+// Get transaction with transaction_id, only if user is involved in transaction.
 router.get('/:user_id/transactions/:transaction_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   var transaction_id = req.param('transaction_id');
@@ -103,7 +101,8 @@ router.get('/:user_id/transactions/:transaction_id', utils.loggedIn, function(re
 });
 
 // POST /users/:user_id/transactions/:transaction_id
-// rate and review transaction with transaction_id with user user_id
+// Rate and review transaction with transaction_id with user user_id, only if
+// user is user_id
 router.post('/:user_id/transactions/:transaction_id', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
 
@@ -122,7 +121,7 @@ router.post('/:user_id/transactions/:transaction_id', utils.loggedIn, function(r
 });
 
 // GET /users/:user_id/offers
-// get all offers for a user
+// Get all offers for a user
 router.get('/:user_id/offers', utils.loggedIn, function(req, res) {
   var user_id = req.param('user_id');
   User.getOffers(user_id, function(offers) {

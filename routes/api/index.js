@@ -15,9 +15,12 @@ require('../../config/passport')(passport, User, LocalStrategy);
 router.use(passport.initialize());
 router.use(passport.session());
 
+// Passport authentication (login)
 router.use('/sessions', sessions);
 
+// User-related actions
 router.use('/users', users);
+// Item-related actions
 router.use('/items', items);
 
 module.exports = router;

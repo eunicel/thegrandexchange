@@ -5,7 +5,7 @@ var Offer = require('../../models/item').Offer;
 var utils = require('../../utils');
 
 // GET /items
-// get all items
+// Get all items
 router.get('/', utils.loggedIn, function(req, res) {
   Item.getItems(function(items) {
     if(items && items.length > 0) {
@@ -17,7 +17,7 @@ router.get('/', utils.loggedIn, function(req, res) {
 });
 
 // POST /items
-// create items
+// Create an item
 router.post('/', utils.loggedIn, function(req, res) {
   var name = req.body.name;
   var description = req.body.description;
@@ -35,7 +35,8 @@ router.post('/', utils.loggedIn, function(req, res) {
   });
 });
 
-// GET /items/:item_id - get item with item_id
+// GET /items/:item_id
+// Get an item with id item_id
 router.get('/:item_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
@@ -47,7 +48,8 @@ router.get('/:item_id', utils.loggedIn, function(req, res) {
   });
 });
 
-// GET /items/:item_id/offers - get offers of item with item_id
+// GET /items/:item_id/offers
+// Get offers for item with id item_id
 router.get('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
@@ -60,7 +62,7 @@ router.get('/:item_id/offers', utils.loggedIn, function(req, res) {
 });
 
 // POST /items/:item_id/offers
-// create new offer
+// Create offers for item with id item_id
 router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   if (req.body.postedBy != req.user._id) {
@@ -81,14 +83,7 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   else {
     Item.getItemById(item_id, function(item){
       var offers = item.offers;
-      // var id;
-      // if(offers.length === 0){
-      //   id = 0;
-      // } else {
-      //   id = offers[offers.length-1]._id+1;
-      // }
       var offer = {
-        // _id: id,
         postedBy: req.body.postedBy,
         postedAt: req.body.postedAt,
         price: req.body.price,
@@ -108,6 +103,7 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
 });
 
 // GET /items/:item_id/offers/:offer_id
+// Get offer with id offer_id for item with id item_id
 router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   var offer_id = req.param('offer_id');
@@ -120,6 +116,8 @@ router.get('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res) {
   });
 });
 
+// POST /items/:item_id/flags
+// Flag item with id item_id as inappropriate
 router.post('/:item_id/flags', utils.loggedIn, function(req, res) {
   var item_id = req.param('item_id');
   Item.getItemById(item_id, function(item) {
@@ -135,7 +133,7 @@ router.post('/:item_id/flags', utils.loggedIn, function(req, res) {
 
 
 // DELETE /items/:item_id/offers/:offer_id
-// delete offer
+// Delete offer with id offer_id from item with id item_id
 router.delete('/:item_id/offers/:offer_id', utils.loggedIn, function(req, res){
   var offer_id = req.param('offer_id');
   var item_id = req.param('item_id');
