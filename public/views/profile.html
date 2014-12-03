@@ -1,11 +1,11 @@
 <div>
-  <h1>{{user.email}}</h1>
+  <h1>{{user.firstName}} {{user.lastName}} ({{user.email}})</h1>
   <h4>
     Reputation: {{user.reputation}}
   </h4>
 
   <h3>My Reviews</h3>
-  <div ng-repeat="review in user.reviews">
+  <div ng-repeat="review in user.reviews" class="review-content">
     {{review.text}}
   </div>
 </div>

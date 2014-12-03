@@ -1,5 +1,5 @@
 <div ng-controller="CompletedCtrl">
-  <h1>Your Completed Transactions</h1>
+  <h1>My Completed Transactions</h1>
   <hr>
     <div ng-repeat="transaction in transactions">
       <div ng-show="transaction.isBuyer"><h3> Bought {{transaction.item.name}} for ${{transaction.price}} from {{transaction.sellOffer.postedBy.firstName}} {{transaction.sellOffer.postedBy.lastName}}<h3></div>

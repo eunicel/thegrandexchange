@@ -18,6 +18,9 @@ angular.module('thegrandexchange')
     },
     postReview: function(userID, transactionID, review) {
       return $http.post('/api/users/' + userID + '/transactions/' + transactionID, review);
+    },
+    verify: function(userID) {
+      return $http.put('/api/users/' + userID + '/verification');
     }
   };
 }])

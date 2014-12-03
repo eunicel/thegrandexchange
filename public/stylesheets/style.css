@@ -239,4 +239,26 @@ hr {
     left:2px;
 }
 
+.review-content{
+  border:1px solid;
+  border-radius:4px;
+  margin-top:8px;
+  margin-bottom:8px;
+  padding:8px;
+}
 
+.slider-label{
+  display:inline-block;
+  margin-right:61px;
+}
+
+.reputation-wrapper {
+  margin-top: 10px;
+}
+
+.reputation {
+  width:300px;
+}
+.slider-label-last{
+  display: inline-block;
+}

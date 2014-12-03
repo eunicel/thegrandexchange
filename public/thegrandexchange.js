@@ -85,6 +85,11 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
       templateUrl: '/views/item.html',
       controller: 'ItemCtrl'
     })
+    .state('verification', {
+      url: '/verification',
+      templateUrl: '/views/verification.html',
+      controller: 'VerificationCtrl'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 
@@ -158,6 +163,9 @@ $(document).ready(function() {
     },
     postReview: function(userID, transactionID, review) {
       return $http.post('/api/users/' + userID + '/transactions/' + transactionID, review);
+    },
+    verify: function(userID) {
+      return $http.put('/api/users/' + userID + '/verification');
     }
   };
 }]);angular.module('thegrandexchange')
@@ -327,7 +335,7 @@ $(document).ready(function() {
             session.setName(userFields);
             $location.path('marketplace');
           } else {
-            $scope.warning = data.message;
+            $location.path('verification');
           }
         })
         .error(function(data) {
@@ -449,8 +457,8 @@ $(document).ready(function() {
         };
         if (utils.validate(newUser, 'firstName', 'lastName', 'email', 'password')) {
           users.create(newUser).success(function (data) {
-            if (data.success === true) {
-              $location.path('sessions');
+            if (data.success) {
+              $location.path('verification');
             } else {
               $scope.warning = data.message;
             }
@@ -529,4 +537,23 @@ $(document).ready(function() {
       }
     });
   }
-])
+]);angular.module('thegrandexchange')
+.controller('VerificationCtrl', [
+  '$http',
+  '$scope',
+  '$location',
+  'session',
+  'users',
+  function($http, $scope, $location, session, users) {
+    $scope.verify = function() {
+      users.verify($scope.activationCode).success(function(data) {
+        if (data.success) {
+          $location.path('login');
+        }
+        else {
+          $scope.activationCode = '';
+          $scope.warning = data.message;
+        }
+      });
+    }
+}])

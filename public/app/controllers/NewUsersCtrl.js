@@ -19,8 +19,8 @@ angular.module('thegrandexchange')
         };
         if (utils.validate(newUser, 'firstName', 'lastName', 'email', 'password')) {
           users.create(newUser).success(function (data) {
-            if (data.success === true) {
-              $location.path('sessions');
+            if (data.success) {
+              $location.path('verification');
             } else {
               $scope.warning = data.message;
             }
