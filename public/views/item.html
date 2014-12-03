@@ -36,8 +36,12 @@
         for $ <input ng-model="price" class="price" type="text"></input>
       </div>
       <h3> from someone with reputation at least </h3>
-      <input ng-model="reputation" class="reputation-required" type="text">
-      </input>
+      <input ng-model="reputation" type="range" name="points" id="points" value="3" min="1" max="5" data-show-value="true" data-hightlight="true"></input>
+      <div class="slider-label">1</div>
+      <div class="slider-label">2</div>
+      <div class="slider-label">3</div>
+      <div class="slider-label">4</div>
+      <div class="slider-label-last">5</div>
       <br><br>
       <div role="alert" ng-show="error" class="alert alert-danger">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
