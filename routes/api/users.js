@@ -58,6 +58,7 @@ router.post('/', function(req, res) {
   }
 });
 
+// POST /users/:user_email/send
 // Send an email with activation code to user with user_email
 router.post('/:user_email/send', function(req, res) {
   var email = req.param('user_email');
