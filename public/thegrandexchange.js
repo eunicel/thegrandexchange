@@ -178,14 +178,9 @@ $(document).ready(function() {
   '$scope',
   'users',
   'session',
-<<<<<<< HEAD
   'utils',
   function($scope, users, session, utils) {
-    users.getTransactions(session.name()._id).then(function (data) {
-=======
-  function($scope, users, session) {
     users.getTransactions(session.name()._id).success(function (data) {
->>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
       var transactions = data.transactions;
       var displayed_transactions = [];
       for (var i = 0; i < transactions.length; i++) {
@@ -220,14 +215,10 @@ $(document).ready(function() {
           } else {
             // failed
           }
-<<<<<<< HEAD
         });
+      } else {
+        alert("Please rate and leave a message.");
       }
-=======
-        } else {
-        }
-      });
->>>>>>> d79321017ee55f2da10dfbe9f12bf13d238435a9
     };
   }
 ]);angular.module('thegrandexchange')
@@ -239,7 +230,8 @@ $(document).ready(function() {
   'session',
   'items',
   'users',
-  function($http, $scope, $location, $stateParams, session, items, users) {
+  'utils',
+  function($http, $scope, $location, $stateParams, session, items, users, utils) {
     $scope.order = 'price';
     users.get(session.name()._id).success(function(data) {
       $scope.userReputation = data.user.reputation;
@@ -257,44 +249,50 @@ $(document).ready(function() {
         type: type,
         minReputation: $scope.reputation
       };
-      items.postOffer($scope.item._id, newOffer).success(function(data) {
-        $scope.message = undefined;
-        $scope.error = false;
-        $scope.posted = false;
-        $scope.matched = false;
-        // posted
-        if (data.message === 'No match') {
-          newOffer.postedBy = {
-            firstName: session.name().firstName,
-            lastName: session.name().lastName,
-            reputation: $scope.userReputation
+      if (utils.validate(newOffer, 'price', 'minReputation')) {
+        items.postOffer($scope.item._id, newOffer).success(function(data) {
+          $scope.message = undefined;
+          $scope.error = false;
+          $scope.posted = false;
+          $scope.matched = false;
+          // posted
+          if (data.message === 'No match') {
+            newOffer.postedBy = {
+              firstName: session.name().firstName,
+              lastName: session.name().lastName,
+              reputation: $scope.userReputation
+            }
+            $scope.item.offers.push(newOffer);
+            $scope.price = '';
+            $scope.reputation = '';
+            $scope.posted = true;
+            $scope.message = 'Your offer has been posted.'
           }
-          $scope.item.offers.push(newOffer);
-          $scope.price = '';
-          $scope.reputation = '';
-          $scope.posted = true;
-          $scope.message = 'Your offer has been posted.'
-        }
-        // error
-        else if (data.success === false) {
-          $scope.error = true;
-          $scope.message = data.message;
-        }
-        // matched
-        else {
-          $scope.matched = true;
-          $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
-          var offers = $scope.item.offers;
-          $scope.price = '';
-          $scope.reputation = '';
-          for (var i = 0; i < offers.length; i++) {
-            if (offers[i].price === data.transaction.price) {
-              offers.splice(i, 1);
-              return;
+          // error
+          else if (data.success === false) {
+            $scope.error = true;
+            $scope.message = data.message;
+          }
+          // matched
+          else {
+            $scope.matched = true;
+            $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
+            var offers = $scope.item.offers;
+            $scope.price = '';
+            $scope.reputation = '';
+            for (var i = 0; i < offers.length; i++) {
+              if (offers[i].price === data.transaction.price) {
+                offers.splice(i, 1);
+                return;
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+        $scope.error = true;
+        $scope.message = 'Please fill in price and min reputation.';
+        console.log($scope.message);
+      }
     }
   }
 ]);angular.module('thegrandexchange')
@@ -303,7 +301,8 @@ $(document).ready(function() {
   '$scope',
   '$location',
   'session',
-  function($http, $scope, $location, session) {
+  'utils',
+  function($http, $scope, $location, session, utils) {
     if (session.name()) {
       $http.post('/api/sessions', session.name()).success(function(data) {
         if (data.success === true) {
@@ -319,24 +318,28 @@ $(document).ready(function() {
         username: $scope.email,
         password: $scope.password
       };
-      $http.post('/api/sessions', userFields).success(function(data) {
-        if (data.success === true) {
-          userFields._id = data.userID;
-          userFields.firstName = data.firstName;
-          userFields.lastName = data.lastName;
-          session.setName(userFields);
-          $location.path('marketplace');
-        } else {
-          $scope.warning = data.message;
-        }
-      })
-      .error(function(data) {
-        console.log(arguments);
-        console.log(data);
-        $scope.warning = 'Invalid username and password.';
-      });
-      $scope.email = '';
-      $scope.password = '';
+      if (utils.validate(userFields, 'username', 'password')) {
+        $http.post('/api/sessions', userFields).success(function(data) {
+          if (data.success === true) {
+            userFields._id = data.userID;
+            userFields.firstName = data.firstName;
+            userFields.lastName = data.lastName;
+            session.setName(userFields);
+            $location.path('marketplace');
+          } else {
+            $scope.warning = data.message;
+          }
+        })
+        .error(function(data) {
+          console.log(arguments);
+          console.log(data);
+          $scope.warning = 'Invalid username and password.';
+        });
+        $scope.email = '';
+        $scope.password = '';
+      } else {
+        $scope.warning = 'Please fill out username and password.';
+      }
     }
 }]);angular.module('thegrandexchange')
 .controller('MainCtrl', [
@@ -344,7 +347,8 @@ $(document).ready(function() {
   '$location',
   'session',
   'items',
-  function($scope, $location, session, items) {
+  'utils',
+  function($scope, $location, session, items, utils) {
 
     $scope.isLoggedIn = function() {
       return session.name() !== undefined;
@@ -373,19 +377,23 @@ $(document).ready(function() {
       $location.url('items/'+ item._id);
     }
     $scope.addItem = function(){
-      console.log('adding item');
       var item = {
         name: $scope.name,
         description: $scope.description
       }
-      items.create(item).success(function(data) {
-        data.item.bestSell = 'No offers';
-        data.item.bestBuy = 'No offers';
-        $scope.items.push(data.item);
-        $scope.name = '';
-        $scope.description = '';
-      });
+      if (utils.validate(item, 'name', 'description')) {
+        items.create(item).success(function(data) {
+          data.item.bestSell = 'No offers';
+          data.item.bestBuy = 'No offers';
+          $scope.items.push(data.item);
+          $scope.name = '';
+          $scope.description = '';
+        });
+      } else {
+        alert("Please enter a name and a description.")
+      }
     }
+
     items.getAll().success(function(response) {
       $scope.items = response.items;
       if (response.success === true) {
@@ -426,7 +434,8 @@ $(document).ready(function() {
   '$scope',
   '$location',
   'users',
-  function($http, $scope, $location, users) {
+  'utils',
+  function($http, $scope, $location, users, utils) {
     $scope.addUser = function() {
       if ($scope.password !== $scope.passwordCheck) {
         $scope.warning = 'Passwords do not match';
@@ -438,16 +447,20 @@ $(document).ready(function() {
           email: $scope.email,
           password: $scope.password
         };
-        users.create(newUser).success(function (data) {
-          if (data.success === true) {
-            $location.path('sessions');
-          } else {
-            $scope.warning = data.message;
-          }
-        })
-        .error(function(error) {
-          $scope.warning = error.data.message;
-        });
+        if (utils.validate(newUser, 'firstName', 'lastName', 'email', 'password')) {
+          users.create(newUser).success(function (data) {
+            if (data.success === true) {
+              $location.path('sessions');
+            } else {
+              $scope.warning = data.message;
+            }
+          })
+          .error(function(error) {
+            $scope.warning = error.data.message;
+          });
+        } else {
+          $scope.warning = 'All fields are required.';
+        }
       }
       $scope.password = '';
       $scope.passwordCheck = '';

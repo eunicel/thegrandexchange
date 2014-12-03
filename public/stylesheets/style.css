@@ -49,7 +49,7 @@ hr {
 }
 
 .review {
-    height:50px;
+  height:50px;
 }
 
 .item {
@@ -69,7 +69,6 @@ hr {
   height:125px;
   margin-top:5px;
   margin-bottom:5px;
-  padding:2px;
   cursor:pointer;
 }
 
@@ -107,18 +106,6 @@ hr {
   margin-top:3px;
   margin-bottom:3px;
   margin-right:15px;
-}
-
-.enter_price{
-  display:inline-block;
-  vertical-align: middle;
-  position:absolute;
-  font-size:x-large;
-}
-
-.price{
-  width:90px;
-  color: #011A41;
 }
 
 .item_left{
@@ -197,13 +184,6 @@ hr {
   color: gray;
   cursor: default;
 
-}
-
-.reputation-required{
-  font-size: x-large;
-  width:90px;
-  display:inline-block;
-  color: #011A41;
 }
 
 .new-item{
