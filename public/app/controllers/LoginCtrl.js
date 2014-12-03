@@ -21,7 +21,7 @@ angular.module('thegrandexchange')
         password: $scope.password
       };
       if (utils.validate(userFields, 'username', 'password')) {
-        server.serverLogin(userFields).success(function(data) {
+        session.serverLogin(userFields).success(function(data) {
           if (data.success === true) {
             userFields._id = data.userID;
             userFields.firstName = data.firstName;

@@ -303,7 +303,6 @@
 
   // item should be deleted after third flag
   asyncTest('flag item and delete', function() {
-    console.log('final test');
     $.ajax({
       type: 'POST',
       url: connectionString + 'items/' + itemid + '/flags',
