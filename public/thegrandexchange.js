@@ -253,9 +253,6 @@ $(document).ready(function() {
         $scope.matched = false;
         // posted
         if (data.message === 'No match') {
-          console.log('matched');
-          console.log($scope.reputation);
-          console.log(data.success);
           newOffer.postedBy = {
             firstName: session.name().firstName,
             lastName: session.name().lastName,
@@ -274,7 +271,6 @@ $(document).ready(function() {
         }
         // matched
         else {
-          console.log('matched');
           $scope.matched = true;
           $scope.message = 'Your offer has been matched. Check your completed transaction or check your email for more information.'
           var offers = $scope.item.offers;
