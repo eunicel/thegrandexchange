@@ -277,4 +277,10 @@ hr {
     left:2px;
 }
 
-
+.review-content{
+  border:1px solid;
+  border-radius:4px;
+  margin-top:8px;
+  margin-bottom:8px;
+  padding:8px;
+}
