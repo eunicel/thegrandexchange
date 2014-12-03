@@ -339,6 +339,22 @@ itemSchema.statics.flag = function (userid, item_id, callback) {
         }
       }
       if(!alreadyRated) {
+        Item.findOne({_id: item_id}, function(err, item) {
+          utils.handleError(err);
+          var offers = item.offers;
+          for (var i = 0; i < offers.length; i++) {
+            Offer.findOneAndRemove({_id: offers[i]}, function(err, offer){
+              User.findOne({_id: offer.postedBy}, function(err, user) {
+                for (var i = user.offers.length-1; i >= 0; i--){
+                  if(user.offers[i] === offer._id){
+                    user.offers.splice(1, i);
+                  }
+                }
+                user.save(function(err){});
+              })
+            });
+          }
+        });
         Item.findOneAndRemove({_id: item_id}, function(err, item) {
           utils.handleError(err);
           callback(item);
