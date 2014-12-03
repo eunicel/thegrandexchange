@@ -49,7 +49,7 @@ hr {
 }
 
 .review {
-    height:50px;
+  height:50px;
 }
 
 .item {
@@ -69,7 +69,6 @@ hr {
   height:125px;
   margin-top:5px;
   margin-bottom:5px;
-  padding:2px;
   cursor:pointer;
 }
 
@@ -94,37 +93,13 @@ hr {
   float: right;
 }
 
+.alert {
+  margin-top: 10px;
+}
+
 .item_error{
   color: red;
   padding: 3px;
-}
-
-.bid_button{
-  padding-top:2px;
-  padding-bottom:2px;
-  padding-left:20px;
-  padding-right:20px;
-  margin-top:3px;
-  margin-bottom:3px;
-  margin-right:15px;
-}
-
-.enter_price{
-  display:inline-block;
-  vertical-align: middle;
-  position:absolute;
-  font-size:x-large;
-}
-
-.price{
-  width:90px;
-  color: #011A41;
-}
-
-.item_left{
-  display:inline-block;
-  width:50%;
-  vertical-align: top;
 }
 
 .item_offers_table{
@@ -145,14 +120,8 @@ hr {
   padding-right:5px;
   text-align: center;
 }
-.item_offers_table th + th{ border-left:1px solid white; }
 
-.item_right{
-  display:inline-block;
-  width:45%;
-  vertical-align:top;
-  float:right;
-}
+.item_offers_table th + th{ border-left:1px solid white; }
 
 .item_name{
   margin-top:20px;
@@ -197,13 +166,6 @@ hr {
   color: gray;
   cursor: default;
 
-}
-
-.reputation-required{
-  font-size: x-large;
-  width:90px;
-  display:inline-block;
-  color: #011A41;
 }
 
 .new-item{
@@ -289,7 +251,12 @@ hr {
   display:inline-block;
   margin-right:61px;
 }
-#points{
+
+.reputation-wrapper {
+  margin-top: 10px;
+}
+
+.reputation {
   width:300px;
 }
 .slider-label-last{
