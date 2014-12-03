@@ -30,7 +30,7 @@ angular.module('thegrandexchange')
             session.setName(userFields);
             $location.path('marketplace');
           } else {
-            $scope.warning = data.message;
+            $location.path('verification');
           }
         })
         .error(function(data) {

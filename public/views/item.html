@@ -1,6 +1,6 @@
 <div ng-controller="ItemCtrl">
   <h1>{{item.name}} <small>{{item.description}}</small></h1>
-  <div class="item_left">
+  <div class="col-sm-4">
     <h3>Sell:</h3>
     <table class="item_offers_table">
       <tr>
@@ -24,9 +24,11 @@
       </tr>
     </table>
   </div>
-  <div class="item_right">
+  <div class="col-sm-8">
     <form class="form-horizontal" role="form">
-      <h4>Make an Offer</h4>
+      <div class="text-right">
+        <h3>Make an Offer</h3>
+      </div>
       <div class="form-group">
         <label for="offer" class="col-xs-4 control-label">$</label>
         <div class="col-xs-8">
@@ -39,7 +41,10 @@
           <input ng-model="reputation" type="text" class="reputation-required form-control" id="reputation" placeholder="Match with this or higher">
         </div>
       </div>
-      <div 
+      <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
+        <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>
+        <a ng-click="offer('sell')" class="btn btn-primary bid_button">Sell</a>
+      </div>
     </form>
     <div role="alert" ng-show="error" class="alert alert-danger">
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
