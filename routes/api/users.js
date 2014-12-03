@@ -8,8 +8,23 @@ var api_user = require('../../config/secrets').api_user;
 var api_key = require('../../config/secrets').api_key;
 var sendgrid  = require('sendgrid')(api_user, api_key);
 
-// POST /users
-// Create a user
+// Helper function to send email with activation code
+var sendActivationCode = function(email, user_id) {
+  var activationCodeEmail = {
+    to      : email,
+    from    : "thegrandexchange@mit.edu",
+    subject : "Your Account Activation Code",
+    text    : "Your Activation Code is:  " + user_id
+  }
+  sendgrid.send(activationCodeEmail, function(err, json) {
+    if (err) { console.error(err); }
+  });
+}
+
+/* POST /users
+ * create new user
+ * firstName, lastName, email, and password cannot be empty
+ */
 router.post('/', function(req, res) {
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
@@ -34,21 +49,28 @@ router.post('/', function(req, res) {
         } else {
           User.createUser(firstName, lastName, email, password, function(user) {
             //send email with activation code (user id)
-            var activationCodeEmail = {
-              to      : email,
-              from    : "thegrandexchange@mit.edu",
-              subject : "Your Account Activation Code",
-              text    : "Your Activation Code is:  " + user._id
-            }
-            sendgrid.send(activationCodeEmail, function(err, json) {
-              if (err) { console.error(err); }
-            });
+            sendActivationCode(email, user._id);
             return res.json({success: true});
           });
         }
       });
     }
   }
+});
+
+// Send an email with activation code to user with user_email
+router.post('/:user_email/send', function(req, res) {
+  var email = req.param('user_email');
+  User.userExists(email, function(exists) {
+    if (exists) {
+      User.getUserByEmail(email, function(err, user) {
+        sendActivationCode(email, user._id);
+      });
+      return res.json({success: true});
+    } else {
+      res.json({message: 'User with that email does not exist.', success: false});
+    }
+  });
 });
 
 // GET /users/:user_id
