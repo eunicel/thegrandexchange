@@ -4,7 +4,8 @@ angular.module('thegrandexchange')
   '$location',
   'session',
   'items',
-  function($scope, $location, session, items) {
+  'utils',
+  function($scope, $location, session, items, utils) {
 
     $scope.isLoggedIn = function() {
       return session.name() !== undefined;
@@ -33,19 +34,23 @@ angular.module('thegrandexchange')
       $location.url('items/'+ item._id);
     }
     $scope.addItem = function(){
-      console.log('adding item');
       var item = {
         name: $scope.name,
         description: $scope.description
       }
-      items.create(item).success(function(data) {
-        data.item.bestSell = 'No offers';
-        data.item.bestBuy = 'No offers';
-        $scope.items.push(data.item);
-        $scope.name = '';
-        $scope.description = '';
-      });
+      if (utils.validate(item, 'name', 'description')) {
+        items.create(item).success(function(data) {
+          data.item.bestSell = 'No offers';
+          data.item.bestBuy = 'No offers';
+          $scope.items.push(data.item);
+          $scope.name = '';
+          $scope.description = '';
+        });
+      } else {
+        alert("Please enter a name and a description.")
+      }
     }
+
     items.getAll().success(function(response) {
       $scope.items = response.items;
       if (response.success === true) {
