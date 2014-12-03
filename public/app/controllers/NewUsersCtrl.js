@@ -18,7 +18,7 @@ angular.module('thegrandexchange')
         };
         users.create(newUser).success(function (data) {
           if (data.success === true) {
-            $location.path('sessions');
+            $location.path('verification');
           } else {
             $scope.warning = data.message;
           }

@@ -70,11 +70,11 @@ router.get('/:user_id', utils.loggedIn, function(req, res) {
 // verify user account with user_id
 router.put('/:user_id/verification', function(req, res) {
   var user_id = req.param('user_id');
-  User.activate(user_id, function(user) {
+  User.activate(user_id, function(user, msg) {
     if (user) {
-      res.json({user: user, success: true});
+      res.json({user: user, message:null, success: true});
     } else {
-      res.json({message: 'Could not activate account', success: false});
+      res.json({message: msg, success: false});
     }
   });
 });

@@ -23,11 +23,24 @@ var userSchema = mongoose.Schema({
 });
 
 userSchema.statics.activate = function(user_id, callback) {
-  User.update({_id: user_id}, {activated: true},
-    function(err, numaffected, doc) {
+  if (mongoose.Types.ObjectId.isValid(user_id)) {
+      User.findOne({_id:user_id}, function(err, user) {
       utils.handleError(err);
-      callback(doc);
+      if (!user) {
+        callback(null, "Incorrect Activation Code");
+      }
+      else {
+        user.activated = true;
+        user.save(function(err, user) {
+          utils.handleError(err);
+          callback(user, null);
+        });
+      }
     });
+  }
+  else {
+    callback(null, "Incorrect Activation Code");
+  }
 };
 
 userSchema.statics.userExists = function(email, callback) {
