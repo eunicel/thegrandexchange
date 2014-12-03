@@ -21,6 +21,9 @@ angular.module('thegrandexchange')
     },
     verify: function(userID) {
       return $http.put('/api/users/' + userID + '/verification');
+    },
+    send: function(userEmail){
+      return $http.post('/api/users/' + userEmail + '/send');
     }
   };
 }])

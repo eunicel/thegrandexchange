@@ -90,6 +90,11 @@ angular.module('thegrandexchange', ['ui.router', 'ngCookies', 'ngTable'], functi
       templateUrl: '/views/verification.html',
       controller: 'VerificationCtrl'
     })
+    .state('send', {
+      url: '/send',
+      templateUrl: '/views/send.html',
+      controller: 'SendController'
+    })
   $urlRouterProvider.otherwise('login');
 }])
 
