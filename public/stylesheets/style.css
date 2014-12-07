@@ -250,3 +250,14 @@ hr {
 .reputation-wrapper {
   margin-top: 10px;
 }
+
+.purchase-btn{
+  width:65%;
+  float:right;
+}
+
+.price{
+  width:65%;
+  float:right;
+}
+

@@ -31,8 +31,8 @@
       </div>
       <div class="form-group">
         <label for="offer" class="col-xs-4 control-label">$</label>
-        <div class="col-xs-8">
-          <input ng-model="price" type="text" class="price form-control" id="offer" placeholder="Offer">
+        <div class="price">
+          <input ng-model="price" type="text" class="form-control" id="offer" placeholder="Offer">
         </div>
       <div class="form-group">
         <label for="reputation" class="col-xs-4 control-label">Reputation</label>
@@ -40,7 +40,7 @@
           <input ng-model="reputation" type="text" class="form-control" id="reputation" placeholder="Match with this or higher">
         </div>
       </div>
-      <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
+      <div class="purchase-btn btn-group btn-group-justified btn-group-lg" role="group" aria="...">
         <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>
         <a ng-click="offer('sell')" class="btn btn-primary bid_button">Sell</a>
       </div>
