@@ -210,7 +210,7 @@ hr {
 }
 
 .rating:not(:checked) > label:before {
-    content: '★ ';
+    content: '★';
 }
 
 .rating > input:checked ~ label {
