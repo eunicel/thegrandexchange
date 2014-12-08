@@ -112,6 +112,11 @@ hr {
   overflow-y: auto;
 }
 
+.offer-title {
+  padding-bottom: 10px;
+  border-bottom: thin solid gray;
+}
+
 .table tbody tr th, .table tbody tr td {
      border-top: none;
  }

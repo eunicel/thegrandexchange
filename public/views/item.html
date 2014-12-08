@@ -2,9 +2,9 @@
   <h1>{{item.name}} <small>{{item.description}}</small></h1>
   <div class="col-sm-5">
 
+    <h3 class="offer-title">Sell</h3>
+    <hl>
       <table class="table">
-
-    <h3>Sell</h3>
         <tr>
           <th>Price</th>
           <th>Reputation</th>
@@ -19,8 +19,9 @@
       </table>
     </div>
     <br>
+
+    <h3 class="offer-title">Buy</h3>
     <table class="table">
-      <h3>Buy</h3>
       <tr>
         <th>Price</th>
         <th>Reputation</th>
@@ -40,14 +41,14 @@
     <fieldset>
 
     <!-- Form Name -->
-    <div class="col-xs-offset-4 col-xs-8">
+    <div class="col-xs-offset-3 col-xs-9">
       <h3 class="form-title">Make an Offer</h3>
     </div>
 
     <!-- Text input-->
     <div class="form-group">
-      <label class="col-xs-4 control-label" for="offer">$</label>  
-      <div class="col-xs-8">
+      <label class="col-xs-3 control-label" for="offer">$</label>  
+      <div class="col-xs-9">
       <input ng-model="price" id="offer" name="offer" type="text" placeholder="Offer" class="form-control input-xs" required="">
         
       </div>
@@ -55,8 +56,8 @@
 
     <!-- Text input-->
     <div class="form-group">
-      <label class="col-xs-4 control-label" for="reputation">Reputation</label>  
-      <div class="col-xs-8">
+      <label class="col-xs-3 control-label" for="reputation">Reputation</label>  
+      <div class="col-xs-9">
       <input ng-model="reputation" id="reputation" name="reputation" type="text" placeholder="Match with this or higher" class="form-control input-xs" required="">
         
       </div>
@@ -65,23 +66,24 @@
     </fieldset>
     </form>
 
-
-    <div class="price">
-      <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
-        <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>
-        <a ng-click="offer('sell')" class="btn btn-primary bid_button">Sell</a>
-      </div>
-      <div role="alert" ng-show="error" class="alert alert-danger">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        {{message}}
-      </div>
-      <div role="alert" ng-show="posted" class="alert alert-info" >
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        {{message}}
-      </div>
-      <div role="alert" ng-show="matched" class="alert alert-success" >
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        {{message}}
+    <div class="row">
+      <div class="col-xs-offset-3 col-xs-9">
+        <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
+          <a ng-click="offer('buy')" role="button" class="btn btn-primary bid_button">Buy</a>
+          <a ng-click="offer('sell')" role="button" class="btn btn-primary bid_button">Sell</a>
+        </div>
+        <div role="alert" ng-show="error" class="alert alert-danger">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          {{message}}
+        </div>
+        <div role="alert" ng-show="posted" class="alert alert-info" >
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+          {{message}}
+        </div>
+        <div role="alert" ng-show="matched" class="alert alert-success" >
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+          {{message}}
+        </div>
       </div>
     </div>
   </div>
