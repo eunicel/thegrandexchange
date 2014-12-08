@@ -1,11 +1,10 @@
 body {
   font-family: "Roboto", sans-serif;
   padding-top: 85px;
-  background-color: #CCC;
+  background-color: #EEE;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: bottom;
-  background-image: url("/images/bg-grandex.png");
 }
 
 form {
@@ -17,7 +16,7 @@ hr {
 }
 
 .navbar-inverse .navbar-brand {
-  color: #eee;
+  color: #DEDFFF;
   font-size: 26px;
 }
 
@@ -76,6 +75,7 @@ hr {
   cursor:pointer;
 }
 
+
 .item_details_add{
   height:125px;
   margin-top:5px;
@@ -112,8 +112,8 @@ hr {
   overflow-y: auto;
 }
 
-.table tbody tr th, .table tbody tr td { 
-     border-top: none; 
+.table tbody tr th, .table tbody tr td {
+     border-top: none;
  }
 
 .item_offers_table{
