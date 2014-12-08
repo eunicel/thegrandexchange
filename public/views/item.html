@@ -40,22 +40,25 @@
           <input ng-model="reputation" type="text" class="form-control" id="reputation" placeholder="Match with this or higher">
         </div>
       </div>
-      <div class="purchase-btn btn-group btn-group-justified btn-group-lg" role="group" aria="...">
+
+    </form>
+    <div class="price">
+      <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
         <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>
         <a ng-click="offer('sell')" class="btn btn-primary bid_button">Sell</a>
       </div>
-    </form>
-    <div role="alert" ng-show="error" class="alert alert-danger">
-      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-      {{message}}
-    </div>
-    <div role="alert" ng-show="posted" class="alert alert-info" >
-      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      {{message}}
-    </div>
-    <div role="alert" ng-show="matched" class="alert alert-success" >
-      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      {{message}}
+      <div role="alert" ng-show="error" class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {{message}}
+      </div>
+      <div role="alert" ng-show="posted" class="alert alert-info" >
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        {{message}}
+      </div>
+      <div role="alert" ng-show="matched" class="alert alert-success" >
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        {{message}}
+      </div>
     </div>
   </div>
 </div>

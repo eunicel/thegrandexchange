@@ -254,6 +254,7 @@ hr {
 .purchase-btn{
   width:65%;
   float:right;
+  position:relative;
 }
 
 .price{
@@ -261,3 +262,10 @@ hr {
   float:right;
 }
 
+.blurb{
+  padding:5px;
+}
+
+.alert-msg{
+  position:relative;
+}
