@@ -83,9 +83,10 @@ router.post('/:item_id/offers', utils.loggedIn, function(req, res) {
   else {
     Item.getItemById(item_id, function(item){
       var offers = item.offers;
+      var newDate = new Date(parseInt(req.body.postedAt));
       var offer = {
         postedBy: req.body.postedBy,
-        postedAt: req.body.postedAt,
+        postedAt: newDate,
         price: req.body.price,
         type: req.body.type,
         item: item.name,

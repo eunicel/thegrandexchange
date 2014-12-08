@@ -517,6 +517,11 @@ $(document).ready(function() {
       }); // 'offer.item._id' doesn't actually get used
     }
     users.getOffers(session.name()._id).success(function(data) {
+
+      for (var i = 0; i < data.offers.length; i++) {
+        console.log(data.offers[i].postedAt);
+        data.offers[i].postedAt = new Date(data.offers[i].postedAt).toLocaleString();
+      }
       $scope.offers = data.offers;
 
       // Set up the table that allows sorting by field.
