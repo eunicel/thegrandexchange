@@ -1,47 +1,71 @@
 <div ng-controller="ItemCtrl">
   <h1>{{item.name}} <small>{{item.description}}</small></h1>
-  <div class="col-sm-4">
-    <h3>Sell:</h3>
-    <table class="item_offers_table">
-      <tr>
-        <th>Sell Price</th>
-        <th>Seller Reputation</th>
-      </tr>
-      <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true" ng-show="userReputation >= sell.minReputation">
-        <td>${{sell.price}}</td>
-        <td>{{sell.postedBy.reputation}}</td>
-      </tr>
-    </table>
-    <h3>Buy:</h3>
-    <table class="item_offers_table">
-      <tr>
-        <th>Buy Price</th>
-        <th>Buyer Reputation</th>
-      </tr>
-      <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true" ng-show="userReputation >= buy.minReputation">
-        <td>${{buy.price}}</td>
-        <td>{{buy.postedBy.reputation}}</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-sm-8">
-    <form class="form-horizontal" role="form">
-      <div class="text-right">
-        <h3>Make an Offer</h3>
-      </div>
-      <div class="form-group">
-        <label for="offer" class="col-xs-4 control-label">$</label>
-        <div class="price">
-          <input ng-model="price" type="text" class="form-control" id="offer" placeholder="Offer">
-        </div>
-      <div class="form-group">
-        <label for="reputation" class="col-xs-4 control-label">Reputation</label>
-        <div class="reputation-wrapper col-xs-8">
-          <input ng-model="reputation" type="text" class="form-control" id="reputation" placeholder="Match with this or higher">
-        </div>
-      </div>
+  <div class="col-sm-5">
 
+      <table class="table">
+
+    <h3>Sell</h3>
+        <tr>
+          <th>Price</th>
+          <th>Reputation</th>
+        </tr>
+      </table>
+    <div class="scroll-table">
+      <table class="table">
+        <tr ng-repeat="sell in item.offers | filter:{type:'sell'}| orderBy:order:true" ng-show="userReputation >= sell.minReputation">
+          <td>${{sell.price}}</td>
+          <td>{{sell.postedBy.reputation}}</td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <table class="table">
+      <h3>Buy</h3>
+      <tr>
+        <th>Price</th>
+        <th>Reputation</th>
+      </tr>
+    </table>
+    <div class="scroll-table">
+      <table class="table">
+        <tr ng-repeat="buy in item.offers | filter:{type:'buy'} | orderBy:order:true" ng-show="userReputation >= buy.minReputation">
+          <td>${{buy.price}}</td>
+          <td>{{buy.postedBy.reputation}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-sm-7">
+    <form class="form-horizontal">
+    <fieldset>
+
+    <!-- Form Name -->
+    <div class="col-xs-offset-4 col-xs-8">
+      <h3 class="form-title">Make an Offer</h3>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-xs-4 control-label" for="offer">$</label>  
+      <div class="col-xs-8">
+      <input ng-model="price" id="offer" name="offer" type="text" placeholder="Offer" class="form-control input-xs" required="">
+        
+      </div>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-xs-4 control-label" for="reputation">Reputation</label>  
+      <div class="col-xs-8">
+      <input ng-model="reputation" id="reputation" name="reputation" type="text" placeholder="Match with this or higher" class="form-control input-xs" required="">
+        
+      </div>
+    </div>
+
+    </fieldset>
     </form>
+
+
     <div class="price">
       <div class="btn-group btn-group-justified btn-group-lg" role="group" aria="...">
         <a ng-click="offer('buy')" class="btn btn-primary bid_button">Buy</a>

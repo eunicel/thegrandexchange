@@ -1,6 +1,7 @@
 body {
+  font-family: "Roboto", sans-serif;
   padding-top: 85px;
-  background-color: #45568A;
+  background-color: #CCC;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: bottom;
@@ -25,12 +26,15 @@ hr {
   padding-bottom: 10px;
   margin-bottom: 15px;
   border-radius: 5px;
-  background-color: rgba(36, 37, 56, 0.9);
-  color: #DEDFFF;
+  background-color: rgba(10, 15, 23, 0.9);
 }
 
 .sidebar-item {
   margin-bottom: 5px;
+}
+
+.sidebar-item a {
+  color: #CCC;
 }
 
 .main-view {
@@ -101,6 +105,16 @@ hr {
   color: red;
   padding: 3px;
 }
+
+.scroll-table {
+  max-height: 40%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.table tbody tr th, .table tbody tr td { 
+     border-top: none; 
+ }
 
 .item_offers_table{
   color:#DEDFFF;
