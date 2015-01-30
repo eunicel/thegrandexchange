@@ -1,0 +1,290 @@
+body {
+  font-family: "Roboto", sans-serif;
+  padding-top: 85px;
+  background-color: #EEE;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom;
+}
+
+form {
+  margin-bottom: 0px;
+}
+
+hr {
+  visibility: hidden;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #DEDFFF;
+  font-size: 26px;
+}
+
+.sidebar {
+  padding-top: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: rgba(10, 15, 23, 0.9);
+}
+
+.sidebar-item {
+  margin-bottom: 5px;
+}
+
+.sidebar-item a {
+  color: #818181;
+}
+
+.main-view {
+  padding-bottom: 15px;
+  border-radius: 5px;
+  background-color: rgba(10, 15, 23, 0.9);
+  color: #DEDFFF;
+}
+
+.main-view .items_container {
+  padding-top: 15px;
+}
+
+.logout {
+  cursor: pointer;
+}
+
+.review {
+  height:50px;
+}
+
+.item {
+  height:200px;
+  border:1px solid;
+  border-radius:5px;
+  border-color:#444444;
+  margin:5px;
+  padding:10px;
+  background-color: rgba(45, 45, 60, 0.9);
+}
+
+.item_details{
+  border-radius:4px;
+  border:1px solid;
+  border-color:#444444;
+  height:125px;
+  margin-top:5px;
+  margin-bottom:5px;
+  cursor:pointer;
+}
+
+
+.item_details_add{
+  height:125px;
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:2px;
+  cursor:pointer;
+}
+.item_details_add:hover{
+  background-color: rgba(50, 50, 70, 0.9);
+  color: #EEEFFF;
+}
+.item_details:hover{
+  background-color: rgba(50, 50, 70, 0.9);
+  color: #EEEFFF;
+}
+
+.item_description{
+  display:inline-block;
+  float: right;
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.item_error{
+  color: red;
+  padding: 3px;
+}
+
+.scroll-table {
+  max-height: 40%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.offer-title {
+  padding-bottom: 10px;
+  border-bottom: thin solid gray;
+}
+
+.table tbody tr th, .table tbody tr td {
+     border-top: none;
+ }
+
+.item_offers_table{
+  color:#DEDFFF;
+}
+
+.item_offers_table td{
+  padding:5px;
+}
+
+.item_offers_table td + td{
+  border-left:1px solid white;
+  text-align: center;
+}
+
+.item_offers_table th{
+  border-bottom: solid 1px white;
+  padding-right:5px;
+  text-align: center;
+}
+
+.item_offers_table th + th{ border-left:1px solid white; }
+
+.item_name{
+  margin-top:20px;
+  margin-bottom: 20px;
+}
+
+.table {
+  color: #EEEFFF;
+}
+
+.delete_btn{
+  display:inline-block;
+  float:right;
+  color:#BDBDBD;
+}
+
+.delete_btn:hover{
+  cursor:pointer;
+  color:#000000;
+}
+
+.bestbuy{
+  display: inline-block;
+}
+
+.flag{
+  font-size: x-small;
+  display:inline-block;
+  bottom: 5px;
+  right: 5px;
+  position: absolute;
+  padding-top:4px;
+  z-index: 100;
+}
+
+.flag:hover{
+  color:red;
+  cursor: pointer;
+}
+
+.flag .flagged{
+  color: gray;
+  cursor: default;
+
+}
+
+.new-item{
+  margin-bottom: 6px;
+}
+
+.new-item-submit{
+  background: transparent;
+  border:1px solid;
+  border-color:#E8E8E8;
+}
+
+.new-item-submit:hover{
+  background-color:#E8E8E8;
+}
+
+.rating {
+  float:left;
+}
+
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+.rating:not(:checked) > input {
+    position:absolute;
+    clip:rect(0,0,0,0);
+}
+
+.rating:not(:checked) > label {
+  display:inline-block;
+  float:right;
+  width:1.1em;
+  padding:0 .1em;
+  margin:1px;
+  overflow:hidden;
+  white-space:nowrap;
+  cursor:pointer;
+  font-size:150%;
+  line-height:1.2;
+  color:#ddd;
+  text-shadow:1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0,0,0,.5);
+}
+
+.rating:not(:checked) > label:before {
+    content: '★';
+}
+
+.rating > input:checked ~ label {
+    color: #f70;
+    text-shadow:1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0,0,0,.5);
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+    color: yellow;
+    text-shadow:1px 1px orange, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.5);
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+    color: #ea0;
+    text-shadow:1px 1px orange, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.5);
+}
+
+.rating > label:active {
+    position:relative;
+    top:2px;
+    left:2px;
+}
+
+.review-content{
+  border:1px solid;
+  border-radius:4px;
+  margin-top:8px;
+  margin-bottom:8px;
+  padding:8px;
+}
+
+.reputation-wrapper {
+  margin-top: 10px;
+}
+
+.purchase-btn{
+  width:65%;
+  float:right;
+  position:relative;
+}
+
+.price{
+  width:65%;
+  float:right;
+}
+
+.blurb{
+  padding:5px;
+}
+
+.alert-msg{
+  position:relative;
+}

@@ -1,0 +1,31 @@
+<div ng-controller="MainCtrl">
+  <h1>Marketplace</h1>
+  <div class="blurb">
+    Welcome to The Grand Exchange! The Grand Exchange is an item-centric online marketplace for the MIT community. You can post auction-style sell or buy offers here for a particular item and you will be notified by email when a match is made between a buyer and a seller. When you have been notified of your match, you can contact the buyer or seller to complete the transaction.
+  </div>
+  <div class="items_container">
+    <div ng-repeat="item in items">
+      <div class="col-sm-5 col-md-2 item" >
+        <div>Sell: {{item.bestSell}}</div>
+        <div class="item_details" type="submit" ng-click="toItem(item)">
+          <h3>{{item.name}}</h3>
+          <div>{{item.description}}</div>
+        </div>
+        <div class="bestbuy">Buy: {{item.bestBuy}}</div>
+        <div class="flag">
+          <span title="Flag this item as inappropriate" class="glyphicon glyphicon-flag {{flagged(item) == true ? 'flagged' : ''}}" ng-click="flag(item)"></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-5 col-md-2 item">
+      <form ng-submit="addItem()">
+        <div>Add new item</div>
+        <div class="item_details_add">
+          <input class="form-control new-item" type="text" placeholder="Name" ng-model="name"></input>
+          <textarea class="form-control new-item" rows="3" placeholder="Description" ng-model="description"></textarea>
+          <input type="submit" class="new-item-submit btn"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

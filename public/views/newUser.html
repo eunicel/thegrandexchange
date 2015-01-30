@@ -1,0 +1,36 @@
+<div>
+  <h2 class="text-center">Sign Up</h2>
+  <hr>
+  <form ng-submit="addUser()">
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="text" ng-model="firstName" class="form-control" placeholder="First Name">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="text" ng-model="lastName" class="form-control" placeholder="Last Name">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="text" ng-model="email" class="form-control" placeholder="Email (@mit.edu)">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="password" ng-model="password" class="form-control" placeholder="Password">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="password" ng-model="passwordCheck" class="form-control" placeholder="Retype Password">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div ng-show="warning" class="alert alert-danger" role="alert">{{warning}}</div>
+      </div>
+    </div><button class="btn btn-default" type="submit">Sign Up</button>
+  </form>
+</div>

@@ -1,0 +1,20 @@
+<div ng-controller="VerificationCtrl">
+  <h2 class="text-center">Verification</h2>
+  <hr>
+  <h5 class="text-center">Activate your account by entering the activation code that was sent to your email address</h5>
+  <hr>
+  <form ng-submit="verify()">
+    <div class="row">
+      <div class="form-group col-xs-12">
+        <input type="text" ng-model="activationCode" class="form-control" placeholder="Activation Code">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div ng-show="warning" class="alert alert-danger" role="alert">{{warning}}</div>
+      </div>
+    </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+  <br><br><a href="#/send">Resend Activation Code</a>
+  </form>
+</div>
